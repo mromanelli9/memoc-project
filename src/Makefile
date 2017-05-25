@@ -1,5 +1,5 @@
 CC = g++
-CPPFLAGS = -g -Wall -O2
+CPPFLAGS = -g -Wall -O2 -Wsign-compare
 LDFLAGS =
 
 CPX_INCDIR  = /opt/ibm/ILOG/CPLEX_Studio1263/cplex/include
