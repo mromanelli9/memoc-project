@@ -34,113 +34,191 @@ char name[NAME_SIZE];
 
 void setupLP(CEnv env, Prob lp)
 {
-    // add x vars [in o.f.: sum{i,j} C_ij x_ij + ...]
-    for (int i = 0; i < I; i++)
-    {
-        for (int j = 0; j < J; j++)
-        {
-            char xtype = 'I';
+	// Problem setup
+    cout << "Init model ..."<<endl;
+
+	int createdVars = 0; 			// Numero di variabili inserite in CPLEX
+    unsigned int N = problem->getSize();
+    vector< Node > nodes = problem->getNodes();
+    vector< vector<double> > C = problem->getCosts();
+
+	/*
+        Variables setup
+    */
+	// x_i,j
+    xMap.resize(N);
+    for (int i = 0; i < N; i++){
+        xMap[i].resize(N);
+        for (int j = 0; j < N; ++j){
+            xMap[i][j] = -1;
+        }
+    }
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            if (i == j) continue; // non creo le variabili con lo stesso indice, ma nella mappa c'è comunque il posto (rimane a -1)
+            char htype = 'I';
+            double obj = 0.0;
             double lb = 0.0;
             double ub = CPX_INFBOUND;
-            snprintf(name, NAME_SIZE, "x_%c_%c", nameI[i], nameJ[j]);
-            char* xname = (char*)(&name[0]);
-            CHECKED_CPX_CALL( CPXnewcols, env, lp, 1, &C[i*J+j], &lb, &ub, &xtype, &xname );
-            /// status = CPXnewcols (env, lp, ccnt, obj, lb, ub, xctype, colname);
-        }
-    }
-    // add y vars [in o.f.: ... + F sum{ij} y_ij + ... ]
-    for (int i = 0; i < I; i++)
-    {
-        for (int j = 0; j < J; j++)
-        {
-          char ytype = 'B';
-          double lb = 0.0;
-          double ub = 1.0;
-          snprintf(name, NAME_SIZE, "y_%c_%c", nameI[i], nameJ[j]);
-          char* yname = (char*)(&name[0]);
-          CHECKED_CPX_CALL( CPXnewcols, env, lp, 1, &F, &lb, &ub, &ytype, &yname );
-            /// status = CPXnewcols (env, lp, ccnt, obj, lb, ub, xctype, colname);
+            snprintf(name, NAME_SIZE, "x_%d,%d", nodes[i], nodes[j]);
+            char* xname = &name[0];
+            CHECKED_CPX_CALL( CPXnewcols, env, lp, 1, &obj, &lb, &ub, &htype, &xname );
+            xMap[i][j] = createdVars;
+            createdVars++;
         }
     }
 
-    // add z var [in o.f.: ... + (L-F) z ]
-  	{
-  		char ztype = 'B';
-  		double lb = 0.0;
-  		double ub = 1.0;
-  		double obj = L - F;
-  		snprintf(name, NAME_SIZE, "z");
-  		char* zname = (char*)(&name[0]);
-  		CHECKED_CPX_CALL( CPXnewcols, env, lp, 1, &obj, &lb, &ub, &ztype, &zname );
-  	}
-
-        ///////////////////////////////////////////////////////////
-        //
-        // now variables are stored in the following order
-        //  x00 x01 ...   x10 x11 ... #xij #    ... ...   y00   y01   ...   y10   y11     ... #yij      #   ... ...   #z    #
-        // with indexes
-        //  0   1         J   J+1     #i*J+j#             I*J+0 I*J+1       I*J+J I*J+J+1     #I*J+i*J+j#             #2*I*J#
-        //
-        ////////////
-
-    // add request constraints (destinations)  [ forall j, sum{i} x_ij >= R_j ]
-    for (int j = 0; j < J; j++)
-    {
-        std::vector<int> idx(I);
-        std::vector<double> coef(I, 1.0);
-        char sense = 'G';
-        for (int i = 0; i < I; i++)
-        {
-            idx[i] = i*J + j;
+	// y_i,j
+    yMap.resize(N);
+    for (int i = 0; i < N; i++){
+        yMap[i].resize(N);
+        for (int j = 0; j < N; ++j){
+            yMap[i][j] = -1;
         }
-        int matbeg = 0;
-        CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, idx.size(), &R[j], &sense, &matbeg, &idx[0], &coef[0], NULL, NULL );
-    /// status = CPXaddrows (env, lp, colcnt, rowcnt, nzcnt, rhs, sense, rmatbeg, rmatind, rmatval, newcolname, newrowname);
+    }
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+
+            if (i == j) continue;
+
+            char ytype = 'B';
+            double obj = C[i][j]; // coefficiente nella funzione obiettivo
+            double lb = 0.0;
+            double ub = CPX_INFBOUND;
+            snprintf(name, NAME_SIZE, "y_%d,%d", nodes[i], nodes[j]);
+            char* yname = &name[0];
+            CHECKED_CPX_CALL( CPXnewcols, env, lp, 1, &obj, &lb, &ub, &ytype, &yname );
+            yMap[i][j] = createdVars;
+            createdVars++;
+        }
     }
 
-    // add capacity constraints (origin) [ forall i, sum{j} x_ij <= D_j ]
-  	for (int i = 0; i < I; i++)
-  	{
-  		std::vector<int> idx(J);
-  		std::vector<double> coef(J, 1.0);
-  		char sense = 'L';
-  		for (int j = 0; j < J; j++)
-  		{
-  			idx[j] = i*J + j; // corresponds to variable x_ij
-  		}
-  		int matbeg = 0;
-  		CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, idx.size(), &D[i], &sense, &matbeg, &idx[0], &coef[0], 0, 0 );
-  	}
+	// Starting node index [0]
+	const Node STARTING_NODE = 0;
 
-    // add linking constraints (x_ij - K y_ij <= 0 -- all variables on the left side!!!)
-    const int NRELATION = I*J;
-    for (int c = 0; c < NRELATION; ++c)
+	// Vincolo sul flusso uscende dal primo nodo
     {
-        std::vector<int> idx(2);
-        idx[0] = c;               // x var
-        idx[1] = c + NRELATION;   // y var
-        std::vector<double> coef(2);
-        coef[0] = 1.0;
-        coef[1] = -K;
-        char sense = 'L';
-        double rhs = 0.0;
-        int matbeg = 0;
-        CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, 2, &rhs, &sense, &matbeg, &idx[0], &coef[0], 0, 0 );
+        std::vector<int> varIndex(N-1); // posizione d'inizio delle variabili x
+        std::vector<double> coef(N-1);
+        // Per scorrere gli elementi di varIndex devo usare un'altra variabile diversa da j
+        // perché j va da 0 a N mentre varIndex è lungo N-1
+        int idx = 0;
+        for (int j = 0; j < N; ++j) {
+            if (j == STARTING_NODE) continue;
+            varIndex[idx] = xMap[STARTING_NODE][j]; // indice della variabile
+            coef[idx] = 1; // coefficente della variabile nel vincolo
+            idx++;
+        }
+        char sense = 'E'; // verso del vincolo
+        double rhs = N; // parte destra del vincolo
+        snprintf(name, NAME_SIZE, "flux");// nome del vincolo
+        char* cname = (char*)(&name[0]);
+
+        int matbeg = 0; // viene creato un solo vincolo (è la posizione d'inizio delle variabili che compaiono nei vari vincoli)
+        // PXaddrows, env, lp, colcount, rowcount, nzcnt, &rhs[0], &sense[0], &rmatbeg[0], &rmatind[0], &rmatval[0], newcolnames , rownames
+        CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, varIndex.size(), &rhs, &sense, &matbeg, &varIndex[0], &coef[0], NULL, &cname );
     }
-    // add counting constraint (sum_ij y_ij - z <= N)
-    {
-        std::vector<int> idx(NRELATION);
-        std::vector<double> coef(NRELATION, 1.0);
-        for (int c = 0; c < NRELATION; ++c) idx[c] = NRELATION + c; // y_ij var
-        idx.push_back(2 * NRELATION);                               // z    var
-        coef.push_back(-1.0);   // coeff for z
-        char sense = 'L';
+
+    // Vincoli sulla domanda di flusso
+    for (int k = 0; k < N; ++k) {
+        if (k == STARTING_NODE) continue;
+
+        std::vector<int> varIndex((N-1)*2);
+        std::vector<double> coef((N-1)*2);
+        int idx = 0;
+        for (int i = 0; i < N; ++i) {
+            if (i == k) continue; // non considera il caso i == k
+            //cout << i <<" +x_"<<nodes[i]<<","<<nodes[k] <<" CPLEX addr: "<< xMap[i][k]<<endl;
+            varIndex[idx] = xMap[i][k];
+            coef[idx] = 1;
+            idx++;
+        }
+        for (int j = 0; j < N; ++j){
+            if (k == j) continue; // non considera il caso k == j
+            //cout << idx <<" -x_"<<nodes[k]<<","<<nodes[j]<<" CPLEX addr: " << xMap[k][j]<<endl;
+            varIndex[idx] = xMap[k][j]; // Parto da metà dell'array degli indici
+            coef[idx] = -1;
+            idx++;
+        }
+
+        char sense = 'E'; // verso del vincolo
+        double rhs = 1; // parte destra del vincolo
+        snprintf(name, NAME_SIZE, "delta_%d",k+1);// nome del vincolo
+        char* cname = (char*)(&name[0]);
+
         int matbeg = 0;
-        CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, idx.size(), &N, &sense, &matbeg, &idx[0], &coef[0], 0, 0 );
+        // PXaddrows, env, lp, colcount, rowcount, nzcnt, &rhs[0], &sense[0], &rmatbeg[0], &rmatind[0], &rmatval[0], newcolnames , rownames
+        CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, varIndex.size(), &rhs, &sense, &matbeg, &varIndex[0], &coef[0], NULL, &cname );
     }
-    // print (debug)
-    CHECKED_CPX_CALL( CPXwriteprob, env, lp, "ironrods.lp", NULL );
-    /// status = CPXwriteprob (env, lp, "myprob", filetype_str);
+
+    // Vincoli sul flusso in uscita
+    for (int i = 0; i < N; ++i){
+        std::vector<int> varIndex(N-1);
+        std::vector<double> coef(N-1);
+        int idx = 0;
+        for (int j = 0; j < N; ++j) {
+            if (j == i) continue;
+            varIndex[idx] = yMap[i][j];
+            coef[idx] = 1;
+            idx++;
+        }
+
+        char sense = 'E';
+        double rhs = 1;
+        snprintf(name, NAME_SIZE, "out_%d",i+1);
+        char* cname = (char*)(&name[0]);
+
+        int matbeg = 0;
+        // PXaddrows, env, lp, colcount, rowcount, nzcnt, &rhs[0], &sense[0], &rmatbeg[0], &rmatind[0], &rmatval[0], newcolnames , rownames
+        CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, varIndex.size(), &rhs, &sense, &matbeg, &varIndex[0], &coef[0], NULL, &cname );
+    }
+    // Vincoli sul flusso in ingresso
+    for (int j = 0; j < N; ++j){
+        std::vector<int> varIndex(N-1);
+        std::vector<double> coef(N-1);
+        int idx = 0;
+        for (int i = 0; i < N; ++i) {
+            if (i==j) continue;
+            varIndex[idx] = yMap[i][j];
+            coef[idx] = 1;
+            idx++;
+        }
+
+        char sense = 'E';
+        double rhs = 1;
+        snprintf(name, NAME_SIZE, "in_%d",j+1);
+        char* cname = (char*)(&name[0]);
+
+        int matbeg = 0;
+        // PXaddrows, env, lp, colcount, rowcount, nzcnt, &rhs[0], &sense[0], &rmatbeg[0], &rmatind[0], &rmatval[0], newcolnames , rownames
+        CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, varIndex.size(), &rhs, &sense, &matbeg, &varIndex[0], &coef[0], NULL, &cname );
+    }
+
+    // Vincoli di attivazione
+    for (int i = 0; i < N; i++){
+        for (int j = 0; j < N; j++){
+            if (i == j) continue;
+            std::vector<int> idx(2);
+            idx[0] = xMap[i][j];
+            idx[1] = yMap[i][j];
+            std::vector<double> coef(2);
+            coef[0] = 1;
+            coef[1] = (double)N * -1;
+            char sense = 'L';
+            double rhs = 0;
+            snprintf(name, NAME_SIZE, "att_%d_%d",i,j);
+            char* cname = &name[0];
+
+            int matbeg = 0;
+            // PXaddrows, env, lp, colcount, rowcount, nzcnt, &rhs[0], &sense[0], &rmatbeg[0], &rmatind[0], &rmatval[0], newcolnames , rownames
+            CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, idx.size(), &rhs, &sense, &matbeg, &idx[0], &coef[0], NULL, &cname );
+        }
+    }
+
+    // Print model on file
+    CHECKED_CPX_CALL( CPXwriteprob, env, lp, "TSPModel.lp", NULL );
+
+	/// status = CPXwriteprob (env, lp, "myprob", filetype_str);
 }
 
 int main (int argc, char const *argv[])
@@ -154,28 +232,30 @@ int main (int argc, char const *argv[])
         // setup LP
         setupLP(env, lp);
 
-        // optimize
+        // Optimize
         CHECKED_CPX_CALL( CPXmipopt, env, lp );
 
-        // print objval
+        // Print optimum
         double objval = 0.0;
         CHECKED_CPX_CALL( CPXgetobjval, env, lp, &objval );
         std::cout << "Objval: " << objval << std::endl;
 
-        //print solution (var values)
-        int n = CPXgetnumcols(env, lp);
-        if (n != 2*I*J+1) { throw std::runtime_error(std::string(__FILE__) + ":" + STRINGIZE(__LINE__) + ": " + "different number of variables"); }
-        std::vector<double> varVals;
-        varVals.resize(n);
-        CHECKED_CPX_CALL( CPXgetx, env, lp, &varVals[0], 0, n - 1 );
-            /// status = CPXgetx (env, lp, x, 0, CPXgetnumcols(env, lp)-1);
-        for ( int i = 0 ; i < n ; ++i ) {
-            std::cout << "var in position " << i << " : " << varVals[i] << std::endl;
-            /// to get variable name, use the RATHER TRICKY "CPXgetcolname"
-            /// status = CPXgetcolname (env, lp, cur_colname, cur_colnamestore, cur_storespace, &surplus, 0, cur_numcols-1);
-        }
-        CHECKED_CPX_CALL( CPXsolwrite, env, lp, "ironrods.sol" );
-        // free
+		//
+		int numVars = CPXgetnumcols(env, lp);
+	    std::vector<double> varVals;
+	    varVals.resize(numVars);
+	    int fromIdx = 0;
+	    int toIdx = numVars - 1;
+	    CHECKED_CPX_CALL( CPXgetx, env, lp, &varVals[0], fromIdx, toIdx );
+
+		// TODO: da esplicitare
+		// vector<Node> path = extractPath(varVals);
+	    // assert(path.size() == problem->getSize()+1);
+
+		//
+        CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
+
+		// free
         CPXfreeprob(env, &lp);
         CPXcloseCPLEX(&env);
     }
