@@ -6,6 +6,8 @@
 #include <cstdio>
 #include <iostream>
 #include <vector>
+#include <assert.h>
+#include <math.h>
 #include "cpxmacro.h"
 
 using namespace std;
@@ -19,7 +21,13 @@ char errmsg[BUF_SIZE];
 const int NAME_SIZE = 512;
 char name[NAME_SIZE];
 
-unsigned int N = 5	// [!TESTING]
+unsigned int N = 5;	// [!TESTING]		// an unsigned will cause a warning (comparison between signed and unsigned integer)
+
+vector< vector<double> > xMap;
+vector< vector<double> > yMap;
+
+// Prototyping
+vector<Node> extractPath(vector<double> vals, int start, int cnt);
 
 void setupLP(CEnv env, Prob lp)
 {
@@ -36,7 +44,7 @@ void setupLP(CEnv env, Prob lp)
 	// Create costs for the problem
 	// I costi vengono generati casualmente come valori da 1 a 100, rispettando la
     // [!TESTING] simmetria della matrice
-	vector<vector<double>> C;
+	vector< vector<double> > C;
 	C.resize(N);
     srand(time(NULL));
 
@@ -55,7 +63,6 @@ void setupLP(CEnv env, Prob lp)
         Variables setup
     */
 	// x_i,j
-	vector<vector<double>> xMap;
     xMap.resize(N);
     for (int i = 0; i < N; i++){
         xMap[i].resize(N);
@@ -79,7 +86,6 @@ void setupLP(CEnv env, Prob lp)
     }
 
 	// y_i,j
-	vector<vector<double>> yMap;
     yMap.resize(N);
     for (int i = 0; i < N; i++){
         yMap[i].resize(N);
@@ -259,7 +265,9 @@ int main (int argc, char const *argv[])
 	    int toIdx = numVars - 1;
 	    CHECKED_CPX_CALL( CPXgetx, env, lp, &varVals[0], fromIdx, toIdx );
 
-		vector<Node> path = extractPath(varVals);
+		// TODO: capire cosa fa
+		int cnt = 0;	// aggiunto a caso
+		vector<Node> path = extractPath(varVals, 0, cnt);	// l'originale metteva solo il primo parametro
 		assert(path.size() == N+1);
 
 		//
@@ -268,12 +276,12 @@ int main (int argc, char const *argv[])
 		// TODO: da esplicitare
 		// return new Solution(problem, path);
 		vector<Node> p;
-	    vector< vector<double> > C = problem->getCosts();
-	    this->path.resize(path.size());
+	    vector< vector<double> > C;
+	    path.resize(path.size());
 	    for (int j = 0; j < p.size(); ++j) {
 	        p[j] = path[j];
 	    }
-	    fitness = 0;
+	    double fitness = 0;
 	    int debug_sum = 0;
 	    int debug_sum_2 =0;
 	    for (int i = 0; i < N; ++i) {
@@ -297,8 +305,8 @@ int main (int argc, char const *argv[])
 }
 
 // TODO: capire cosa fa
-vector<Node> CPLEXSolver::extractPath(vector<double> vals, int start, int cnt){
-    unsigned int l = problem->getSize() + 1; // il nodo di partenza deve comparire 2 volte
+vector<Node> extractPath(vector<double> vals, int start, int cnt){
+    unsigned int l = N + 1; // il nodo di partenza deve comparire 2 volte
 
     if (cnt == l) { return vector<Node>(); }
 
