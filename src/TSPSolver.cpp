@@ -265,33 +265,33 @@ int main (int argc, char const *argv[])
 	    int toIdx = numVars - 1;
 	    CHECKED_CPX_CALL( CPXgetx, env, lp, &varVals[0], fromIdx, toIdx );
 
-		// TODO: capire cosa fa
-		int cnt = 0;	// aggiunto a caso
-		vector<Node> path = extractPath(varVals, 0, cnt);	// l'originale metteva solo il primo parametro
-		assert(path.size() == N+1);
-
+		// // TODO: capire cosa fa
+		// int cnt = 0;	// aggiunto a caso
+		// vector<Node> path = extractPath(varVals, 0, cnt);	// l'originale metteva solo il primo parametro
+		// assert(path.size() == N+1);
 		//
-        CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
-
-		// TODO: da esplicitare
-		// return new Solution(problem, path);
-		vector<Node> p;
-	    vector< vector<double> > C;
-	    path.resize(path.size());
-	    for (int j = 0; j < p.size(); ++j) {
-	        p[j] = path[j];
-	    }
-	    double fitness = 0;
-	    int debug_sum = 0;
-	    int debug_sum_2 =0;
-	    for (int i = 0; i < N; ++i) {
-	        debug_sum += path[i];
-	        debug_sum_2 += i;
-	        fitness += C[p[i]][p[i+1]];
-	    }
-	    assert(debug_sum == debug_sum_2);
-
-		cout << "Soluzione di CPLEX - Costo "<< fitness <<endl;
+		// //
+        // CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
+		//
+		// // TODO: da esplicitare
+		// // return new Solution(problem, path);
+		// vector<Node> p;
+	    // vector< vector<double> > C;
+	    // path.resize(path.size());
+	    // for (int j = 0; j < p.size(); ++j) {
+	    //     p[j] = path[j];
+	    // }
+	    // double fitness = 0;
+	    // int debug_sum = 0;
+	    // int debug_sum_2 =0;
+	    // for (int i = 0; i < N; ++i) {
+	    //     debug_sum += path[i];
+	    //     debug_sum_2 += i;
+	    //     fitness += C[p[i]][p[i+1]];
+	    // }
+	    // assert(debug_sum == debug_sum_2);
+		//
+		// cout << "Soluzione di CPLEX - Costo "<< fitness <<endl;
 
 		// free
         CPXfreeprob(env, &lp);
@@ -305,21 +305,21 @@ int main (int argc, char const *argv[])
 }
 
 // TODO: capire cosa fa
-vector<Node> extractPath(vector<double> vals, int start, int cnt){
-    unsigned int l = N + 1; // il nodo di partenza deve comparire 2 volte
-
-    if (cnt == l) { return vector<Node>(); }
-
-    for (int i = 0; i < l; ++i) {
-        if ( i != start && round(vals[yMap[start][i] ]) == 1) {
-            // i è il nodo in cui mi sposto
-            vector<Node> res;
-            res.push_back(start);
-            vector<Node> nextPath = extractPath(vals, i, ++cnt);
-            res.insert(res.end(), nextPath.begin(), nextPath.end()); // faccio l'append del resto del percorso.
-            return  res;
-        }
-    }
-
-    return vector<Node>();
-}
+// vector<Node> extractPath(vector<double> vals, int start, int cnt){
+//     unsigned int l = N + 1; // il nodo di partenza deve comparire 2 volte
+//
+//     if (cnt == l) { return vector<Node>(); }
+//
+//     for (int i = 0; i < l; ++i) {
+//         if ( i != start && round(vals[yMap[start][i] ]) == 1) {
+//             // i è il nodo in cui mi sposto
+//             vector<Node> res;
+//             res.push_back(start);
+//             vector<Node> nextPath = extractPath(vals, i, ++cnt);
+//             res.insert(res.end(), nextPath.begin(), nextPath.end()); // faccio l'append del resto del percorso.
+//             return  res;
+//         }
+//     }
+//
+//     return vector<Node>();
+// }
