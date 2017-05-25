@@ -15,6 +15,6 @@ main: $(OBJ)
 		$(CC) $(CPPFLAGS) $(OBJ) -o TSPSolver -L$(CPX_LIBDIR) $(CPX_LDFLAGS)
 
 clean:
-		rm -rf $(OBJ) TSPSolver.cpp
+		rm -rf $(OBJ) TSPSolver tsp.sol TSPModel.lp
 
 .PHONY: clean
