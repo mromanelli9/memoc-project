@@ -1,6 +1,8 @@
 /**
- * @file ironrods.cpp
- * @brief
+	@file TSPSolver.cpp
+	@brief	Main file
+	@author Marco Romanelli
+	@version 0.1 25/22/17
  */
 
 #include <cstdio>
