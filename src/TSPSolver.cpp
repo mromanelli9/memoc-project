@@ -10,42 +10,52 @@
 
 using namespace std;
 
+typedef int Node;	// It's an integer, used to distinguish nodes and indexes
+
 // error status and messagge buffer
 int status;
 char errmsg[BUF_SIZE];
 
-// data
-const int I = 3;
-const int J = 3;
-const char nameI[I] = { 'A', 'B', 'C' }; // origins
-const char nameJ[J] = { '1', '2', '3' }; // destinations
-const double D[I] = { 7000.0, 6000.0, 4000.0 }; // Disponibilita' (origins)
-const double R[J] = { 8000.0, 5000.0, 4000.0 }; // Richieste (destinations)
-const double C[I*J] = { 9.0, 6.0, 5.0,
-                        7.0, 4.0, 9.0,
-                        4.0, 6.0, 3.0 }; // costs(origin, destination) LINEARIZED!
-const double K = 10000.0;
-const double F = 50.0;
-const double N = 4.0;
-const double L = 65.0;
-
 const int NAME_SIZE = 512;
 char name[NAME_SIZE];
+
+unsigned int N = 5	// [!TESTING]
 
 void setupLP(CEnv env, Prob lp)
 {
 	// Problem setup
-    cout << "Init model ..."<<endl;
+    cout << "Init model ..." << endl;
 
-	int createdVars = 0; 			// Numero di variabili inserite in CPLEX
-    unsigned int N = problem->getSize();
-    vector< Node > nodes = problem->getNodes();
-    vector< vector<double> > C = problem->getCosts();
+	int createdVars = 0;	// number of variables added to cplex
+
+	// create nodes for the problem
+	vector<Node> nodes;
+	nodes.reserve(N);
+    for (int i = 0; i < N; ++i) { nodes.push_back(i); }
+
+	// Create costs for the problem
+	// I costi vengono generati casualmente come valori da 1 a 100, rispettando la
+    // [!TESTING] simmetria della matrice
+	vector<vector<double>> C;
+	C.resize(N);
+    srand(time(NULL));
+
+	// [!TESTING]
+	for (int i = 0; i < N; ++i) {
+        if (C[i].size() == 0) { C[i].resize(N); }
+        C[i][i] = 0; // azzera la diagonale
+        for (int j = i+1; j < N; j++){
+            C[i][j] = rand() % 99 +1; // costo casuale C_i,j (non nullo)
+            if (C[j].size() == 0) { C[j].resize(N); }
+            C[j][i] = C[i][j]; // la matrice è simmetrica, C_j,i = C_i,j
+        }
+    }
 
 	/*
         Variables setup
     */
 	// x_i,j
+	vector<vector<double>> xMap;
     xMap.resize(N);
     for (int i = 0; i < N; i++){
         xMap[i].resize(N);
@@ -69,6 +79,7 @@ void setupLP(CEnv env, Prob lp)
     }
 
 	// y_i,j
+	vector<vector<double>> yMap;
     yMap.resize(N);
     for (int i = 0; i < N; i++){
         yMap[i].resize(N);
@@ -248,12 +259,31 @@ int main (int argc, char const *argv[])
 	    int toIdx = numVars - 1;
 	    CHECKED_CPX_CALL( CPXgetx, env, lp, &varVals[0], fromIdx, toIdx );
 
-		// TODO: da esplicitare
-		// vector<Node> path = extractPath(varVals);
-	    // assert(path.size() == problem->getSize()+1);
+		vector<Node> path = extractPath(varVals);
+		assert(path.size() == N+1);
 
 		//
         CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
+
+		// TODO: da esplicitare
+		// return new Solution(problem, path);
+		vector<Node> p;
+	    vector< vector<double> > C = problem->getCosts();
+	    this->path.resize(path.size());
+	    for (int j = 0; j < p.size(); ++j) {
+	        p[j] = path[j];
+	    }
+	    fitness = 0;
+	    int debug_sum = 0;
+	    int debug_sum_2 =0;
+	    for (int i = 0; i < N; ++i) {
+	        debug_sum += path[i];
+	        debug_sum_2 += i;
+	        fitness += C[p[i]][p[i+1]];
+	    }
+	    assert(debug_sum == debug_sum_2);
+
+		cout << "Soluzione di CPLEX - Costo "<< fitness <<endl;
 
 		// free
         CPXfreeprob(env, &lp);
@@ -264,4 +294,24 @@ int main (int argc, char const *argv[])
         std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
     }
     return 0;
+}
+
+// TODO: capire cosa fa
+vector<Node> CPLEXSolver::extractPath(vector<double> vals, int start, int cnt){
+    unsigned int l = problem->getSize() + 1; // il nodo di partenza deve comparire 2 volte
+
+    if (cnt == l) { return vector<Node>(); }
+
+    for (int i = 0; i < l; ++i) {
+        if ( i != start && round(vals[yMap[start][i] ]) == 1) {
+            // i è il nodo in cui mi sposto
+            vector<Node> res;
+            res.push_back(start);
+            vector<Node> nextPath = extractPath(vals, i, ++cnt);
+            res.insert(res.end(), nextPath.begin(), nextPath.end()); // faccio l'append del resto del percorso.
+            return  res;
+        }
+    }
+
+    return vector<Node>();
 }
