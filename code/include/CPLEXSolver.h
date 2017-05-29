@@ -30,10 +30,10 @@ class CPLEXSolver {
 		char errmsg[BUF_SIZE];
 		char name[NAME_SIZE];
 
-		std::vector< std::vector<int> > xMap;
-		std::vector< std::vector<int> > yMap;
+		std::vector< std::vector<int> > xMap;	// used for store variables x_i,j
+		std::vector< std::vector<int> > yMap;	// used for store variables y_i,j
 
-		TSPProblem* problem;
+		TSPProblem* problem;	// the TSP problem to solve
 
 		vector<Node> extractPath(vector<double> vals, int start=0, int cnt=0);
 
