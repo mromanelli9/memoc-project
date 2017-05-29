@@ -25,10 +25,7 @@
 using namespace std;
 
  /**
- *	@brief	Default constructor
- *
- *	@section DESCRIPTION
- *	TODO
+ *	@brief	Default constructor, Build the model, adding variaibles and contraints
  *
  */
  CPLEXSolver::CPLEXSolver(TSPProblem *problem) {
