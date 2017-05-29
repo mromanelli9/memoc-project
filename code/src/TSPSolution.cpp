@@ -52,3 +52,17 @@ TSPSolution::TSPSolution(TSProblem *problem, vector<Node> p) {
 double TSPSolution::get_fitness() {
 	return this->fitness;
 }
+
+/**
+*   @brief	print in the standard ouput the path
+*
+*   @return void
+*/
+void Solution::print_path() {
+	cout << "Fitness: " << this->fitness << endl;
+	for (unsigned int i = 0; i < path.size(); ++i) {
+		cout << path[i];
+		if (i != path.size()-1) { cout << " -> ";}
+	}
+	cout << endl;
+}
