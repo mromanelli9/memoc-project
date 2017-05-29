@@ -51,11 +51,13 @@ TSPProblem::TSPProblem(unsigned int N) {
 */
 TSPProblem::TSPProblem(string filename) {
 	fstream file(filename, ios_base::in);
-	file >> N;
+	file >> N;	// read problem dimension value
 
 	nodes.reserve(N);	// create nodes for the problem
 	for (unsigned int i = 0; i < N; ++i) { nodes.push_back(i); }
 	C.resize(N);
+
+	// reads costs from file
 	for (unsigned int i = 0; i < N; ++i) {
 		C[i].resize(N);
 		for (unsigned int j = 0; j <N; j++){
