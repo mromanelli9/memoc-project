@@ -10,6 +10,7 @@ BINDIR := bin
 TARGET := bin/main
 ARGS :=
 OUTPUTDIR := output
+TESTFILE = test/pseudo_n5_v1_distances.txt
 
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -32,6 +33,9 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 run: ${TARGET}
 	@mkdir -p $(OUTPUTDIR)
 	@echo "Launching ${TARGET}"; ${TARGET} ${ARGS}
+
+test: ${TARGET} ${TESTFILE}
+	@echo "Running test\n ${TARGET} ${TESTFILE}"; ${TARGET} ${TESTFILE}
 
 clean:
 	@echo "Cleaning...";
