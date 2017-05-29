@@ -9,6 +9,7 @@ BUILDDIR := build
 BINDIR := bin
 TARGET := bin/main
 ARGS :=
+OUTPUTDIR := output
 
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -29,10 +30,11 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@echo "$(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 run: ${TARGET}
+	@mkdir -p $(OUTPUTDIR)
 	@echo "Launching ${TARGET}"; ${TARGET} ${ARGS}
 
 clean:
 	@echo "Cleaning...";
-	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR)
+	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR) $(OUTPUTDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR) $(OUTPUTDIR)
 
 .PHONY: clean
