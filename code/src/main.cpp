@@ -35,8 +35,8 @@
      CPLEXSolver* cplexSolver = new CPLEXSolver(problem);
      Solution* cplexSol = cplexSolver->solve();
 
-     cout << "CPLEX solution - cost: " << cplexSol->getFitness() <<endl;
-     cplexSol->printPath();
+     cout << "CPLEX solution - cost: " << cplexSol->get_fitness() << endl;
+     cplexSol->print_path();
 
 	 cout << "######################################" << endl;
 	 return 0;
