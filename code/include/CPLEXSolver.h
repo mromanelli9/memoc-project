@@ -23,6 +23,8 @@ class CPLEXSolver {
 	private:
 		static const int NAME_SIZE = 512;
 
+		static string model_filename = "../output/model.lp";
+
 		Env env;	// CPLEX Enviroment
 		Prob lp;	// CPLEX Problem
 
