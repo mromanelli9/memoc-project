@@ -20,6 +20,7 @@
  #include <time.h>
  #include <math.h>
  #include <assert.h>
+ #include <string.h>
  #include "../include/CPLEXSolver.h"
 
 using namespace std;
@@ -28,7 +29,7 @@ using namespace std;
  *	@brief	Default constructor, Build the model, adding variaibles and contraints
  *
  */
- CPLEXSolver::CPLEXSolver(TSPProblem *problem, const char* model_filename) {
+ CPLEXSolver::CPLEXSolver(TSPProblem *problem, string model_filename) {
 	 this->problem = problem;
 
 	// Setup CPLEX eviroment
@@ -229,13 +230,14 @@ using namespace std;
 	}
 
 	// Print model on file
-	CHECKED_CPX_CALL( CPXwriteprob, env, lp, this->model_filename, 0 );
+	const char* c = model_filename.c_str();
+	CHECKED_CPX_CALL( CPXwriteprob, env, lp, c, 0 );
  }
 
  /**
  *	@brief	use this when constructor time limit is specified
  */
- CPLEXSolver::CPLEXSolver(TSPProblem *p, const char* f, unsigned int time_limit) : CPLEXSolver(p, f) {
+ CPLEXSolver::CPLEXSolver(TSPProblem *p, string f, unsigned int time_limit) : CPLEXSolver(p, f) {
 	 CPXsetdblparam(env, CPX_PARAM_TILIM, time_limit);	// Setup time limit
  }
 
@@ -244,7 +246,7 @@ using namespace std;
  *
  *   @return return a new TSP solution
  */
- TSPSolution *CPLEXSolver::solve(const char* sol_filename) {
+ TSPSolution *CPLEXSolver::solve(string sol_filename) {
 	 // Resolve the model
 	 CHECKED_CPX_CALL( CPXmipopt, env, lp );
 
@@ -266,7 +268,9 @@ using namespace std;
 	 assert(path.size() == problem->getSize()+1);
 
 
-	 CHECKED_CPX_CALL( CPXsolwrite, env, lp, sol_filename );
+	 const char* c = sol_filename.c_str();
+
+	 CHECKED_CPX_CALL( CPXsolwrite, env, lp, c );
 	 return new TSPSolution(problem, path);
  }
 

@@ -14,6 +14,7 @@
  */
 
 #include <iostream>
+#include <string>
 #include "../include/TSPProblem.h"
 #include "../include/CPLEXSolver.h"
 
@@ -23,6 +24,10 @@
  *	@brief	Main function
  */
  int main() {
+	 string model_filename = "output/model.lp";
+	 string sol_filename = "output/tsp.sol";
+
+
      cout << "######################################" << endl;
 
      int size = 5;	// dimension of the problem
@@ -32,8 +37,8 @@
 
 	 cout << "######################################"<<endl;
      cout << "Solving using CPLEX... " << endl;
-     CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, "../output/model.lp");
-     TSPSolution* cplexSol = cplexSolver->solve("../output/tsp.sol");
+     CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, model_filename);
+     TSPSolution* cplexSol = cplexSolver->solve(sol_filename);
 
      cout << "CPLEX solution - cost: " << cplexSol->get_fitness() << endl;
      cplexSol->print_path();
