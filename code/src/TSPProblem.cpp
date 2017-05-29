@@ -49,8 +49,8 @@ TSPProblem::TSPProblem(unsigned int N) {
 /**
 *	@brief	(constructor) Load an istance from a file
 */
-TSPProblem::TSPProblem(string fileName) {
-	fstream file(fileName, ios_base::in);
+TSPProblem::TSPProblem(string filename) {
+	fstream file(filename, ios_base::in);
 	file >> N;
 
 	nodes.reserve(N);	// create nodes for the problem
@@ -58,7 +58,7 @@ TSPProblem::TSPProblem(string fileName) {
 	C.resize(N);
 	for (unsigned int i = 0; i < N; ++i) {
 		C[i].resize(N);
-		for (int j = 0; j <N; j++){
+		for (unsigned int j = 0; j <N; j++){
 			file >> C[i][j];
 		}
 	}

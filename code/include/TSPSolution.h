@@ -22,23 +22,19 @@
 
 using namespace std;
 
-class Solution {
+class TSPSolution {
 	private:
 		TSPProblem* problem;
 		vector<Node> path; // Percorso
 		double fitness;	// cost of the solution
-		Node choose_node(Node from, vector<Node> nodes, vector< vector<double> >& C);
 
 	public:
-		TSPSolution(TSPProblem* problem);
 		TSPSolution(TSPProblem* problem, vector<Node> path);
-		~Solution() { problem = nullptr;}
+		// TSPSolution(TSPProblem* problem);
+		// ~TCPSolution() { problem = nullptr;}
 
 		double get_fitness();
-		vector<Node> get_path();
 		void print_path();
-		Node next_node(Node from);
-		bool equals(TSPSolution& sol);
 };
 
 #endif

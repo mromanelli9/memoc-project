@@ -28,7 +28,7 @@ using namespace std;
  *	@brief	Default constructor, Build the model, adding variaibles and contraints
  *
  */
- CPLEXSolver::CPLEXSolver(TSPProblem *problem) {
+ CPLEXSolver::CPLEXSolver(TSPProblem *problem, const char* model_filename) {
 	 this->problem = problem;
 
 	// Setup CPLEX eviroment
@@ -163,11 +163,11 @@ using namespace std;
 	}
 
 	// Constraints: outflow
-	for (int i = 0; i < N; ++i){
+	for (unsigned int i = 0; i < N; ++i){
 	 std::vector<int> varIndex(N-1);
 	 std::vector<double> coef(N-1);
 	 int idx = 0;
-	 for (int j = 0; j < N; ++j) {
+	 for (unsigned int j = 0; j < N; ++j) {
 		 if (j == i) continue;
 		 varIndex[idx] = yMap[i][j];
 		 coef[idx] = 1;
@@ -235,7 +235,7 @@ using namespace std;
  /**
  *	@brief	use this when constructor time limit is specified
  */
- CPLEXSolver::CPLEXSolver(TSPProblem *p, unsigned int time_limit) : CPLEXSolver(p) {
+ CPLEXSolver::CPLEXSolver(TSPProblem *p, const char* f, unsigned int time_limit) : CPLEXSolver(p, f) {
 	 CPXsetdblparam(env, CPX_PARAM_TILIM, time_limit);	// Setup time limit
  }
 
@@ -244,7 +244,7 @@ using namespace std;
  *
  *   @return return a new TSP solution
  */
- Solution *CPLEXSolver::solve() {
+ TSPSolution *CPLEXSolver::solve(const char* sol_filename) {
 	 // Resolve the model
 	 CHECKED_CPX_CALL( CPXmipopt, env, lp );
 
@@ -266,7 +266,7 @@ using namespace std;
 	 assert(path.size() == problem->getSize()+1);
 
 
-	 CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
+	 CHECKED_CPX_CALL( CPXsolwrite, env, lp, sol_filename );
 	 return new TSPSolution(problem, path);
  }
 
@@ -276,11 +276,11 @@ using namespace std;
  *	@return return a list (vector) of nodes
  */
  vector<Node> CPLEXSolver::extract_path(vector<double> vals, int start, int cnt){
-	 unsigned int l = problem->getSize() + 1;	// starting node should be consider twice
+	 int l = problem->getSize() + 1;	// starting node should be consider twice
 
 	 if (cnt == l) { return vector<Node>(); }
 
-	 for (unsigned int i = 0; i < l; ++i) {	// i: current node
+	 for (int i = 0; i < l; ++i) {	// i: current node
 		 if ( i != start && round(vals[yMap[start][i] ]) == 1) {
 			 vector<Node> res;
 			 res.push_back(start);

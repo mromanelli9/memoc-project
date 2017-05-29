@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include "../include/TSPProblem.h"
-//TODO: include "../include/CPLEXSolver.h"
+#include "../include/CPLEXSolver.h"
 
  using namespace std;
 
@@ -32,8 +32,8 @@
 
 	 cout << "######################################"<<endl;
      cout << "Solving using CPLEX... " << endl;
-     CPLEXSolver* cplexSolver = new CPLEXSolver(problem);
-     Solution* cplexSol = cplexSolver->solve();
+     CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, "../output/model.lp");
+     TSPSolution* cplexSol = cplexSolver->solve("../output/tsp.sol");
 
      cout << "CPLEX solution - cost: " << cplexSol->get_fitness() << endl;
      cplexSol->print_path();

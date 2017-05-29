@@ -32,7 +32,7 @@ class TSPProblem {
 
 	public:
 		TSPProblem(unsigned int N);
-		TSPProblem(string fileName);
+		TSPProblem(string filename);
 		vector< vector<double> > getCosts();
 		unsigned int getSize();
 		void printCosts();

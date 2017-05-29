@@ -23,8 +23,6 @@ class CPLEXSolver {
 	private:
 		static const int NAME_SIZE = 512;
 
-		static string model_filename = "../output/model.lp";
-
 		Env env;	// CPLEX Enviroment
 		Prob lp;	// CPLEX Problem
 
@@ -32,17 +30,19 @@ class CPLEXSolver {
 		char errmsg[BUF_SIZE];
 		char name[NAME_SIZE];
 
+		const char* model_filename;
+
 		std::vector< std::vector<int> > xMap;	// used for store variables x_i,j
 		std::vector< std::vector<int> > yMap;	// used for store variables y_i,j
 
 		TSPProblem* problem;	// the TSP problem to solve
 
-		vector<Node> extractPath(vector<double> vals, int start=0, int cnt=0);
+		vector<Node> extract_path(vector<double> vals, int start=0, int cnt=0);
 
 	public:
-		CPLEXSolver(TSPProblem* problem);
-		CPLEXSolver(TSPProblem* problem, unsigned int time_limit);
-		Solution* solve();
+		CPLEXSolver(TSPProblem* problem, const char* model_filename);
+		CPLEXSolver(TSPProblem* problem, const char* model_filename, unsigned int time_limit);
+		TSPSolution* solve(const char* sol_filename);
 };
 
 #endif	// CPLEX_SOLVER_H_
