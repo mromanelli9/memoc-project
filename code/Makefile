@@ -14,7 +14,7 @@ OUTPUTDIR := output
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g -Wall -O2 -Wsign-compare	# -std=c++0x
+CFLAGS := -g -Wall -O2 -Wsign-compare -std=c++0x
 CPX_INCDIR := /opt/ibm/ILOG/CPLEX_Studio1263/cplex/include/
 CPX_LIBDIR := /opt/ibm/ILOG/CPLEX_Studio1263/cplex/lib/x86-64_linux/static_pic
 LIB := -L$(CPX_LIBDIR) -lcplex -lm -pthread  # -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
