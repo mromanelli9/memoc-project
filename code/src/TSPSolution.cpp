@@ -54,6 +54,15 @@ double TSPSolution::get_fitness() {
 }
 
 /**
+*   @brief	function to get access to the path
+*
+*   @return return the path
+*/
+// vector<Node> Solution::get_path() const {
+//     return this->path;
+// }
+
+/**
 *   @brief	print in the standard ouput the path
 *
 *   @return void
@@ -66,3 +75,19 @@ void Solution::print_path() {
 	}
 	cout << endl;
 }
+
+/**
+*   @brief	return the next node in the path
+*
+*   @return return a node
+*/
+// Node Solution::nextNode(Node from) {
+//     for (int i = 0; i < this->path.size()-1; ++i) {
+//         if (this->path[i] == from){
+//             return this->path[i+1];
+//         }
+//     }
+//
+//     assert(false);	// shouldn't be here --> error
+//     return -1;
+// }
