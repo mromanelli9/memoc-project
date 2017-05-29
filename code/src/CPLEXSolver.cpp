@@ -241,6 +241,8 @@ using namespace std;
 
  /**
  *	@brief	main function: solves the model and prints it in a file
+ *
+ *   @return return a new TSP solution
  */
  Solution *CPLEXSolver::solve() {
 	 // Resolve the model
@@ -268,6 +270,11 @@ using namespace std;
 	 return new TSPSolution(problem, path);
  }
 
+ /**
+ *	@brief	compute the optimum path
+ *
+ *	@return return a list (vector) of nodes
+ */
  vector<Node> CPLEXSolver::extract_path(vector<double> vals, int start, int cnt){
 	 unsigned int l = problem->getSize() + 1;	// starting node should be consider twice
 
