@@ -4,5 +4,8 @@ build
 # Ignore any executables
 bin/*
 
+# Ignore any output files
+output/*
+
 # Ignore Mac specific files
 .DS_Store
