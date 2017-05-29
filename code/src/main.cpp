@@ -24,9 +24,8 @@
  *	@brief	Main function
  */
  int main() {
-	 string model_filename = "output/model.lp";
-	 string sol_filename = "output/tsp.sol";
-
+	 string model_filename = "output/model.lp";	// path of the file in which store the model
+	 string sol_filename = "output/tsp.sol";	// path of the file in which store the solution
 
      cout << "######################################" << endl;
 
