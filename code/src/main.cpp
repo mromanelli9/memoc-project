@@ -23,14 +23,25 @@
  /**
  *	@brief	Main function
  */
- int main() {
+ int main(int argc, char* argv[]) {
 	 string model_filename = "output/model.lp";	// path of the file in which store the model
 	 string sol_filename = "output/tsp.sol";	// path of the file in which store the solution
 
+	 TSPProblem* tspProblem;
+
+	  if (argc > 1) {
+		  // A filename is provide, so load the problem
+		  // with the instance in it
+		  std::string istance_filename = argv[1];
+		  tspProblem = new TSPProblem("test/pseudo_n5_v1_distances.txt");
+	  } else {
+		  // No istance file provide, create one randomly
+		  int size = 5;	// dimension of the problem
+		  tspProblem = new TSPProblem(size);
+	  }
+
      cout << "######################################" << endl;
 
-     int size = 5;	// dimension of the problem
-     TSPProblem* tspProblem = new TSPProblem(size);
      cout << "TSP Problem: N = " << tspProblem->getSize() << endl;
      tspProblem->printCosts();
 
