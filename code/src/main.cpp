@@ -30,6 +30,14 @@
      cout << "TSP Problem: N = " << tspProblem->getSize() << endl;
      tspProblem->printCosts();
 
+	 cout << "######################################"<<endl;
+     cout << "Solving using CPLEX... " << endl;
+     CPLEXSolver* cplexSolver = new CPLEXSolver(problem);
+     Solution* cplexSol = cplexSolver->solve();
+
+     cout << "CPLEX solution - cost: " << cplexSol->getFitness() <<endl;
+     cplexSol->printPath();
+
 	 cout << "######################################" << endl;
 	 return 0;
 }
