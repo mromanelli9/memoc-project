@@ -24,9 +24,6 @@
  *	@brief	Main function
  */
  int main(int argc, char* argv[]) {
-	 string model_filename = "output/model.lp";	// path of the file in which store the model
-	 string sol_filename = "output/tsp.sol";	// path of the file in which store the solution
-
 	 TSPProblem* tspProblem;
 
 	  if (argc > 1) {
@@ -47,8 +44,8 @@
 
 	 cout << "######################################"<<endl;
      cout << "Solving using CPLEX... " << endl;
-     CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, model_filename);
-     TSPSolution* cplexSol = cplexSolver->solve(sol_filename);
+     CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem);
+     TSPSolution* cplexSol = cplexSolver->solve();
 
      cout << "CPLEX solution - cost: " << cplexSol->get_fitness() << endl;
      cplexSol->print_path();

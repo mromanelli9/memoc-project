@@ -40,9 +40,9 @@ class CPLEXSolver {
 		vector<Node> extract_path(vector<double> vals, int start=0, int cnt=0);
 
 	public:
-		CPLEXSolver(TSPProblem* problem, string model_filename);
-		CPLEXSolver(TSPProblem* problem, string model_filename, unsigned int time_limit);
-		TSPSolution* solve(string sol_filename);
+		CPLEXSolver(TSPProblem* problem);
+		CPLEXSolver(TSPProblem* problem, unsigned int time_limit);
+		TSPSolution* solve();
 };
 
 #endif	// CPLEX_SOLVER_H_

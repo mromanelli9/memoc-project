@@ -29,7 +29,7 @@ using namespace std;
  *	@brief	Default constructor, Build the model, adding variaibles and contraints
  *
  */
- CPLEXSolver::CPLEXSolver(TSPProblem *problem, string model_filename) {
+ CPLEXSolver::CPLEXSolver(TSPProblem *problem) {
 	 this->problem = problem;
 
 	// Setup CPLEX eviroment
@@ -230,14 +230,13 @@ using namespace std;
 	}
 
 	// Print model on file
-	const char* c = model_filename.c_str();
-	CHECKED_CPX_CALL( CPXwriteprob, env, lp, c, 0 );
+	// CHECKED_CPX_CALL( CPXwriteprob, env, lp, "problem.lp", 0 );
  }
 
  /**
  *	@brief	use this when constructor time limit is specified
  */
- CPLEXSolver::CPLEXSolver(TSPProblem *p, string f, unsigned int time_limit) : CPLEXSolver(p, f) {
+ CPLEXSolver::CPLEXSolver(TSPProblem *p, unsigned int time_limit) : CPLEXSolver(p) {
 	 CPXsetdblparam(env, CPX_PARAM_TILIM, time_limit);	// Setup time limit
  }
 
@@ -246,7 +245,7 @@ using namespace std;
  *
  *   @return return a new TSP solution
  */
- TSPSolution *CPLEXSolver::solve(string sol_filename) {
+ TSPSolution *CPLEXSolver::solve() {
 	 // Resolve the model
 	 CHECKED_CPX_CALL( CPXmipopt, env, lp );
 
@@ -267,10 +266,7 @@ using namespace std;
 	 vector<Node> path = extract_path(var_vals);
 	 assert(path.size() == problem->getSize()+1);
 
-
-	 const char* c = sol_filename.c_str();
-
-	 CHECKED_CPX_CALL( CPXsolwrite, env, lp, c );
+	 CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
 	 return new TSPSolution(problem, path);
  }
 
