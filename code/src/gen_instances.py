@@ -1,14 +1,30 @@
-#!/usr/bin/python
-## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+#!/usr/bin/env python
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: t; tab-width: 4; coding: utf-8; -*-
+#title           : gen_instances.py
+#description     : This script will create instances from a real TSP file probem
+#					provided in the VLSI data sets by Andre Rohe.
+#					The instances will have this format: bcl380_n[$i].tsp,
+#					with $i within the range 5-<limit>.
+#author          : Marco Romanelli
+#date            : 30/05/2017
+#version         : 1
+#usage           : python gen_instances.py -f <instanceName> [-n <limit>]
+#python_version  : 2.7
+#==============================================================================
+
 
 import getopt, sys
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt	# enable this to show a PCB
 import math
 import os.path
 import random
 
+
 def diplay_pcb(N, points):
+	""" Create a window and show graphically where
+	the points are placed.
+    """
 	x = [item[0] for item in points]
 	y = [item[1] for item in points]
 
@@ -16,86 +32,66 @@ def diplay_pcb(N, points):
 	plt.show()
 
 def distance(p1, p2):
+	""" Compute the distance between two point. """
 	x1, y1 = p1
 	x2, y2 = p2
 	return math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
 
-def readPoints(filename, N=None):
+def readPoints(filename):
+	""" Read a file with path "filename" and return
+	a list of points, eg:
+	[[pt1_x,pt1_y],[pt2_x, pt2_y],...]
+	"""
 	fp = open(filename,'r')
 	lines = fp.readlines()
 	fp.close()
 
+	# Read the length (= number of points)
 	n = int(lines[5].split(" ")[2])
+
+	# Skip the first 8 lines and the last one
 	t_points = lines[8:-1]
 	points = [map(int, e.split(" ")[1:]) for e in t_points]
 	del lines
 	del t_points
 
-	if N:
-		return points[:N], N
-	else:
-		return points, n
-
-def crop(p, times=1):
-	points = p
-	itr = 1
-	while (itr <= times):
-		print "Crop"
-		x_list = [el[0] for el in points]
-		y_list = [el[1] for el in points]
-
-		x_max = max(x_list)
-		y_max = max(y_list)
-		x_half = math.floor(x_max / 2)
-		y_half = math.floor(y_max / 2)
-
-		quadrant = random.randrange(4)+1
-		x_min, y_min = None, None
-		if quadrant == 1:
-			x_min = x_half
-			y_min = y_half
-		elif quadrant == 2:
-			x_min = 0
-			y_min = y_half
-			x_max = x_half
-		elif quadrant == 3:
-			x_min = 0
-			x_max = x_half
-			y_min = 0
-			y_max = y_half
-		elif quadrant == 4:
-			x_min = x_half
-			y_min = 0
-			y_max = y_half
-
-		new_points_x = [(el - x_min) for el in x_list if (el <= x_max and el >= x_min)]
-		new_points_y = [(el - y_min) for el in y_list if (el <= y_max and el >= y_min)]
-		points = zip(new_points_x, new_points_y)
-		itr += 1
-
 	return points
 
-def reduce(points, n=None):
+def heuristic(points, n):
+	""" This function takes a list of points
+	and a number n and return a smallers list
+	of n elements randomly taken.
+	"""
+
+	# If no limit is provided, return the entire list
 	if n == None:
 		return points
 
-	p = points
-	ub = n + (n/100*10)
+	loop = True
+	p = None
 
-	while (len(p) >= n):
-		print "Riduco..."
-		p = crop(p)
+	# Loop until a "valid" list of point is founded
+	while (loop):
+		loop = False
 
-	if len(p) > n:
-		p = p[:n]
+		# select randomly a segment of the list
+		r = random.randrange(len(points) - n)
+		p = points[r:(r+n)]
 
-	return p
+		# The new list of points must have at least two element
+		# with different x (or y) coordinate
+		if len(set([el[0] for el in p])) <= 2:
+			loop = True
+		if len(set([el[1] for el in p])) <= 2:
+			loop = True
 
-def remove_duplicate(l):
-	return list(set(l))
-
+	points = p
+	return points
 
 def main(argv):
+	""" Main function. """
+
+	# Handle parameters
 	try:
 		(opts, args) = getopt.getopt(argv, "f:n:")
 	except getopt.GetoptError as err:
@@ -106,6 +102,7 @@ def main(argv):
 
 	filename = None
 	N = None
+	step = 5
 
 	for o, a in opts:
 		if o == "-f":
@@ -115,44 +112,53 @@ def main(argv):
 		else:
 			assert False, "unhandled option"
 
-
+	# Parse a file
 	print "Parsing file '%s'..." % filename
-	points, N = readPoints(filename, N)
+	points = readPoints(filename)
+	print "I got %d points." % len(points)
 
-	print "I got %d points." % N
-
+	# Display the PCB
 	# diplay_pcb(N, points)
 
-	points = crop(points, 5)
+	print "Starting instances generation (%d different instances with step %d)." % (N, step)
 
-	print len(points)
-	point = remove_duplicate(points)
-	print points, len(points)
+	# Generate instances iteratively
+	i = 1
+	instances = []
+	p = None
+	for itr in xrange(step, N+step, step):
+		print "Generating instance #%d with %d points." % (i, itr)
+		p = heuristic(points, itr)
+		instances.append(p)
+		i += 1
 
-	diplay_pcb(len(points), points)
+	# Compute distance for each pair of points
+	# in each instance
+	print "Computing distances..."
+	for i, current in enumerate(instances):
+		print "Working on instance #%d." % (i+1)
 
+		n = len(current)
+		data = str(n) + '\n'
+		for i in range(0, n):
+			for j in range(0, n):
+				if i == j:
+					d = 0
+				else:
+					d = round(distance(current[i], current[j]), 2)
+				data += str(d) + ' '
+			data += '\n'
+		data += '\n'
 
-	# print "Computing distances..."
-	#
-	# data = str(N) + '\n'
-	# for i in range(0, N):
-	# 	for j in range(0, N):
-	# 		if i == j:
-	# 			d = 0
-	# 		else:
-	# 			d = round(distance(points[i], points[j]), 2)
-	# 		data += str(d) + ' '
-	# 	data += '\n'
-	# data += '\n'
-	#
-	# outputFile = "instances/" + \
-	# 			os.path.splitext(os.path.basename(filename))[0] + \
-	# 			"_n" + str(N) + ".tsp"
-	# print "Saving (%s)..." % (outputFile)
-	# fp = open(outputFile, 'w')
-	# fp.write(data)
-	# fp.close()
+		outputFile = "instances/" + \
+					os.path.splitext(os.path.basename(filename))[0] + \
+					"_n" + str(n) + ".tsp"
+		print "\tSaving (%s)..." % (outputFile)
+		fp = open(outputFile, 'w')
+		fp.write(data)
+		fp.close()
 
+	# Exit
 	print "Done. Exit."
 	print
 
