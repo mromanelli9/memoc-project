@@ -8,10 +8,11 @@ SRCDIR := src
 BUILDDIR := build
 BINDIR := bin
 TARGET := bin/main
-PYTARGET := script/
-ARGS :=
-OUTPUTDIR := output
-TESTFILE = test/pseudo_n5_v1_distances.txt
+PYTARGET := scripts/gen_instances.py
+PYCC := python
+DATASET := vlsi-dataset/bcl380.tsp
+INSTANCESDIR := instances
+PYARGS := -f $(INSTANCESDIR)/bcl380.tsp -n 100
 
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -35,11 +36,14 @@ run: ${TARGET}
 	@mkdir -p $(OUTPUTDIR)
 	@echo "Launching ${TARGET}"; ${TARGET} ${ARGS}
 
-gen-instances: ${TARGET} ${TESTFILE}
-	@echo "Running test\n ${TARGET} ${TESTFILE}"; ${TARGET} ${TESTFILE}
+gen-instances: ${PYTARGET} ${DATASET}
+	@mkdir -p $(INSTANCESDIR)
+	@cp ${DATASET} $(INSTANCESDIR)/bcl380.tsp
+	@echo "Generating instances.\n $(PYCC) ${PYTARGET} ${PYARGS}"; $(PYCC) ${PYTARGET} ${PYARGS}
+	@rm $(INSTANCESDIR)/bcl380.tsp
 
 clean:
 	@echo "Cleaning...";
-	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR) $(OUTPUTDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR) $(OUTPUTDIR)
+	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR)
 
 .PHONY: clean
