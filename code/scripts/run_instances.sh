@@ -7,11 +7,15 @@
 #usage           : bash gen_instances.sh
 #==============================================================================
 
-for file in `ls instances/*.tsp | sort -V`; do
+INSTANCES_DIR="instances"
+MAIN=bin/main
+OUTFILE=target/results.txt
+
+for file in `ls $INSTANCES_DIR/*.tsp | sort -V`; do
 	echo "Running on $file.";
-	TIME=`/usr/bin/time -f "%U\t%S\t%x" bin/main "$file" 2>&1`
+	TIME=`/usr/bin/time -f "%U\t%S\t%x" $MAIN "$file" 2>&1`
 	RES=`echo $?`
-	echo -e "$TIME\t$RES" >>results.txt
+	echo -e "$TIME\t$RES" >>$OUTFILE
 	sleep 2
 done
 
