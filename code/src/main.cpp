@@ -29,8 +29,8 @@
 	  if (argc > 1) {
 		  // A filename is provide, so load the problem
 		  // with the instance in it
-		  std::string istance_filename = argv[1];
-		  tspProblem = new TSPProblem("test/pseudo_n5_v1_distances.txt");
+		  std::string instance_filename = argv[1];
+		  tspProblem = new TSPProblem(instance_filename);
 	  } else {
 		  // No istance file provide, create one randomly
 		  int size = 5;	// dimension of the problem
