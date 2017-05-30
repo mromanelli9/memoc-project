@@ -24,17 +24,22 @@
  *	@brief	Main function
  */
  int main(int argc, char* argv[]) {
-	 if (argc != 2) { return -1; }
+	if (argc != 2) { return 1; }
 
-	 unsigned int time_limit = 300;	// 5 minutes
+	unsigned int time_limit = 2;	// 5 minutes
 
-	 // Create a problem from the instance provided with the argument
-	 TSPProblem* tspProblem;
-	 std::string instance_filename = argv[1];
-	 tspProblem = new TSPProblem(instance_filename);
+	// Create a problem from the instance provided with the argument
+	try {
+		 TSPProblem* tspProblem;
+		 std::string instance_filename = argv[1];
+		 tspProblem = new TSPProblem(instance_filename);
 
-	 // Solving problem using CPLEX
-	 CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
-	 TSPSolution* cplexSol = cplexSolver->solve();
-	 return 0;
+		 // Solving problem using CPLEX
+		 CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
+		 TSPSolution* cplexSol = cplexSolver->solve();
+	} catch(std::exception& e) {
+		// std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
+		return 2;
+	}
+	return 0;
 }
