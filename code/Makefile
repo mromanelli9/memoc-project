@@ -13,6 +13,7 @@ PYCC := python
 DATASET := vlsi-dataset/bcl380.tsp
 INSTANCESDIR := instances
 PYARGS := -f $(INSTANCESDIR)/bcl380.tsp -n 100
+OUTDIR := output
 
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -44,6 +45,6 @@ gen-instances: ${PYTARGET} ${DATASET}
 
 clean:
 	@echo "Cleaning...";
-	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR)
+	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR) $(OUTDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR) $(OUTDIR)
 
 .PHONY: clean
