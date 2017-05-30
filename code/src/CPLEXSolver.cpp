@@ -49,7 +49,7 @@ using namespace std;
 		throw std::runtime_error(std::string(__FILE__) + ":" + STRINGIZE(__LINE__) + ": " + errmsg);
 	}
 
-	cout << "Init model ..." << endl;	// Model setup
+	// cout << "Init model ..." << endl;	// Model setup
 
 	/*
 		Variables setup
@@ -252,7 +252,7 @@ using namespace std;
 	 // Print the optimum
 	 double obj_val = 0.0;
 	 CHECKED_CPX_CALL( CPXgetobjval, env, lp, &obj_val );
-	 std::cout << "Optimum (min): " << obj_val << std::endl;
+	 // std::cout << "Optimum (min): " << obj_val << std::endl;
 
 
 	 int num_vars = CPXgetnumcols(env, lp);

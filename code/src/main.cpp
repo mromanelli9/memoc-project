@@ -24,32 +24,17 @@
  *	@brief	Main function
  */
  int main(int argc, char* argv[]) {
+	 if (argc != 2) { return -1; }
+
+	 unsigned int time_limit = 300;	// 5 minutes
+
+	 // Create a problem from the instance provided with the argument
 	 TSPProblem* tspProblem;
+	 std::string instance_filename = argv[1];
+	 tspProblem = new TSPProblem(instance_filename);
 
-	  if (argc > 1) {
-		  // A filename is provide, so load the problem
-		  // with the instance in it
-		  std::string instance_filename = argv[1];
-		  tspProblem = new TSPProblem(instance_filename);
-	  } else {
-		  // No istance file provide, create one randomly
-		  int size = 5;	// dimension of the problem
-		  tspProblem = new TSPProblem(size);
-	  }
-
-     cout << "######################################" << endl;
-
-     cout << "TSP Problem: N = " << tspProblem->getSize() << endl;
-     tspProblem->printCosts();
-
-	 cout << "######################################"<<endl;
-     cout << "Solving using CPLEX... " << endl;
-     CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem);
-     TSPSolution* cplexSol = cplexSolver->solve();
-
-     cout << "CPLEX solution - cost: " << cplexSol->get_fitness() << endl;
-     cplexSol->print_path();
-
-	 cout << "######################################" << endl;
+	 // Solving problem using CPLEX
+	 CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
+	 TSPSolution* cplexSol = cplexSolver->solve();
 	 return 0;
 }
