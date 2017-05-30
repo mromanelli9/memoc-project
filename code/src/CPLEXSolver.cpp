@@ -266,7 +266,7 @@ using namespace std;
 	 vector<Node> path = extract_path(var_vals);
 	 assert(path.size() == problem->getSize()+1);
 
-	 CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
+	 // CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
 	 return new TSPSolution(problem, path);
  }
 
