@@ -26,7 +26,7 @@
  int main(int argc, char* argv[]) {
 	if (argc != 2) { return 1; }
 
-	unsigned int time_limit = 2;	// 5 minutes
+	unsigned int time_limit = 300;	// 5 minutes
 
 	// Create a problem from the instance provided with the argument
 	try {
