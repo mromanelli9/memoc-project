@@ -8,6 +8,7 @@ SRCDIR := src
 BUILDDIR := build
 BINDIR := bin
 TARGET := bin/main
+PYTARGET := script/
 ARGS :=
 OUTPUTDIR := output
 TESTFILE = test/pseudo_n5_v1_distances.txt
@@ -34,7 +35,7 @@ run: ${TARGET}
 	@mkdir -p $(OUTPUTDIR)
 	@echo "Launching ${TARGET}"; ${TARGET} ${ARGS}
 
-test: ${TARGET} ${TESTFILE}
+gen-instances: ${TARGET} ${TESTFILE}
 	@echo "Running test\n ${TARGET} ${TESTFILE}"; ${TARGET} ${TESTFILE}
 
 clean:
