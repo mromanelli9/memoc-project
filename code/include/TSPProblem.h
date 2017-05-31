@@ -33,10 +33,10 @@ class TSPProblem {
 	public:
 		TSPProblem(unsigned int N);
 		TSPProblem(string filename);
-		vector< vector<double> > getCosts();
-		unsigned int getSize();
-		void printCosts();
-		vector<Node> getNodes();
+		vector< vector<double> > get_costs();
+		void print_costs();
+		unsigned int get_size();
+		vector<Node> get_nodes();
 };
 
 #endif	// TSP_PROBLEM_H_

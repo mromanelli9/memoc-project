@@ -71,7 +71,7 @@ TSPProblem::TSPProblem(string filename) {
 *
 *   @return costs matrix
 */
-vector< vector<double> > TSPProblem::getCosts() {
+vector< vector<double> > TSPProblem::get_costs() {
 	return this->C;
 }
 
@@ -80,7 +80,7 @@ vector< vector<double> > TSPProblem::getCosts() {
 *
 *   @return dimension of the problem
 */
-unsigned int TSPProblem::getSize() {
+unsigned int TSPProblem::get_size() {
 	return this->N;
 }
 
@@ -89,7 +89,7 @@ unsigned int TSPProblem::getSize() {
 *
 *   @return void
 */
-void TSPProblem::printCosts() {
+void TSPProblem::print_costs() {
 	cout << "matrix of costs [C_i,j]" << endl;
 	cout << "i\\j\t";
 	for (unsigned int i = 0; i < N; ++i)
@@ -111,6 +111,6 @@ void TSPProblem::printCosts() {
 *
 *   @return vector of nodes
 */
-vector<Node> TSPProblem::getNodes() {
+vector<Node> TSPProblem::get_nodes() {
 	return nodes;
 }

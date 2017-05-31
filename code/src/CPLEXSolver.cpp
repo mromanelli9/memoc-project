@@ -56,9 +56,9 @@ using namespace std;
 	*/
 	int created_vars = 0;	// total number of variables used in cplex
 
-	unsigned int N = problem->getSize();
-	vector< Node > nodes = problem->getNodes();
-	vector< vector<double> > C = problem->getCosts();
+	unsigned int N = problem->get_size();
+	vector< Node > nodes = problem->get_nodes();
+	vector< vector<double> > C = problem->get_costs();
 
 	xMap.resize(N);	// variables: x_i,j
 	for (unsigned int i = 0; i < N; i++) {
@@ -264,7 +264,7 @@ using namespace std;
 	 CHECKED_CPX_CALL( CPXgetx, env, lp, &var_vals[0], starting_idx, ending_idx );
 
 	 vector<Node> path = extract_path(var_vals);
-	 assert(path.size() == problem->getSize()+1);
+	 assert(path.size() == problem->get_size()+1);
 
 	 // CHECKED_CPX_CALL( CPXsolwrite, env, lp, "tsp.sol" );
 	 return new TSPSolution(problem, path);
@@ -276,7 +276,7 @@ using namespace std;
  *	@return return a list (vector) of nodes
  */
  vector<Node> CPLEXSolver::extract_path(vector<double> vals, int start, int cnt){
-	 int l = problem->getSize() + 1;	// starting node should be consider twice
+	 int l = problem->get_size() + 1;	// starting node should be consider twice
 
 	 if (cnt == l) { return vector<Node>(); }
 
