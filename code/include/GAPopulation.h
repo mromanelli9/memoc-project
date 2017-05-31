@@ -28,7 +28,7 @@ class GAPopulation {
 		// Population parameters
 		TSPProblem* problem;
 
-		vector< GAIndividual* > individuals;	// Actual population
+		vector< GAIndividual* > population;	// Actual population
 		vector< GAIndividual* > mating_pool;	// current parents set
 
 	public:

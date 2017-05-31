@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <algorithm>
 #include <climits>
-#include <stdexcept>
 
 using namespace std;
 
@@ -33,5 +32,7 @@ GAPopulation::GAPopulation(unsigned int size, double mutation_probability, doubl
     this->mutation_probability = mutation_probability;
 
 	// Populate the population (= set of individuals)
-
+	for (unsigned int i = 0; i < this->population_size; ++i) {
+		this->population.push_back(new GAIndividual(this->problem));
+	}
 }
