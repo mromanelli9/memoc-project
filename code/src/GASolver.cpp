@@ -47,6 +47,8 @@ GAIndividual* GASolver::solve() {
 	// while ((current_timestamp() - t_start) < this->time_limit) {
 
 		// Phase 2: select the mating pool
+		vector< GAIndividual* > mating_pool;
+		mating_pool = population->create_mating_pool(10);
 
 		// Phase 3: crossover to generate offsprings
 
@@ -57,6 +59,7 @@ GAIndividual* GASolver::solve() {
 
 	//}
 
+	return nullptr;
 }
 
 /**
