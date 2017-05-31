@@ -57,6 +57,16 @@ GAPopulation::GAPopulation(unsigned int size, double mutation_probability, doubl
 }
 
 /**
+*	@brief	Evolve the selected population
+*
+*	@return value of the best individual
+*/
+void GAPopulation::evolvePopulation(){
+
+}
+
+
+/**
 *	@brief	return the best individual in the population
 *
 *	@return value of the best individual

@@ -22,11 +22,13 @@ class GASolver {
 	private:
 	    TSPProblem* problem;
 	    unsigned int population_size;
-	    unsigned int time_limit;
+	    long long time_limit;
 	    double mutation_probability;
 	    double new_generation_ratio;
 	    GAPopulation* population;
 	    unsigned int last_iterations_count;
+		long long GASolver:current_timestamp();
+
 	public:
 	    GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr, double new_gen_r);
 	    // ~GASolver(){ problem = NULL; delete population;}
