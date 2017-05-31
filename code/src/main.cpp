@@ -15,9 +15,8 @@
 
 #include <iostream>
 #include <string>
-#include "../include/TSPProblem.h"
 #include "../include/CPLEXSolver.h"
-#include "../include/GAIndividual.h"
+#include "../include/GASolver.h"
 
 using namespace std;
 
@@ -49,10 +48,19 @@ using namespace std;
     problem->print_costs();
 
 	CPLEXSolver* cplexSolver = new CPLEXSolver(problem);
-    TSPSolution* sol = cplexSolver->solve();
-	cout << "Soluzione di CPLEX - Costo "<<sol->get_fitness() <<endl;
-    sol->print_path();
+    TSPSolution* cplexSol = cplexSolver->solve();
+	cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_fitness() <<endl;
+    cplexSol->print_path();
 
+	cout << "--------------------------------------"<<endl;
+    cout << "Risolvo con GA" <<endl;
+    GASolver* gaSolver = new GASolver(problem, 50, 3, 0.05, 2);
+    GAIndividual* gaSol = gaSolver->solve();
+
+	cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;
+    gaSol->print_path();
+    cout << "--------------------------------------" <<endl;
+    cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
 
 	return 0;
 }

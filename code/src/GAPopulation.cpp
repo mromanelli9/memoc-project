@@ -55,3 +55,30 @@ GAPopulation::GAPopulation(unsigned int size, double mutation_probability, doubl
     this->best = new GAIndividual(problem, individuals.at(bi)->get_path());
     this->worst = new GAIndividual(problem, individuals.at(wi)->get_path());
 }
+
+/**
+*	@brief	return the best individual in the population
+*
+*	@return value of the best individual
+*/
+GAIndividual* GAPopulation::get_best_individual() {
+    return this->best;
+}
+
+/**
+*	@brief	return the worst individual in the population
+*
+*	@return value of the worst individual
+*/
+GAIndividual* GAPopulation::get_worst_individual() {
+    return this->worst;
+}
+
+/**
+*	@brief	return the averge individual in the population
+*
+*	@return value of the average individual
+*/
+double GAPopulation::get_average_fitness() {
+    return this->average_fitness;
+}

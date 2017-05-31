@@ -16,9 +16,7 @@
 #ifndef GA_SOLVER_H_
 #define GA_SOLVER_H_
 
-#include "TSPSolution.h"
-
-typedef TSPSolution GAIndividual;	// an individual is basically a solution
+#include "GAPopulation.h"
 
 class GASolver {
 	private:
@@ -27,14 +25,14 @@ class GASolver {
 	    unsigned int time_limit;
 	    double mutation_probability;
 	    double new_generation_ratio;
-	    // Population* population;
-	    unsigned int lastIterationsCount;
+	    GAPopulation* population;
+	    unsigned int last_iterations_count;
 	public:
-	    GASolver(TSPProblem *problem, unsigned int populationSize, unsigned int timeLimit, double mutationProbability, double newGenerationRatio);
+	    GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr, double new_gen_r);
 	    // ~GASolver(){ problem = NULL; delete population;}
-	    TSPSolution* solve();
-	   // Population* getLastPopulation();
-	    unsigned int getLastIterationsCount();
+	    GAIndividual* solve();
+	   	GAPopulation* get_last_population();
+	    unsigned int get_last_iterations_count();
 };
 
 #endif	// GA_SOLVER_H_
