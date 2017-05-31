@@ -23,7 +23,7 @@
 using namespace std;
 
 class TSPSolution {
-	private:
+	protected:
 		TSPProblem* problem;
 		vector<Node> path;
 		double fitness;	// cost of the solution

@@ -17,8 +17,9 @@
 #include <string>
 #include "../include/TSPProblem.h"
 #include "../include/CPLEXSolver.h"
+#include "../include/GAIndividual.h"
 
- using namespace std;
+using namespace std;
 
  /**
  *	@brief	Main function
@@ -28,18 +29,30 @@
 
 	unsigned int time_limit = 300;	// 5 minutes
 
-	// Create a problem from the instance provided with the argument
-	try {
-		 TSPProblem* tspProblem;
-		 std::string instance_filename = argv[1];
-		 tspProblem = new TSPProblem(instance_filename);
+	// // Create a problem from the instance provided with the argument
+	// try {
+	// 	 TSPProblem* tspProblem;
+	// 	 std::string instance_filename = argv[1];
+	// 	 tspProblem = new TSPProblem(instance_filename);
+	//
+	// 	 // Solving problem using CPLEX
+	// 	 CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
+	// 	 TSPSolution* cplexSol = cplexSolver->solve();
+	// } catch(std::exception& e) {
+	// 	// std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
+	// 	return 2;
+	// }
 
-		 // Solving problem using CPLEX
-		 CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
-		 TSPSolution* cplexSol = cplexSolver->solve();
-	} catch(std::exception& e) {
-		// std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
-		return 2;
-	}
+	int size = 5;
+    TSPProblem* problem = new TSPProblem(size);
+    cout << "Problema: N = " <<size<<endl;
+    problem->print_costs();
+
+	CPLEXSolver* cplexSolver = new CPLEXSolver(problem);
+    TSPSolution* sol = cplexSolver->solve();
+	cout << "Soluzione di CPLEX - Costo "<<sol->get_fitness() <<endl;
+    sol->print_path();
+
+
 	return 0;
 }
