@@ -40,6 +40,23 @@ GAIndividual* GASolver::solve() {
 											this->mutation_probability, \
 											this->new_generation_ratio,
 											this->problem);
+
+	// Start main loop. Stop when time exceed
+	// long long t_start = current_timestamp();	// time in milliseconds
+	// unsigned int i = 0;	// current itereation
+	// while ((current_timestamp() - t_start) < this->time_limit) {
+
+		// Phase 2: select the mating pool
+
+		// Phase 3: crossover to generate offsprings
+
+		// Phase 4: mutation
+
+		// Phase 5: population management
+
+
+	//}
+
 }
 
 /**
