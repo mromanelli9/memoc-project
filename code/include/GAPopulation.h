@@ -31,8 +31,12 @@ class GAPopulation {
 		vector< GAIndividual* > population;	// Actual population
 		vector< GAIndividual* > mating_pool;	// current parents set
 
+		GAIndividual* choose_best(vector<GAIndividual*> pool);
+		GAIndividual* choose_random(vector<GAIndividual*> pool, vector<GAIndividual*>  not_good);
+
 	public:
 	    GAPopulation(unsigned int size, double mutation_probability, double new_generation_ratio,  TSPProblem* problem);
+		vector< GAIndividual* > create_mating_pool(unsigned int ratio);
 };
 
 #endif	// GA_POPULATION_H_
