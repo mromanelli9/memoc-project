@@ -81,7 +81,7 @@ TSPSolution::TSPSolution(TSPProblem *problem, vector<Node> p) {
 		this->fitness += C[path[i]][path[i+1]];
 	}
 
-	assert(debug_sum == debug_sum_2);	// note: told to do so but not sure why
+	// assert(debug_sum == debug_sum_2);	// note: told to do so but not sure why
 }
 
 /**

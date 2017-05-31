@@ -57,10 +57,10 @@ using namespace std;
     GASolver* gaSolver = new GASolver(problem, 50, 3, 0.05, 2);
     GAIndividual* gaSol = gaSolver->solve();
 
-	cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;
-    gaSol->print_path();
-    cout << "--------------------------------------" <<endl;
-    cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
+	// cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;
+    // gaSol->print_path();
+    // cout << "--------------------------------------" <<endl;
+    // cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
 
 	return 0;
 }

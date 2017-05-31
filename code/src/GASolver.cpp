@@ -14,6 +14,7 @@
  */
 
 #include "../include/GASolver.h"
+#include "../include/GAPopulation.h"
 #include <iostream>
 #include <sys/time.h>
 
@@ -50,36 +51,37 @@ GAIndividual* GASolver::solve() {
     cout << "\t Best: " <<bestSol->get_fitness() << endl;
     delete bestSol;
 
-	this->population = population;
-
 
 	// Start main loop. Stop when time exceed
 	long long t_start = current_timestamp();	// time in milliseconds
 	unsigned int i = 0;	// current itereation
-	while ((current_timestamp() - t_start) < this->time_limit) {
+	// while ((current_timestamp() - t_start) < this->time_limit) {
+		i++;
 
 		// Phase 2: select the mating pool
-		population->evolvePopulation();
-
-		// [!DEBUG]
-		if (i % 500 == 0) {
-			cout << "Iterazione "  <<i <<endl;
-			worstSol = population->get_worst_individual();
-			cout << "Worst: " <<worstSol->getFitness();
-			delete worstSol;
-			cout << "\t Avg: " <<population->get_average_fitness();
-			bestSol = population->get_best_individual();
-			cout << "\t Best: " <<bestSol->get_fitness() << endl;
-			delete bestSol;
-		}
+		cout << "Creo i genitori "<<endl;
+		population->create_mating_pool(GAPopulation::K_TOURNAMENT);
 
 		// Phase 3: crossover to generate offsprings
+		cout << "li accoppio" <<endl;
+		population->crossover(GAPopulation::UNIFORM_CROSSOVER);
 
 		// Phase 4: mutation
 
 		// Phase 5: population management
 
-	}
+		// [!DEBUG]
+		// if (i % 500 == 0) {
+		// 	cout << "Iterazione "  <<i <<endl;
+		// 	worstSol = population->get_worst_individual();
+		// 	cout << "Worst: " <<worstSol->get_fitness();
+		// 	delete worstSol;
+		// 	cout << "\t Avg: " <<population->get_average_fitness();
+		// 	bestSol = population->get_best_individual();
+		// 	cout << "\t Best: " <<bestSol->get_fitness() << endl;
+		// 	delete bestSol;
+		// }
+	// }
 
 	return bestSol;
 }
@@ -107,7 +109,7 @@ unsigned int GASolver::get_last_iterations_count() {
 *
 *	@return return time [milliseconds]
 */
-long long GASolver:current_timestamp() {
+long long GASolver::current_timestamp() {
     struct timeval te;
     gettimeofday(&te, NULL);	// get current time
     long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000;	// caculate milliseconds
