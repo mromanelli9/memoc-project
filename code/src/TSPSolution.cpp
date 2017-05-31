@@ -21,41 +21,41 @@
 using namespace std;
 
 /**
-*	@brief	Constructor: create a solution of the model.
+*	@brief	Constructor: create a solution for the model.
 *			Method: pseudo-greey
 */
 // TODO: rivedere questa parte
 TSPSolution::TSPSolution(TSPProblem *problem) {
-    this->problem = problem;
+	this->problem = problem;
 
-    // Costruisco la soluzione in modo pseudo-casuale: come successore scelgo a caso tra quelli possibili, tenendo conto di quanto migliorano
-    vector< vector<double> > C = problem->get_costs();
-    unsigned int N = problem->get_size();
-    fitness = 0;
-    path.resize(N + 1);
-    path[0] = 0; // parto sempre dal nodo 0
+	// Costruisco la soluzione in modo pseudo-casuale: come successore scelgo a caso tra quelli possibili, tenendo conto di quanto migliorano
+	// choose the next successor randomly among the possibilies
+	vector< vector<double> > C = problem->get_costs();
+	unsigned int N = problem->get_size();
+	fitness = 0;
+	path.resize(N + 1);
+	path[0] = 0;	// starting node is 0
 
-    vector<Node> nodes(N-1); // Creo un vettore con i nodi ancora da scegliere per il percorso (da notare che non c'è il nodo 0)
-    for (unsigned int i = 0; i < N-1; ++i) {
-        nodes[i] = i+1;
-    }
+	vector<Node> nodes(N-1);	// vector of nodes to be choosen
+	for (unsigned int i = 0; i < N-1; ++i) {
+		nodes[i] = i+1;
+	}
 
-    for (unsigned int i = 1; i < N; ++i) {
-        Node selected_node = choose_node(path[i-1], nodes, C);
-        fitness += C[path[i-1]][selected_node]; // man mano che proseguo calcolo il costo della soluzione
-        path[i] = selected_node;
+	for (unsigned int i = 1; i < N; ++i) {
+		Node selected_node = choose_node(path[i-1], nodes, C);
+		fitness += C[path[i-1]][selected_node];	// compute the cost of the solution so far
+		path[i] = selected_node;
 
-        // ricalcolo il vettore dei nodi disponibili
-        vector<Node> new_nodes;
-        for (unsigned int j = 0; j < nodes.size(); ++j) {
-            if (nodes[j] != selected_node) { new_nodes.push_back(nodes[j]);}
-        }
-        assert(nodes.size() == new_nodes.size()+1);
-        nodes = new_nodes;
-    }
-    fitness += C[path[N-1]][0]; // costo dal penultimo nodo, al quello di partenza (il +0 è per chiarezza)
-    path[N] = 0; // il nodo di arrivo deve essere sempre 0
-
+		// re-compute the vector of possible nodes
+		vector<Node> new_nodes;
+		for (unsigned int j = 0; j < nodes.size(); ++j) {
+			if (nodes[j] != selected_node) { new_nodes.push_back(nodes[j]);}
+		}
+		assert(nodes.size() == new_nodes.size()+1);
+		nodes = new_nodes;
+	}
+	fitness += C[path[N-1]][0];	// cost of the second-to-last node
+	path[N] = 0;	// ending node should be always 0
 }
 
 /**
@@ -99,7 +99,7 @@ double TSPSolution::get_fitness() {
 *   @return return the path value
 */
 vector<Node> TSPSolution::get_path() {
-    return this->path;
+	return this->path;
 }
 
 /**
@@ -122,54 +122,58 @@ void TSPSolution::print_path() {
 *   @return return a node
 */
 Node TSPSolution::next_node(Node from) {
-    for (unsigned int i = 0; i < this->path.size()-1; ++i) {
-        if (this->path[i] == from){
-            return this->path[i+1];
-        }
-    }
+	for (unsigned int i = 0; i < this->path.size()-1; ++i) {
+		if (this->path[i] == from){
+			return this->path[i+1];
+		}
+	}
 
-    assert(false);	// shouldn't be here --> error
-    return -1;
+	assert(false);	// shouldn't be here --> error
+	return -1;
 }
 
 bool TSPSolution::equals(TSPSolution &sol) {
-    return this->path == sol.path;
+	return this->path == sol.path;
 }
 
 
 /**
- * Effettua la scelta pesata di un nodo da utilizzare come destinazione a partire dal nodo from
- * */
+*   @brief	choose (weighted) wich node should be used
+*	as destination node starting from node "from".
+*
+*   @return return a node
+*/
+// TODO: rivedere questa parte
 Node TSPSolution::choose_node(Node from, vector<Node> nodes, vector< vector<double> >& C){
-    if (nodes.size() == 1){
-        return nodes[0];
-    }
+	if (nodes.size() == 1){
+		return nodes[0];
+	}
 
-    double tot = 0;
-    for (unsigned int i = 0; i < nodes.size(); ++i) {
-        tot += C[from][nodes[i]];
-    }
-    vector<double> adjustedCosts; // "Aggiusto i costi" in modo che quelli che costano poco abbiano maggior probabilità
-    // di essere scelti
+	double tot = 0;
+	for (unsigned int i = 0; i < nodes.size(); ++i) {
+		tot += C[from][nodes[i]];
+	}
+	vector<double> adjusted_costs;	// less cost --> more probability
 
-    double adjustedTot = 0;
-    for (unsigned int i = 0; i < nodes.size(); ++i) {
-        double adjustedCost = tot - C[from][nodes[i]];
-        adjustedCosts.push_back(adjustedCost);
-        adjustedTot += adjustedCost; // Aggiungo l'ultimo elemento al totale
-    }
+	double adjusted_tot = 0;
+	for (unsigned int i = 0; i < nodes.size(); ++i) {
+		double adjusted_cost = tot - C[from][nodes[i]];
+		adjusted_costs.push_back(adjusted_cost);
+		adjusted_tot += adjusted_cost; // Aggiungo l'ultimo elemento al totale
+	}
 
-    double val = (rand() / (double) RAND_MAX) * adjustedTot; // genero un numero tra 0 e tot
-    assert(val >= 0);
-    assert(val <= adjustedTot);
-    // sommo tutte le probabilità, finché non diventano maggiori del valore ottenuto
-    // quando diventano maggiori vuol dire che l'indice che ha reso maggiore in numero è quello scelto casualente
-    unsigned int i = 0;
-    double sum = 0;
-    while (val > sum){
-        sum += adjustedCosts[i];
-        if (val > sum) {i++;} // evito di incrementare all'ultima iterazione
-    }
-    assert(i < nodes.size());
-    return nodes[i];
+	double val = (rand() / (double) RAND_MAX) * adjusted_tot;	// random number in [0, tot]
+	assert(val >= 0);
+	assert(val <= adjusted_tot);
+
+	// sum over all probability until they becom bigger than the value we got
+	// when that appens: the index which cause that is the one randomly chosen
+	unsigned int i = 0;
+	double sum = 0;
+	while (val > sum){
+		sum += adjusted_costs[i];
+		if (val > sum) {i++;} // evito di incrementare all'ultima iterazione
+	}
+	assert(i < nodes.size());
+	return nodes[i];
 }
