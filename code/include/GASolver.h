@@ -26,15 +26,12 @@ class GASolver {
 	    double mutation_probability;
 	    double new_generation_ratio;
 	    GAPopulation* population;
-	    unsigned int last_iterations_count;
 		long long current_timestamp();
 
 	public:
 	    GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr, double new_gen_r);
 	    // ~GASolver(){ problem = NULL; delete population;}
 	    GAIndividual* solve();
-	   	GAPopulation* get_last_population();
-	    unsigned int get_last_iterations_count();
 };
 
 #endif	// GA_SOLVER_H_
