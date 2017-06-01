@@ -54,7 +54,11 @@ using namespace std;
 
 	cout << "--------------------------------------"<<endl;
     cout << "Risolvo con GA" <<endl;
-    GASolver* gaSolver = new GASolver(problem, 50, 3, 0.05, 2);
+    //GASolver* gaSolver = new GASolver(problem, problem->get_size()*10, 3, 0.05, 2);
+
+	// per debug prendiamone una piccola
+	GASolver* gaSolver = new GASolver(problem, problem->get_size()*3, 3, 0.05, 2);
+
     GAIndividual* gaSol = gaSolver->solve();
 
 	// cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;
