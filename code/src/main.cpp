@@ -69,8 +69,8 @@ long long current_time() {
 	cout << "Tempo " << (e_time - s_time) << endl;
 	cout << "--------------------------------------"<<endl;
 
-	unsigned int ga_time_limit = 10;
-	unsigned int ga_population_size_factor = 8;
+	unsigned int ga_time_limit = 3;
+	unsigned int ga_population_size_factor = 5;
 	double ga_mutation_probability = 0.02;
 
     cout << "Risolvo con GA" <<endl;
@@ -89,7 +89,7 @@ long long current_time() {
     gaSol->print_path();
 	cout << "Tempo " << (e_time - s_time) << endl;
     cout << "--------------------------------------" <<endl;
-    // cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
+    cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
 
 	return 0;
 }
