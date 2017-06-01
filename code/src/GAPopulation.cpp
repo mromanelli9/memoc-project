@@ -100,7 +100,8 @@ vector< GAIndividual* > GAPopulation::crossover(vector< GAIndividual* > pool) {
 
 	// consider two individuals at each iteration
 	for (unsigned int i = 0; i < pool.size(); i += 2 ) {
-		GAIndividual*  child = cut_point_crossover(pool.at(i), pool.at(i+1));
+		// Create a child that can mutate
+		GAIndividual* child = mutate(cut_point_crossover(pool.at(i), pool.at(i+1)));
 		offsprings.push_back(child);
 	}
 
@@ -130,8 +131,8 @@ GAIndividual* GAPopulation::cut_point_crossover(GAIndividual* p1, GAIndividual* 
 	// - k1, k2 >= 1, k1, k2 <= problem.N
 	// - k2 - k1 > 2
 	while (1) {
-		k1 = (rand() % (unsigned int) N-1) + 1;
-		k2 = (rand() % (unsigned int) N-1) + 1;
+		k1 = (rand() % (N-1)) + 1;
+		k2 = (rand() % (N-1)) + 1;
 
 		if (( k2 <= k1) || ((k2 - k1) < 2)) { continue; }
 		break;
@@ -196,6 +197,35 @@ GAIndividual* GAPopulation::cut_point_crossover(GAIndividual* p1, GAIndividual* 
 	// Create a new child with the path created upon
 	return new GAIndividual(this->problem, child_path);
 }
+
+/**
+*	@brief	Mutate a individual using inversion mutation method.
+*
+*	@section DESCRIPTION
+*	Two point are randomly generated and then swapped
+*
+*	@return a mutated individual
+*/
+GAIndividual* GAPopulation::mutate(GAIndividual* individual) {
+	GAIndividual* new_individual;
+	unsigned int z, t;
+	unsigned int N = this->problem->get_size();
+
+	// Computing the two points randomly, s.t.
+	// - k1,k2 >= 1, k1, k2 <= problem.N
+	// - k1 != k2
+	z = (rand() % (N-1)) + 1;
+	while (1) {
+		t = (rand() % (N-1)) + 1;
+
+		if (z != t) break;
+	}
+
+	cout << z << " "<< t<<endl;
+
+	return new_individual;
+}
+
 
 
 /**

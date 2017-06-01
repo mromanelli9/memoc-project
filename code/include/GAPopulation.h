@@ -39,6 +39,7 @@ class GAPopulation {
 		vector< GAIndividual* > create_mating_pool(unsigned int ratio);
 		vector< GAIndividual* > crossover(vector< GAIndividual* > pool);
 		GAIndividual* cut_point_crossover(GAIndividual* p1, GAIndividual* p2);
+		GAIndividual* mutate(GAIndividual* individual);
 };
 
 #endif	// GA_POPULATION_H_
