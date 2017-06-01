@@ -36,9 +36,6 @@ GAPopulation::GAPopulation(unsigned int size, double mutation_probability, doubl
 	for (unsigned int i = 0; i < this->population_size; ++i) {
 		this->population.push_back(new GAIndividual(this->problem));
 	}
-
-	cout << "pop dim " << this->population.size()<<endl;
-
 }
 
 /**
@@ -55,8 +52,6 @@ vector< GAIndividual* > GAPopulation::create_mating_pool(unsigned int ratio) {
 	double ratio_val = this->population_size /(double)100 * ratio;
 	unsigned int K = (int) ratio_val;
 	vector< GAIndividual* > parents;		// current set of individuals
-
-	cout << "K =  " << K <<endl;
 
 	// loop (rounds)
 	for (unsigned int i = 0; i < this->population_size; i++) {
@@ -202,28 +197,51 @@ GAIndividual* GAPopulation::cut_point_crossover(GAIndividual* p1, GAIndividual* 
 *	@brief	Mutate a individual using inversion mutation method.
 *
 *	@section DESCRIPTION
-*	Two point are randomly generated and then swapped
+*	Two point are randomly generated and then the sublist between them is revered.
 *
 *	@return a mutated individual
 */
 GAIndividual* GAPopulation::mutate(GAIndividual* individual) {
+	// mutate with probability <mutation_probability>
+	double prob = rand() / double(RAND_MAX);
+    if (prob >= mutation_probability) {
+		return individual;
+	}
+
 	GAIndividual* new_individual;
 	unsigned int z, t;
 	unsigned int N = this->problem->get_size();
 
 	// Computing the two points randomly, s.t.
-	// - k1,k2 >= 1, k1, k2 <= problem.N
-	// - k1 != k2
-	z = (rand() % (N-1)) + 1;
+	// - z,t >= 1, z, t <= problem.N
+	// - z < t
 	while (1) {
+		z = (rand() % (N-1)) + 1;
 		t = (rand() % (N-1)) + 1;
 
-		if (z != t) break;
+		if (z < t) break;
 	}
 
-	cout << z << " "<< t<<endl;
+	vector<Node> p = individual->get_path();
+	vector<Node> new_path(N+1);	// new path for the individual
+	new_path[0] = 0;	// as always the first and the last
+	new_path[N] = 0;	// node are set to 0
 
-	return new_individual;
+	// the first and the last part are the same
+	for (unsigned int i = 1; i < z; i++ )
+		new_path[i] = p[i];
+
+	for (unsigned int i = t+1; i < N+1; i++ )
+		new_path[i] = p[i];
+
+	// do the magic
+	unsigned int j = 0;
+	for (unsigned int i = z; i <= t; i++ ) {
+		new_path[i] = p[t-j];
+		j++;
+	}
+
+	return new GAIndividual(this->problem, new_path);
 }
 
 
