@@ -43,15 +43,15 @@ using namespace std;
 	// 	return 2;
 	// }
 
-	int size = 30;
+	int size = 100;
     TSPProblem* problem = new TSPProblem(size);
     cout << "Problema: N = " <<size<<endl;
     // problem->print_costs();
 
-	CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
-    TSPSolution* cplexSol = cplexSolver->solve();
-	cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_fitness() <<endl;
-    cplexSol->print_path();
+	// CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
+    // TSPSolution* cplexSol = cplexSolver->solve();
+	// cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_fitness() <<endl;
+    // cplexSol->print_path();
 
 	cout << "--------------------------------------"<<endl;
 
@@ -72,7 +72,7 @@ using namespace std;
 	cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;
     gaSol->print_path();
     cout << "--------------------------------------" <<endl;
-    cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
+    // cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
 
 	return 0;
 }

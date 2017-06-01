@@ -50,11 +50,6 @@ GAIndividual* GASolver::solve() {
 		<< "; Peggiore " << worst->get_fitness() \
 		<< ", Migliore: " << best->get_fitness() << endl;
 
-	// This is an optimizatiom, especially with small instances.
-	// After 2 iterations in which the best individual and
-	// the best are the same, the algorithm has reached a fix point.
-	unsigned int fix_point = 0;
-
 	// Start main loop. Stop when time exceed
 	unsigned int i = 0;	// current itereation
 	long long t_start = current_timestamp();	// time in milliseconds
@@ -77,25 +72,13 @@ GAIndividual* GASolver::solve() {
 		best = population->get_best_individual();
 		worst = population->get_worst_individual();
 
-		// Fix point reached?
-		if ( best->get_fitness() == worst->get_fitness() ) {
-			fix_point++;
-		}
-
-		// If yes then exit
-		//if ( fix_point == 2) { break; }
-
 		// Some statistics:
-		if ( i % 1000 == 0) {
+		if ( i % 500 == 0) {
 			cout << "Giro " << i<< "; Peggiore " << worst->get_fitness() \
 								 << ", Migliore: " << best->get_fitness() << endl;
 		}
 
 		i++;
-	}
-
-	if ( fix_point == 2) {
-		cout << "Exit by fix point after " << i << " iterations." << endl;
 	}
 
 	best = population->get_best_individual();
