@@ -399,7 +399,7 @@ bool GAPopulation::sort_by_fitness(GAIndividual* p1, GAIndividual* p2) {
 *	@return true or false
 */
 GAIndividual* GAPopulation::get_best_individual() {
-	return *max_element(this->population.begin(), this->population.end(), GAPopulation::sort_by_fitness);
+	return *min_element(this->population.begin(), this->population.end(), GAPopulation::sort_by_fitness);
 }
 
 /**
@@ -408,5 +408,5 @@ GAIndividual* GAPopulation::get_best_individual() {
 *	@return true or false
 */
 GAIndividual* GAPopulation::get_worst_individual() {
-	return *min_element(this->population.begin(), this->population.end(), GAPopulation::sort_by_fitness);
+	return *max_element(this->population.begin(), this->population.end(), GAPopulation::sort_by_fitness);
 }

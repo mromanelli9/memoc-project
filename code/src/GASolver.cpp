@@ -26,7 +26,7 @@ using namespace std;
 GASolver::GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr, double new_gen_r) {
     this->problem = problem;
     this->population_size = pop_size;
-    this->time_limit = (long long) t_limit;
+    this->time_limit = (long long) t_limit * 1000;
     this->mutation_probability = mutation_pr;
     this->new_generation_ratio = new_gen_r;
 }
@@ -41,10 +41,13 @@ GAIndividual* GASolver::solve() {
 											this->new_generation_ratio,
 											this->problem);
 
+	GAIndividual* best;
+	GAIndividual* worst;
+
 	// Start main loop. Stop when time exceed
-	// long long t_start = current_timestamp();	// time in milliseconds
-	// unsigned int i = 0;	// current itereation
-	// while ((current_timestamp() - t_start) < this->time_limit) {
+	long long t_start = current_timestamp();	// time in milliseconds
+	unsigned int i = 0;	// current itereation
+	while ((current_timestamp() - t_start) < this->time_limit) {
 
 		// Phase 2: select the mating pool
 		vector< GAIndividual* > mating_pool;
@@ -58,9 +61,24 @@ GAIndividual* GASolver::solve() {
 		// Phase 5: population management
 		population->population_management(offsprings);
 
-	//}
+		// Some statistics:
+		if ( i % 1000 == 0) {
+			best = population->get_best_individual();
+			worst = population->get_worst_individual();
+			cout << "Giro " << i<< "; il peggiore ha fitness value " << worst->get_fitness()<<endl;
+			cout << "Giro " << i<< "; il migliore ha fitness value con " << best->get_fitness()<<endl;
+		}
 
-	return nullptr;
+		i++;
+	}
+
+	best = population->get_best_individual();
+	worst = population->get_worst_individual();
+	cout << "Fine" <<endl;
+	cout << "Il peggiore ha fitness value " << worst->get_fitness()<<endl;
+	cout << "Il migliore ha fitness value con " << best->get_fitness()<<endl;
+
+	return best;
 }
 
 /**
