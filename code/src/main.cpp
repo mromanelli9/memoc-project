@@ -26,10 +26,7 @@ using namespace std;
  int main(int argc, char* argv[]) {
 	if (argc != 2) { return 1; }
 
-	unsigned int cplex_time_limit = 300;	// 5 minutes
-	unsigned int ga_time_limit = 8;	// 5 seconds
-	unsigned int ga_population_size_factor = 5;
-	double ga_mutation_probability = 0.05;
+	unsigned int cplex_time_limit = 10;	// 5 minutes
 
 
 	// // Create a problem from the instance provided with the argument
@@ -46,7 +43,7 @@ using namespace std;
 	// 	return 2;
 	// }
 
-	int size = 20;
+	int size = 30;
     TSPProblem* problem = new TSPProblem(size);
     cout << "Problema: N = " <<size<<endl;
     // problem->print_costs();
@@ -57,6 +54,11 @@ using namespace std;
     cplexSol->print_path();
 
 	cout << "--------------------------------------"<<endl;
+
+	unsigned int ga_time_limit = 10;
+	unsigned int ga_population_size_factor = 8;
+	double ga_mutation_probability = 0.02;
+
     cout << "Risolvo con GA" <<endl;
     //GASolver* gaSolver = new GASolver(problem, problem->get_size()*10, 3, 0.05, 2);
 

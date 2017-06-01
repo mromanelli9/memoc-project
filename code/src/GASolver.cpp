@@ -83,20 +83,20 @@ GAIndividual* GASolver::solve() {
 		}
 
 		// If yes then exit
-		if ( fix_point == 2) { break; }
+		//if ( fix_point == 2) { break; }
 
 		// Some statistics:
-		// if ( i % 1000 == 0) {
-		// 	cout << "Giro " << i<< "; Peggiore " << worst->get_fitness() \
-		// 						 << ", Migliore: " << best->get_fitness() << endl;
-		// }
+		if ( i % 1000 == 0) {
+			cout << "Giro " << i<< "; Peggiore " << worst->get_fitness() \
+								 << ", Migliore: " << best->get_fitness() << endl;
+		}
 
 		i++;
 	}
 
-	// if ( fix_point == 2) {
-	// 	cout << "Exit by fix point after " << i << " iterations." << endl;
-	// }
+	if ( fix_point == 2) {
+		cout << "Exit by fix point after " << i << " iterations." << endl;
+	}
 
 	best = population->get_best_individual();
 	worst = population->get_worst_individual();
