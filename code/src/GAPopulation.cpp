@@ -383,7 +383,30 @@ GAIndividual* GAPopulation::choose_random(vector<GAIndividual*> pool, vector<GAI
 	return candidate;
 }
 
-bool GAPopulation::sort_by_fitness(GAIndividual* p1, GAIndividual* p2)
-{
+/**
+*	@brief	Return true if an individual p1 fitness value is grater than
+*			the fiteness value of individual p2
+*
+*	@return true or false
+*/
+bool GAPopulation::sort_by_fitness(GAIndividual* p1, GAIndividual* p2) {
     return p1->get_fitness() < p2->get_fitness();
+}
+
+/**
+*	@brief	Retrieve the best individual in the population
+*
+*	@return true or false
+*/
+GAIndividual* GAPopulation::get_best_individual() {
+	return *max_element(this->population.begin(), this->population.end(), GAPopulation::sort_by_fitness);
+}
+
+/**
+*	@brief	Retrieve the worst individual in the population
+*
+*	@return true or false
+*/
+GAIndividual* GAPopulation::get_worst_individual() {
+	return *min_element(this->population.begin(), this->population.end(), GAPopulation::sort_by_fitness);
 }

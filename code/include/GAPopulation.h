@@ -44,6 +44,8 @@ class GAPopulation {
 		GAIndividual* mutate(GAIndividual* individual);
 		void population_management(vector< GAIndividual* > pool);
 		GAIndividual* montecarlo_selection(vector< GAIndividual* > pool);
+		GAIndividual* get_best_individual();
+		GAIndividual* get_worst_individual();
 };
 
 #endif	// GA_POPULATION_H_
