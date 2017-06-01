@@ -27,10 +27,9 @@ using namespace std;
 	if (argc != 2) { return 1; }
 
 	unsigned int cplex_time_limit = 300;	// 5 minutes
-	unsigned int ga_time_limit = 5;	// 5 seconds
-	unsigned int ga_population_size_factor = 7;
+	unsigned int ga_time_limit = 8;	// 5 seconds
+	unsigned int ga_population_size_factor = 5;
 	double ga_mutation_probability = 0.05;
-	unsigned int ga_new_generation_ratio = 2;
 
 
 	// // Create a problem from the instance provided with the argument
@@ -65,8 +64,7 @@ using namespace std;
 	GASolver* gaSolver = new GASolver(problem,\
 						problem->get_size()*ga_population_size_factor,\
 						ga_time_limit,\
-						ga_mutation_probability,\
-						ga_new_generation_ratio);
+						ga_mutation_probability);
     GAIndividual* gaSol = gaSolver->solve();
 
 	cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;

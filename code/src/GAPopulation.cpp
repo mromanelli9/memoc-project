@@ -24,11 +24,11 @@ using namespace std;
 /**
 *	@brief	Default contructor
 */
-GAPopulation::GAPopulation(unsigned int size, double mutation_probability, double new_generation_ratio, TSPProblem *problem) {
+GAPopulation::GAPopulation(unsigned int size, double mutation_probability, TSPProblem *problem) {
 	// Store parameters
 	this->population_size = size;
 	this->problem = problem;
-	this->new_generation_ratio = new_generation_ratio;
+	this->new_generation_ratio = 2;	// Fixed!
 	this->mutation_probability = mutation_probability;
 
 	// Populate the population (= set of individuals)

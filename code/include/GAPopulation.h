@@ -37,7 +37,7 @@ class GAPopulation {
 		static bool sort_by_fitness(GAIndividual* p, GAIndividual* p2);
 
 	public:
-	    GAPopulation(unsigned int size, double mutation_probability, double new_generation_ratio,  TSPProblem* problem);
+	    GAPopulation(unsigned int size, double mutation_probability, TSPProblem* problem);
 		vector< GAIndividual* > create_mating_pool(unsigned int ratio);
 		vector< GAIndividual* > crossover(vector< GAIndividual* > pool);
 		GAIndividual* cut_point_crossover(GAIndividual* p1, GAIndividual* p2);

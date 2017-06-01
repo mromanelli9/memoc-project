@@ -23,12 +23,11 @@ using namespace std;
 /**
 *	@brief	Default constructor
 */
-GASolver::GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr, double new_gen_r) {
+GASolver::GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr) {
     this->problem = problem;
     this->population_size = pop_size;
     this->time_limit = (long long) t_limit * 1000;
     this->mutation_probability = mutation_pr;
-    this->new_generation_ratio = new_gen_r;
 }
 
 /**
@@ -38,13 +37,18 @@ GAIndividual* GASolver::solve() {
 	// Phase 1: create the first population
 	GAPopulation* population = new GAPopulation(this->population_size,\
 											this->mutation_probability, \
-											this->new_generation_ratio,
 											this->problem);
 
 	// individuals used for statistics over the iterations
 	// and for return the best individual at the end
 	GAIndividual* best;
 	GAIndividual* worst;
+
+	best = population->get_best_individual();
+	worst = population->get_worst_individual();
+	cout << "Inizio" \
+		<< "; Peggiore " << worst->get_fitness() \
+		<< ", Migliore: " << best->get_fitness() << endl;
 
 	// This is an optimizatiom, especially with small instances.
 	// After 2 iterations in which the best individual and
@@ -94,11 +98,11 @@ GAIndividual* GASolver::solve() {
 	// 	cout << "Exit by fix point after " << i << " iterations." << endl;
 	// }
 
-	// best = population->get_best_individual();
-	// worst = population->get_worst_individual();
-	// cout << "Fine" \
-	// 	<< "; Peggiore " << worst->get_fitness() \
-	// 	<< ", Migliore: " << best->get_fitness() << endl;
+	best = population->get_best_individual();
+	worst = population->get_worst_individual();
+	cout << "Fine (it: " << i \
+		<< "); Peggiore " << worst->get_fitness() \
+		<< ", Migliore: " << best->get_fitness() << endl;
 
 	return best;
 }
