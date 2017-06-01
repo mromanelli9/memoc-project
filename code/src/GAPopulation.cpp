@@ -207,7 +207,6 @@ GAIndividual* GAPopulation::mutate(GAIndividual* individual) {
 		return individual;
 	}
 
-	GAIndividual* new_individual;
 	unsigned int z, t;
 	unsigned int N = this->problem->get_size();
 
@@ -336,19 +335,28 @@ GAIndividual* GAPopulation::montecarlo_selection(vector< GAIndividual* > pool) {
 *	@return an individual
 */
 GAIndividual* GAPopulation::choose_best(vector<GAIndividual*> pool) {
-	double max = 0;
-	unsigned int best = 0;
-	double value;
-
-	for (unsigned int i = 0; i < pool.size(); i++) {
-		value = pool.at(i)->get_fitness();
-		if (value > max) {
-			max = value;
-			best = i;
+	double bestValue = INT_MAX;
+	unsigned long index = pool.size()+1;
+	for (unsigned long i = 0; i < pool.size(); ++i) {
+		if (pool.at(i)->get_fitness() < bestValue){
+			bestValue = pool.at(i)->get_fitness();
+			index = i;
 		}
 	}
-
-	return pool.at(best);
+	return pool.at(index);
+	// double max = 0;
+	// unsigned int best = 0;
+	// double value;
+	//
+	// for (unsigned int i = 0; i < pool.size(); i++) {
+	// 	value = pool.at(i)->get_fitness();
+	// 	if (value > max) {
+	// 		max = value;
+	// 		best = i;
+	// 	}
+	// }
+	//
+	// return pool.at(best);
 }
 
 /**

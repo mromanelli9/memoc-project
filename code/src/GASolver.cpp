@@ -41,12 +41,20 @@ GAIndividual* GASolver::solve() {
 											this->new_generation_ratio,
 											this->problem);
 
+	// individuals used for statistics over the iterations
+	// and for return the best individual at the end
 	GAIndividual* best;
 	GAIndividual* worst;
 
+	// This is an optimizatiom, especially with small instances.
+	// After 2 iterations in which the best individual and
+	// the best are the same, the algorithm has reached a fix point.
+	unsigned int fix_point = 0;
+
 	// Start main loop. Stop when time exceed
-	long long t_start = current_timestamp();	// time in milliseconds
 	unsigned int i = 0;	// current itereation
+	long long t_start = current_timestamp();	// time in milliseconds
+
 	while ((current_timestamp() - t_start) < this->time_limit) {
 
 		// Phase 2: select the mating pool
@@ -61,22 +69,36 @@ GAIndividual* GASolver::solve() {
 		// Phase 5: population management
 		population->population_management(offsprings);
 
-		// Some statistics:
-		if ( i % 1000 == 0) {
-			best = population->get_best_individual();
-			worst = population->get_worst_individual();
-			cout << "Giro " << i<< "; il peggiore ha fitness value " << worst->get_fitness()<<endl;
-			cout << "Giro " << i<< "; il migliore ha fitness value con " << best->get_fitness()<<endl;
+		// See how thing goes
+		best = population->get_best_individual();
+		worst = population->get_worst_individual();
+
+		// Fix point reached?
+		if ( best->get_fitness() == worst->get_fitness() ) {
+			fix_point++;
 		}
+
+		// If yes then exit
+		if ( fix_point == 2) { break; }
+
+		// Some statistics:
+		// if ( i % 1000 == 0) {
+		// 	cout << "Giro " << i<< "; Peggiore " << worst->get_fitness() \
+		// 						 << ", Migliore: " << best->get_fitness() << endl;
+		// }
 
 		i++;
 	}
 
-	best = population->get_best_individual();
-	worst = population->get_worst_individual();
-	cout << "Fine" <<endl;
-	cout << "Il peggiore ha fitness value " << worst->get_fitness()<<endl;
-	cout << "Il migliore ha fitness value con " << best->get_fitness()<<endl;
+	// if ( fix_point == 2) {
+	// 	cout << "Exit by fix point after " << i << " iterations." << endl;
+	// }
+
+	// best = population->get_best_individual();
+	// worst = population->get_worst_individual();
+	// cout << "Fine" \
+	// 	<< "; Peggiore " << worst->get_fitness() \
+	// 	<< ", Migliore: " << best->get_fitness() << endl;
 
 	return best;
 }
