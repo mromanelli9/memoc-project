@@ -51,6 +51,8 @@ GAIndividual* GASolver::solve() {
 		mating_pool = population->create_mating_pool(20);
 
 		// Phase 3: crossover to generate offsprings
+		vector< GAIndividual* > offsprings;
+		offsprings = population->crossover(mating_pool);
 
 		// Phase 4: mutation
 

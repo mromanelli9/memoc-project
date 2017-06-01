@@ -37,6 +37,8 @@ class GAPopulation {
 	public:
 	    GAPopulation(unsigned int size, double mutation_probability, double new_generation_ratio,  TSPProblem* problem);
 		vector< GAIndividual* > create_mating_pool(unsigned int ratio);
+		vector< GAIndividual* > crossover(vector< GAIndividual* > pool);
+		GAIndividual* cut_point_crossover(GAIndividual* p1, GAIndividual* p2);
 };
 
 #endif	// GA_POPULATION_H_
