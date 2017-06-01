@@ -47,10 +47,10 @@ using namespace std;
 	// 	return 2;
 	// }
 
-	int size = 10;
+	int size = 20;
     TSPProblem* problem = new TSPProblem(size);
     cout << "Problema: N = " <<size<<endl;
-    problem->print_costs();
+    // problem->print_costs();
 
 	CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
     TSPSolution* cplexSol = cplexSolver->solve();
