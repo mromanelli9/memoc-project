@@ -43,15 +43,15 @@ using namespace std;
 	// 	return 2;
 	// }
 
-	int size = 100;
+	int size = 20;
     TSPProblem* problem = new TSPProblem(size);
     cout << "Problema: N = " <<size<<endl;
     // problem->print_costs();
 
-	// CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
-    // TSPSolution* cplexSol = cplexSolver->solve();
-	// cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_fitness() <<endl;
-    // cplexSol->print_path();
+	CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
+    TSPSolution* cplexSol = cplexSolver->solve();
+	cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_fitness() <<endl;
+    cplexSol->print_path();
 
 	cout << "--------------------------------------"<<endl;
 
