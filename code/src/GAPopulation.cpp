@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <algorithm>
 #include <climits>
-#include <cmath>
 
 using namespace std;
 
@@ -108,9 +107,9 @@ vector< GAIndividual* > GAPopulation::crossover(vector< GAIndividual* > pool) {
 *	@brief	Generate an individual from another two using 2-cut point crossover.
 *
 *	@section DESCRIPTION
-*	After K cut points are defined, the first child is obtained by copying
+*	After K cut points are defined, the child is obtained by copying
 *	the block between the cut points from the first and the second parents
-*	alternatively. In the same way the second child is obtained.
+*	alternatively.
 *	We use K=2, so it's a 2-cyt point crossover.
 *	In order to preserve feasible solutions, the order crossover is implemented.
 *	the child takes the external blocks from one parent and the inner genes
@@ -244,6 +243,91 @@ GAIndividual* GAPopulation::mutate(GAIndividual* individual) {
 	return new GAIndividual(this->problem, new_path);
 }
 
+/**
+*	@brief	Merge the old population with the offspring and produce a new generation.
+*
+*	@section DESCRIPTION
+*	Method used: selection of the bests.
+*	N individuals are selected from a pool of N+R individuals where
+*	R is the dimension of the offspring.
+*
+*	@return void
+*/
+void GAPopulation::population_management(vector< GAIndividual* > pool) {
+	vector< GAIndividual* > new_population;
+
+	// Create a new (provisional) population with the old one and the offspring
+	// with dimension N + R (actually: population_size * new_generation_ratio)
+	this->population.insert( this->population.end(), pool.begin(), pool.end() );
+
+	for (unsigned int i = 0; i < this->population_size; i++) {
+		GAIndividual* selected = montecarlo_selection(this->population);
+
+		// Remove the individual from the current population
+		this->population.erase(std::remove(this->population.begin(), \
+									this->population.end(), selected), this->population.end());
+
+
+		// Add the individual to the new population
+		new_population.push_back(selected);
+	}
+
+	this->population = new_population;
+}
+
+/**
+*	@brief	Select the best individual in the pool using the Montecarlo method.
+*
+*	@section DESCRIPTION
+*	The probability p_i of picking the individual i is proportional to its
+*	fitness value f_i:
+*		p_i = (f_i / sum of f_k)  where k=1,_,N
+*
+*
+*	@return an individual
+*/
+GAIndividual* GAPopulation::montecarlo_selection(vector< GAIndividual* > pool) {
+	// Sort the population by their fitness value
+	std::sort(pool.begin(), pool.end(), GAPopulation::sort_by_fitness);
+
+	vector< double > probabilities;	// probability of a node to be selected
+	// Compute sum of f_k
+	{
+		vector< double > f_i;	// list of all fiteness values
+		long double f_k_sum;	// sum of f_k
+
+		for (auto & element : pool) {
+			f_i.push_back(element->get_fitness());
+		}
+		f_k_sum = std::accumulate(f_i.begin(), f_i.end(), 0.0);
+
+		// Compute probabilities
+		for (auto & el : f_i) {
+			probabilities.push_back(el / f_k_sum);
+		}
+	}
+
+	// Choose a random number k s.t. 0<k<1
+	double k = (double) rand() / (RAND_MAX);
+
+	double tot = 0;	// p_i so far
+	unsigned int i = 0;
+	while (i < probabilities.size()) {
+		tot += probabilities.at(i);
+		if (tot >= k) {
+			// Pick this element
+			break;
+		}
+		i++;
+	}
+	if (i==0) {
+		i = 1;
+	}
+
+	return pool.at(i-1);
+}
+
+
 
 
 /**
@@ -297,4 +381,9 @@ GAIndividual* GAPopulation::choose_random(vector<GAIndividual*> pool, vector<GAI
 	}
 
 	return candidate;
+}
+
+bool GAPopulation::sort_by_fitness(GAIndividual* p1, GAIndividual* p2)
+{
+    return p1->get_fitness() < p2->get_fitness();
 }

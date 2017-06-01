@@ -34,12 +34,16 @@ class GAPopulation {
 		GAIndividual* choose_best(vector<GAIndividual*> pool);
 		GAIndividual* choose_random(vector<GAIndividual*> pool, vector<GAIndividual*>  not_good);
 
+		static bool sort_by_fitness(GAIndividual* p, GAIndividual* p2);
+
 	public:
 	    GAPopulation(unsigned int size, double mutation_probability, double new_generation_ratio,  TSPProblem* problem);
 		vector< GAIndividual* > create_mating_pool(unsigned int ratio);
 		vector< GAIndividual* > crossover(vector< GAIndividual* > pool);
 		GAIndividual* cut_point_crossover(GAIndividual* p1, GAIndividual* p2);
 		GAIndividual* mutate(GAIndividual* individual);
+		void population_management(vector< GAIndividual* > pool);
+		GAIndividual* montecarlo_selection(vector< GAIndividual* > pool);
 };
 
 #endif	// GA_POPULATION_H_
