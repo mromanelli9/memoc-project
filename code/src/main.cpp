@@ -15,10 +15,19 @@
 
 #include <iostream>
 #include <string>
+#include <sys/time.h>
 #include "../include/CPLEXSolver.h"
 #include "../include/GASolver.h"
 
 using namespace std;
+
+
+long long current_time() {
+    struct timeval te;
+    gettimeofday(&te, NULL);	// get current time
+    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000;	// caculate milliseconds
+    return milliseconds;
+}
 
  /**
  *	@brief	Main function
@@ -48,11 +57,16 @@ using namespace std;
     cout << "Problema: N = " <<size<<endl;
     // problem->print_costs();
 
+	long long e_time, s_time;
+
+	s_time = current_time();
 	CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
     TSPSolution* cplexSol = cplexSolver->solve();
+	e_time = current_time();
+
 	cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_fitness() <<endl;
     cplexSol->print_path();
-
+	cout << "Tempo " << (e_time - s_time) << endl;
 	cout << "--------------------------------------"<<endl;
 
 	unsigned int ga_time_limit = 10;
@@ -63,14 +77,17 @@ using namespace std;
     //GASolver* gaSolver = new GASolver(problem, problem->get_size()*10, 3, 0.05, 2);
 
 	// per debug prendiamone una piccola
+	s_time = current_time();
 	GASolver* gaSolver = new GASolver(problem,\
 						problem->get_size()*ga_population_size_factor,\
 						ga_time_limit,\
 						ga_mutation_probability);
     GAIndividual* gaSol = gaSolver->solve();
+	e_time = current_time();
 
 	cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;
     gaSol->print_path();
+	cout << "Tempo " << (e_time - s_time) << endl;
     cout << "--------------------------------------" <<endl;
     // cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
 
