@@ -56,24 +56,25 @@ vector< GAIndividual* > GAPopulation::create_mating_pool(unsigned int ratio) {
 	for (unsigned int i = 0; i < this->population_size; i++) {
 		vector<GAIndividual*> winners;	// Select two individuals (parents) at each round
 
-		for (unsigned int j = 0; j < this->new_generation_ratio; j++) {
-			vector<GAIndividual*> candidates;	// individuals in this round
-			vector<GAIndividual*> no_good;	// avoid past individuals
-			GAIndividual* winner;
+		// Init K candidates
+		vector<GAIndividual*> candidates(K);
 
-			for (unsigned int j = 0; j < K; j++) {
-				GAIndividual* c = choose_random(this->population, no_good);
-				candidates.push_back(c);
+		// Choose a random number k1 s.t.  1 <= k1 < N-K
+		unsigned int k1 = (rand() % (this->population_size - K - 1)) +1;
 
-				no_good.push_back(candidates.at(j));
-			}
-			winner = choose_best(candidates);
-			winners.push_back(winner);
-		}
+		// Copy K individuals into the new array
+		std::copy(this->population.begin()+k1, this->population.begin()+ k1 +K, candidates.begin());
 
+		// Shuffle randomly the individuals
+		std::random_shuffle(candidates.begin(), candidates.end());
+
+		// Sort them by their fitness value
+		std::sort(candidates.begin(), candidates.end(), GAPopulation::sort_by_fitness);
+
+		// Take the best individuals in the candidates set
 		// Saving the winning parents into the set (vector)
-		for (unsigned int j = 0; j < this->new_generation_ratio; j++) {
-			parents.push_back(winners.at(j));
+		for (unsigned int j = 1; j <= this->new_generation_ratio; j++) {
+			winners.push_back(candidates.at(K-j));
 		}
 
 	}
