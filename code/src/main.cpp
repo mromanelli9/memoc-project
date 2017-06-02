@@ -43,7 +43,7 @@ void single_test() {
 	unsigned int cplex_time_limit = 10;	// 5 minutes
 
 	int size = 20;
-	TSPProblem* problem = new TSPProblem(size);
+	TSPProblem* problem = new TSPProblem("/media/psf/memoc-project/code/instances/bcl380_n20.tsp");
 	cout << "Problema: N = " <<size<<endl;
 	// problem->print_costs();
 
@@ -60,6 +60,7 @@ void single_test() {
 	cout << "--------------------------------------"<<endl;
 
 	unsigned int ga_time_limit = 3;
+	unsigned int ga_iteration_limit = 1000;
 	unsigned int ga_population_size_factor = 5;
 	double ga_mutation_probability = 0.02;
 
@@ -71,6 +72,7 @@ void single_test() {
 	GASolver* gaSolver = new GASolver(problem,\
 						problem->get_size()*ga_population_size_factor,\
 						ga_time_limit,\
+						ga_iteration_limit,
 						ga_mutation_probability);
 	GAIndividual* gaSol = gaSolver->solve();
 	e_time = current_time();

@@ -23,11 +23,14 @@ class GASolver {
 	    TSPProblem* problem;
 	    unsigned int population_size;
 	    long long time_limit;
+		unsigned int iterations_limit;
 	    double mutation_probability;
 	    GAPopulation* population;
 
 	public:
-	    GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr);
+	    GASolver(TSPProblem *problem, unsigned int pop_size,\
+				unsigned int t_limit, unsigned int itr_limit, \
+				double mutation_pr);
 	    // ~GASolver(){ problem = NULL; delete population;}
 	    GAIndividual* solve();
 

@@ -23,10 +23,13 @@ using namespace std;
 /**
 *	@brief	Default constructor
 */
-GASolver::GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr) {
+GASolver::GASolver(TSPProblem *problem, unsigned int pop_size, \
+		unsigned int t_limit, unsigned int itr_limit,
+		double mutation_pr) {
     this->problem = problem;
     this->population_size = pop_size;
-    this->time_limit = (long long) t_limit * 1000;
+    this->time_limit = (long long) t_limit * 1000;	// seconds to milliseconds
+	this->iterations_limit = itr_limit;
     this->mutation_probability = mutation_pr;
 }
 
@@ -54,7 +57,7 @@ GAIndividual* GASolver::solve() {
 	unsigned int i = 0;	// current itereation
 	long long t_start = current_timestamp();	// time in milliseconds
 
-	while ((current_timestamp() - t_start) < this->time_limit) {
+	while  ((i < this->iterations_limit) && ((current_timestamp() - t_start) < this->time_limit)) {
 
 		// Phase 2: select the mating pool
 		vector< GAIndividual* > mating_pool;
