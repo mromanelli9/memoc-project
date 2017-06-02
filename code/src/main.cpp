@@ -120,6 +120,7 @@ void single_test(string filename) {
 	GAIndividual* gaSol = gaSolver->solve();
 	e_time = current_timestamp();
 	ga_time = e_time - s_time;
+	cout << " Done." << endl;
 
 	cout << endl;
 	cout << "--------------  CPLEX	--------------"<<endl;

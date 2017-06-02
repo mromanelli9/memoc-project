@@ -25,12 +25,15 @@ class GASolver {
 	    long long time_limit;
 		unsigned int iterations_limit;
 	    double mutation_probability;
+		bool verbose;
+
 	    GAPopulation* population;
 
 	public:
 	    GASolver(TSPProblem *problem, unsigned int pop_size_factor,\
 				unsigned int t_limit, unsigned int itr_limit, \
-				double mutation_pr);
+				double mutation_pr,
+				bool vvv = false);
 	    // ~GASolver(){ problem = NULL; delete population;}
 	    GAIndividual* solve();
 

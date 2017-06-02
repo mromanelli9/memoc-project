@@ -26,12 +26,14 @@ using namespace std;
 */
 GASolver::GASolver(TSPProblem *problem, unsigned int pop_size_factor, \
 		unsigned int t_limit, unsigned int itr_limit,
-		double mutation_pr) {
+		double mutation_pr,
+		bool vvv) {
     this->problem = problem;
     this->population_size = problem->get_size() * pop_size_factor;
     this->time_limit = (long long) t_limit * 1000;	// seconds to milliseconds
 	this->iterations_limit = itr_limit;
     this->mutation_probability = mutation_pr;
+	this->verbose = vvv;
 }
 
 /**
@@ -50,9 +52,12 @@ GAIndividual* GASolver::solve() {
 
 	best = population->get_best_individual();
 	worst = population->get_worst_individual();
-	cout << " Inizio" \
-		<< ": Peggiore " << worst->get_fitness() \
-		<< ", Migliore: " << best->get_fitness() << endl;
+
+	if (this->verbose) {
+		cout << " Inizio" \
+			<< ": Peggiore " << worst->get_fitness() \
+			<< ", Migliore: " << best->get_fitness() << endl;
+	}
 
 	// Counting how much consegutive iterations
 	// the population fitness fits to a value.
@@ -93,14 +98,29 @@ GAIndividual* GASolver::solve() {
 		// If fix point counter reaches a fixed value stop evolution
 		if ( fix_point > fix_point_limit) { break; }
 
+		best = population->get_best_individual();
+		worst = population->get_worst_individual();
+
+		if (this->verbose && (i % 500) == 0 ) {
+			best = population->get_best_individual();
+			worst = population->get_worst_individual();
+
+			cout << " Iterazione " << i \
+				<< ": Peggiore " << worst->get_fitness() \
+				<< ", Migliore: " << best->get_fitness() << endl;
+		}
+
 		i++;
 	}
 
 	best = population->get_best_individual();
 	worst = population->get_worst_individual();
-	cout << " Fine (iterazione: " << i \
-		<< "): Peggiore " << worst->get_fitness() \
-		<< ", Migliore: " << best->get_fitness() << endl;
+
+	if (this->verbose) {
+		cout << " Fine (iterazione: " << i \
+			<< "): Peggiore " << worst->get_fitness() \
+			<< ", Migliore: " << best->get_fitness() << endl;
+	}
 
 	return best;
 }
