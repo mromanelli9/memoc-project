@@ -29,7 +29,7 @@ bool is_file(const char* path);
 bool is_dir(const char* path);
 void single_test(string filename);
 void run_tests(vector<string> &files);
-
+long long current_timestamp();
 
  /**
  *	@brief	Main function
@@ -69,6 +69,8 @@ void run_tests(vector<string> &files) {
 }
 
 void single_test(string filename) {
+	long long s_time, e_time, cplex_time, ga_time;
+
 	cout << "######################################"<< endl;
 
 	// Create a new problem based on date provided in the file
@@ -81,12 +83,18 @@ void single_test(string filename) {
 		// Initialize the solver
 		cout << "Solving with CPLEX..." <<endl;
 		unsigned int cplex_time_limit = 10;	// 5 minutes
+
+		s_time = current_timestamp();
 		CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, cplex_time_limit);
 
 		// Solve the problem with CPLEX
 		cplexSol = cplexSolver->solve();
+		e_time = current_timestamp();
+
+		cplex_time = e_time - s_time;
 	} catch(std::exception& e) {
 		cplexSol = NULL;
+		cplex_time = -1;
 		std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
 	}
 	cout << " Done." << endl;
@@ -99,14 +107,19 @@ void single_test(string filename) {
 	unsigned int ga_population_size_factor = 5;	// the population will have a number
 												// of individuals set to 5 * problem-size
 	double ga_mutation_probability = 0.02;	// probability of mutation
+	bool verbose = true;
 
 	cout << "Solving with GA..." <<endl;
+	s_time = current_timestamp();
 	GASolver* gaSolver = new GASolver(tspProblem,\
 									ga_population_size_factor,\
 									ga_time_limit,\
 									ga_iteration_limit,\
-									ga_mutation_probability);
+									ga_mutation_probability,
+									verbose);
 	GAIndividual* gaSol = gaSolver->solve();
+	e_time = current_timestamp();
+	ga_time = e_time - s_time;
 
 	cout << endl;
 	cout << "--------------  CPLEX	--------------"<<endl;
@@ -120,6 +133,8 @@ void single_test(string filename) {
 		} else {
 			cout << " too long. " << endl;
 		}
+
+		cout << " Time: " << cplex_time << " [ms]." << endl;
 	} else {
 		cout << " No solution found.";
 	}
@@ -134,6 +149,7 @@ void single_test(string filename) {
 	} else {
 		cout << " too long. " << endl;
 	}
+	cout << " Time: " << ga_time << " [ms]." << endl;
 	cout << endl;
 
 	if ( cplexSol != NULL) {
@@ -182,4 +198,16 @@ bool is_dir(const char* path) {
 	struct stat buf;
 	stat(path, &buf);
 	return S_ISDIR(buf.st_mode);
+}
+
+/**
+*	@brief	Get time in milliseconds
+*
+*	@return return time [milliseconds]
+*/
+long long current_timestamp() {
+    struct timeval te;
+    gettimeofday(&te, NULL);	// get current time
+    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000;	// caculate milliseconds
+    return milliseconds;
 }
