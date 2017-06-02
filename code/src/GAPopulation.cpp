@@ -344,19 +344,6 @@ GAIndividual* GAPopulation::choose_best(vector<GAIndividual*> pool) {
 		}
 	}
 	return pool.at(index);
-	// double max = 0;
-	// unsigned int best = 0;
-	// double value;
-	//
-	// for (unsigned int i = 0; i < pool.size(); i++) {
-	// 	value = pool.at(i)->get_fitness();
-	// 	if (value > max) {
-	// 		max = value;
-	// 		best = i;
-	// 	}
-	// }
-	//
-	// return pool.at(best);
 }
 
 /**
