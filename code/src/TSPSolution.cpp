@@ -108,7 +108,6 @@ vector<Node> TSPSolution::get_path() {
 *   @return void
 */
 void TSPSolution::print_path() {
-	cout << "Solution cost: " << this->solution_cost << endl;
 	for (unsigned int i = 0; i < this->path.size(); ++i) {
 		cout << this->path[i];
 		if (i != this->path.size()-1) { cout << " -> ";}

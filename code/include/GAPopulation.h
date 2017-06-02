@@ -8,8 +8,9 @@
  *
  *  @section DESCRIPTION
  *
- *  A population is a set of individuals
- *	with some features (genes) in common.
+ *  This class represents a population of individuals
+ *	and containts the functions to build, evolge and manage the
+ *	population.
  *
  */
 

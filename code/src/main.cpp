@@ -8,106 +8,178 @@
  *
  *  @section DESCRIPTION
  *
- *  This file is the main file, it creates/loads instances,
+ *  This file is the main file: it loads all the instances,
  *	solve the problems, prints results and some statistics.
  *
  */
 
+#include "../include/CPLEXSolver.h"
+#include "../include/GASolver.h"
 #include <iostream>
 #include <string>
 #include <sys/time.h>
-#include "../include/CPLEXSolver.h"
-#include "../include/GASolver.h"
+#include <dirent.h>
+#include <algorithm>
+#include <sys/stat.h>
 
 using namespace std;
 
-// Prototypes
-long long current_time();
+int getdir (string dir, vector<string> &files);
+bool is_file(const char* path);
+bool is_dir(const char* path);
+void single_test(string filename);
+void run_tests(vector<string> &files);
 
-void single_test();
-
-void run_istances();
 
  /**
  *	@brief	Main function
+ *
  */
  int main(int argc, char* argv[]) {
-	// if (argc != 2) { return 1; }
+	 if (argc != 2) { return -1; }
 
-	single_test();
+	 std::string input = argv[1];
+	 vector<std::string> files = vector<std::string>();
 
+	 if (is_dir(input.c_str())) {
+		 // Read instances filenames
+		 getdir(input, files);
+		 std::sort(files.begin(), files.end());
+
+		 // Remove . and ..
+		 files.erase(files.begin(), files.begin()+2);
+
+		 // Go!
+		 run_tests(files);
+	 } else if (is_file(input.c_str())) {
+		 // GO!
+		 single_test(input);
+	 } else {
+		 cout << "Error." << endl;
+		 return -2;
+	 }
+
+	 return 0;
+}
+
+void run_tests(vector<string> &files) {
+	for (unsigned int i = 0;i < files.size();i++) {
+		 cout << files[i] << endl;
+	}
+}
+
+void single_test(string filename) {
+	cout << "######################################"<< endl;
+
+	// Create a new problem based on date provided in the file
+	TSPProblem* tspProblem = new TSPProblem(filename);
+	cout << "Problem dimension: " << tspProblem->get_size() << "." << endl;
+
+	// Solving problem using CPLEX
+	TSPSolution* cplexSol;
+	try {
+		// Initialize the solver
+		cout << "Solving with CPLEX..." <<endl;
+		unsigned int cplex_time_limit = 10;	// 5 minutes
+		CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, cplex_time_limit);
+
+		// Solve the problem with CPLEX
+		cplexSol = cplexSolver->solve();
+	} catch(std::exception& e) {
+		cplexSol = NULL;
+		std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
+	}
+	cout << " Done." << endl;
+
+	// Solving problem using the heuristic (GA)
+
+	// Parameters
+	unsigned int ga_time_limit = 10;	// 10 seconds
+	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
+	unsigned int ga_population_size_factor = 5;	// the population will have a number
+												// of individuals set to 5 * problem-size
+	double ga_mutation_probability = 0.02;	// probability of mutation
+
+	cout << "Solving with GA..." <<endl;
+	GASolver* gaSolver = new GASolver(tspProblem,\
+									ga_population_size_factor,\
+									ga_time_limit,\
+									ga_iteration_limit,\
+									ga_mutation_probability);
+	GAIndividual* gaSol = gaSolver->solve();
+
+	cout << endl;
+	cout << "--------------  CPLEX	--------------"<<endl;
+	if ( cplexSol != NULL) {
+		cout << " Solution found." << endl;
+		cout << " Cost: " << cplexSol->get_solution_cost() << "." << endl;
+		cout << " Path: ";
+
+		if (tspProblem->get_size() <= 20) {
+			cplexSol->print_path();
+		} else {
+			cout << " too long. " << endl;
+		}
+	} else {
+		cout << " No solution found.";
+	}
+	cout << endl;
+
+	cout << "--------------    GA 	--------------" << endl;
+	cout << " Solution found." << endl;
+	cout << " Cost: " << gaSol->get_fitness() << "." << endl;
+	cout << " Path: ";
+	if (tspProblem->get_size() <= 20) {
+		gaSol->print_path();
+	} else {
+		cout << " too long. " << endl;
+	}
+	cout << endl;
+
+	if ( cplexSol != NULL) {
+		cout << "Gap between solutions : " << \
+			(1-(gaSol->get_fitness() / cplexSol->get_solution_cost())) * 100 << \
+			"%" << "." << endl;
+	}
+}
+
+
+/**
+*	@brief	Read files in a given directory
+*/
+int getdir (string dir, vector<string> &files) {
+	DIR *dp;
+	struct dirent *dirp;
+	if((dp  = opendir(dir.c_str())) == NULL) {
+		cout << "Error(" << errno << ") opening " << dir << endl;
+		return errno;
+	}
+
+	while ((dirp = readdir(dp)) != NULL) {
+		files.push_back(string(dirp->d_name));
+	}
+	closedir(dp);
 	return 0;
 }
 
-void single_test() {
-	unsigned int cplex_time_limit = 20;	// 5 minutes
-
-	int size = 20;
-	TSPProblem* problem = new TSPProblem("/media/psf/memoc-project/code/instances/bcl380_n100.tsp");
-	cout << "Problema: N = " <<problem->get_size()<<endl;
-	// problem->print_costs();
-
-	long long e_time, s_time;
-
-	// s_time = current_time();
-	// CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
-	// TSPSolution* cplexSol = cplexSolver->solve();
-	// e_time = current_time();
-	//
-	// cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_solution_cost() <<endl;
-	// cplexSol->print_path();
-	// cout << "Tempo " << (e_time - s_time) << endl;
-	// cout << "--------------------------------------"<<endl;
-
-	unsigned int ga_time_limit = 10;
-	unsigned int ga_iteration_limit = 1000;
-	unsigned int ga_population_size_factor = 8;
-	double ga_mutation_probability = 0.02;
-
-	cout << "Risolvo con GA" <<endl;
-	//GASolver* gaSolver = new GASolver(problem, problem->get_size()*10, 3, 0.05, 2);
-
-	// per debug prendiamone una piccola
-	s_time = current_time();
-	GASolver* gaSolver = new GASolver(problem,\
-						ga_population_size_factor,\
-						ga_time_limit,\
-						ga_iteration_limit,
-						ga_mutation_probability);
-	GAIndividual* gaSol = gaSolver->solve();
-	e_time = current_time();
-
-	cout << "Soluzione di GA - Costo "<<gaSol->get_fitness() <<endl;
-	gaSol->print_path();
-	cout << "Tempo " << (e_time - s_time) << endl;
-	cout << "--------------------------------------" <<endl;
-	double cplexsol = 334.07;
-	cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexsol))*100 <<"%"<<endl;
+/**
+*	@brief	Return true if the argument is a regular file
+*
+*	@return boolean
+*/
+bool is_file(const char* path) {
+	struct stat buf;
+	stat(path, &buf);
+	return S_ISREG(buf.st_mode);
 }
 
-void run_istances() {
-	// unsigned int cplex_time_limit = 10;	// 5 minutes
-
-	// // Create a problem from the instance provided with the argument
-	// try {
-	// 	 TSPProblem* tspProblem;
-	// 	 std::string instance_filename = argv[1];
-	// 	 tspProblem = new TSPProblem(instance_filename);
-	//
-	// 	 // Solving problem using CPLEX
-	// 	 CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
-	// 	 TSPSolution* cplexSol = cplexSolver->solve();
-	// } catch(std::exception& e) {
-	// 	// std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
-	// 	return 2;
-	// }
-}
-
-
-// [!DEBUG]
-long long current_time() {
-    struct timeval te;
-    gettimeofday(&te, NULL);	// get current time
-    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000;	// caculate milliseconds
-    return milliseconds;
+/**
+*	@brief	Return true if the argument is a directory
+*
+*	@return boolean
+*/
+bool is_dir(const char* path) {
+	struct stat buf;
+	stat(path, &buf);
+	return S_ISDIR(buf.st_mode);
 }

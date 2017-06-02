@@ -39,14 +39,9 @@ GASolver::GASolver(TSPProblem *problem, unsigned int pop_size_factor, \
 */
 GAIndividual* GASolver::solve() {
 	// Phase 1: create the first population
-	long long s_time, e_time;
-	s_time = current_timestamp();
 	GAPopulation* population = new GAPopulation(this->population_size,\
 											this->mutation_probability, \
 											this->problem);
-
-	e_time = current_timestamp();
-	cout << "Tempo " << (e_time - s_time) << endl;
 
 	// individuals used for statistics over the iterations
 	// and for return the best individual at the end
@@ -55,8 +50,8 @@ GAIndividual* GASolver::solve() {
 
 	best = population->get_best_individual();
 	worst = population->get_worst_individual();
-	cout << "Inizio" \
-		<< "; Peggiore " << worst->get_fitness() \
+	cout << " Inizio" \
+		<< ": Peggiore " << worst->get_fitness() \
 		<< ", Migliore: " << best->get_fitness() << endl;
 
 	// Counting how much consegutive iterations
@@ -70,27 +65,18 @@ GAIndividual* GASolver::solve() {
 	unsigned int i = 0;	// current itereation
 	long long t_start = current_timestamp();	// time in milliseconds
 
-	// while  ((i < this->iterations_limit) && ((current_timestamp() - t_start) < this->time_limit)) {
+	while  ((i < this->iterations_limit) && ((current_timestamp() - t_start) < this->time_limit)) {
 		// Phase 2: select the mating pool
 		vector< GAIndividual* > mating_pool;
-		s_time = current_timestamp();
 		mating_pool = population->create_mating_pool(20);
-		e_time = current_timestamp();
-		cout << "Tempo " << (e_time - s_time) << endl;
 
 		// Phase 3-4: crossover to generate offsprings
 		// and mutate new children according to probability
 		vector< GAIndividual* > offsprings;
-		s_time = current_timestamp();
 		offsprings = population->crossover(mating_pool);
-		e_time = current_timestamp();
-		cout << "Tempo " << (e_time - s_time) << endl;
 
 		// Phase 5: population management
-		s_time = current_timestamp();
 		population->population_management(offsprings);
-		e_time = current_timestamp();
-		cout << "Tempo " << (e_time - s_time) << endl;
 
 		// See how thing goes
 		best = population->get_best_individual();
@@ -105,21 +91,15 @@ GAIndividual* GASolver::solve() {
 		}
 
 		// If fix point counter reaches a fixed value stop evolution
-		// if ( fix_point > fix_point_limit) { break; }
-
-		// Some statistics:
-		if ( i % 500 == 0) {
-			cout << "Giro " << i<< "; Peggiore " << worst->get_fitness() \
-								 << ", Migliore: " << best->get_fitness() << endl;
-		}
+		if ( fix_point > fix_point_limit) { break; }
 
 		i++;
-	// }
+	}
 
 	best = population->get_best_individual();
 	worst = population->get_worst_individual();
-	cout << "Fine (it: " << i \
-		<< "); Peggiore " << worst->get_fitness() \
+	cout << " Fine (iterazione: " << i \
+		<< "): Peggiore " << worst->get_fitness() \
 		<< ", Migliore: " << best->get_fitness() << endl;
 
 	return best;

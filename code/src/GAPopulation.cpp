@@ -1,23 +1,22 @@
 /**
  *  @file    GAPopulation.cpp
  *  @author  Marco Romanelli
- *  @date    31/05/2017
+ *  @date    02/05/2017
  *  @version 1.0
  *
  *  @brief GA population class file
  *
  *  @section DESCRIPTION
  *
- *  A population is a set of individuals
- *	with some features (genes) in common.
- *
+ *  This class represents a population of individuals
+ *	and containts the functions to build, evolge and manage the
+ *	population.
  */
 
-#include "../include/GAPopulation.h"
-#include "../include/GAIndividual.h"
 #include <assert.h>
 #include <algorithm>
 #include <climits>
+#include "../include/GAPopulation.h"
 
 using namespace std;
 
@@ -54,29 +53,26 @@ vector< GAIndividual* > GAPopulation::create_mating_pool(unsigned int ratio) {
 
 	// loop (rounds)
 	for (unsigned int i = 0; i < this->population_size; i++) {
-		vector<GAIndividual*> winners;	// Select two individuals (parents) at each round
 
-		// Init K candidates
-		vector<GAIndividual*> candidates(K);
+		// new_generation_ratio is fixed and set to 2
+		// so we create two parents
+		for (unsigned int j = 0; j < this->new_generation_ratio; j++) {
+			vector<GAIndividual*> candidates;	// individuals in this round
+			vector<GAIndividual*> no_good;	// avoid past individuals
+			GAIndividual* winner;
 
-		// Choose a random number k1 s.t.  1 <= k1 < N-K
-		unsigned int k1 = (rand() % (this->population_size - K - 1)) +1;
+			// K-tournament
+			for (unsigned int j = 0; j < K; j++) {
+				GAIndividual* c = choose_random(this->population, no_good);
+				candidates.push_back(c);
 
-		// Copy K individuals into the new array
-		std::copy(this->population.begin()+k1, this->population.begin()+ k1 +K, candidates.begin());
+				no_good.push_back(candidates.at(j));
+			}
 
-		// Shuffle randomly the individuals
-		std::random_shuffle(candidates.begin(), candidates.end());
-
-		// Sort them by their fitness value
-		std::sort(candidates.begin(), candidates.end(), GAPopulation::sort_by_fitness);
-
-		// Take the best individuals in the candidates set
-		// Saving the winning parents into the set (vector)
-		for (unsigned int j = 1; j <= this->new_generation_ratio; j++) {
-			winners.push_back(candidates.at(K-j));
+			// Choose a winner
+			winner = choose_best(candidates);
+			parents.push_back(winner);
 		}
-
 	}
 
 	return parents;
