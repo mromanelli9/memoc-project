@@ -25,12 +25,13 @@ class GASolver {
 	    long long time_limit;
 	    double mutation_probability;
 	    GAPopulation* population;
-		long long current_timestamp();
 
 	public:
 	    GASolver(TSPProblem *problem, unsigned int pop_size, unsigned int t_limit, double mutation_pr);
 	    // ~GASolver(){ problem = NULL; delete population;}
 	    GAIndividual* solve();
+
+		long long current_timestamp();
 };
 
 #endif	// GA_SOLVER_H_
