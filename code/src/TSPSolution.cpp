@@ -32,7 +32,7 @@ TSPSolution::TSPSolution(TSPProblem *problem) {
 	// choose the next successor randomly among the possibilies
 	vector< vector<double> > C = problem->get_costs();
 	unsigned int N = problem->get_size();
-	fitness = 0;
+	solution_cost = 0;
 	path.resize(N + 1);
 	path[0] = 0;	// starting node is 0
 
@@ -43,7 +43,7 @@ TSPSolution::TSPSolution(TSPProblem *problem) {
 
 	for (unsigned int i = 1; i < N; ++i) {
 		Node selected_node = choose_node(path[i-1], nodes, C);
-		fitness += C[path[i-1]][selected_node];	// compute the cost of the solution so far
+		solution_cost += C[path[i-1]][selected_node];	// compute the cost of the solution so far
 		path[i] = selected_node;
 
 		// re-compute the vector of possible nodes
@@ -54,7 +54,7 @@ TSPSolution::TSPSolution(TSPProblem *problem) {
 		assert(nodes.size() == new_nodes.size()+1);
 		nodes = new_nodes;
 	}
-	fitness += C[path[N-1]][0];	// cost of the second-to-last node
+	solution_cost += C[path[N-1]][0];	// cost of the second-to-last node
 	path[N] = 0;	// ending node should be always 0
 }
 
@@ -72,25 +72,25 @@ TSPSolution::TSPSolution(TSPProblem *problem, vector<Node> p) {
 	this->path.resize(p.size());
 	for (unsigned int j = 0; j < path.size(); ++j) { path[j] = p[j]; }
 
-	this->fitness = 0;
+	this->solution_cost = 0;
 	int debug_sum = 0;
 	int debug_sum_2 = 0;
 	for (unsigned int i = 0; i < N; ++i) {
 		debug_sum += path[i];
 		debug_sum_2 += i;
-		this->fitness += C[path[i]][path[i+1]];
+		this->solution_cost += C[path[i]][path[i+1]];
 	}
 
 	// assert(debug_sum == debug_sum_2);	// note: told to do so but not sure why
 }
 
 /**
-*   @brief	function to get access to the fitness value
+*   @brief	function to get access to the sol. cost. value
 *
-*   @return return the fitness value
+*   @return the cost of the solution
 */
-double TSPSolution::get_fitness() {
-	return this->fitness;
+double TSPSolution::get_solution_cost() {
+	return this->solution_cost;
 }
 
 /**
@@ -108,7 +108,7 @@ vector<Node> TSPSolution::get_path() {
 *   @return void
 */
 void TSPSolution::print_path() {
-	cout << "Fitness: " << this->fitness << endl;
+	cout << "Solution cost: " << this->solution_cost << endl;
 	for (unsigned int i = 0; i < this->path.size(); ++i) {
 		cout << this->path[i];
 		if (i != this->path.size()-1) { cout << " -> ";}

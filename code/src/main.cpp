@@ -64,7 +64,7 @@ long long current_time() {
     TSPSolution* cplexSol = cplexSolver->solve();
 	e_time = current_time();
 
-	cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_fitness() <<endl;
+	cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_solution_cost() <<endl;
     cplexSol->print_path();
 	cout << "Tempo " << (e_time - s_time) << endl;
 	cout << "--------------------------------------"<<endl;
@@ -89,7 +89,7 @@ long long current_time() {
     gaSol->print_path();
 	cout << "Tempo " << (e_time - s_time) << endl;
     cout << "--------------------------------------" <<endl;
-    cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_fitness()))*100 <<"%"<<endl;
+    cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_solution_cost()))*100 <<"%"<<endl;
 
 	return 0;
 }

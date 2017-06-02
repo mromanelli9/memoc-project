@@ -24,6 +24,8 @@ class GAIndividual : public TSPSolution {
 	public:
 	    GAIndividual(TSPProblem *problem);
 		GAIndividual(TSPProblem* problem, vector<Node> path);
+
+		double get_fitness();
 };
 
 #endif	// GA_INDIVIDUAL_H_

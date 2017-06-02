@@ -24,3 +24,13 @@ using namespace std;
 */
 GAIndividual::GAIndividual(TSPProblem *problem): TSPSolution(problem) {}
 GAIndividual::GAIndividual(TSPProblem *problem, vector<Node> p): TSPSolution(problem, p) {}
+
+/**
+*   @brief	function to get access to the sol. cost. value,
+*			here named fitness value
+*
+*   @return the cost of the solution
+*/
+double GAIndividual::get_fitness() {
+	return TSPSolution::get_solution_cost();
+}

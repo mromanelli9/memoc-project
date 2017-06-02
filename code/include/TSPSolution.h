@@ -26,7 +26,7 @@ class TSPSolution {
 	protected:
 		TSPProblem* problem;
 		vector<Node> path;
-		double fitness;	// cost of the solution
+		double solution_cost;
 		Node choose_node(Node from, vector<Node> nodes, vector< vector<double> >& C);
 
 	public:
@@ -34,7 +34,7 @@ class TSPSolution {
 		TSPSolution(TSPProblem* problem);
 		// ~TCPSolution() { problem = nullptr;}
 
-		double get_fitness();
+		double get_solution_cost();
 	    vector<Node> get_path();
 	    void print_path();
 	    Node next_node(Node from);
