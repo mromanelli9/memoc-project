@@ -102,11 +102,11 @@ void single_test(string filename) {
 	// Solving problem using the heuristic (GA)
 
 	// Parameters
-	unsigned int ga_time_limit = 10;	// 10 seconds
+	unsigned int ga_time_limit = 5;	// 10 seconds
 	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
-	unsigned int ga_population_size_factor = 5;	// the population will have a number
+	unsigned int ga_population_size_factor = 2;	// the population will have a number
 												// of individuals set to 5 * problem-size
-	double ga_mutation_probability = 0.02;	// probability of mutation
+	double ga_mutation_probability = 0.05;	// probability of mutation
 	bool verbose = true;
 
 	cout << "Solving with GA..." <<endl;
