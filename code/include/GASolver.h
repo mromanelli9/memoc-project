@@ -28,7 +28,7 @@ class GASolver {
 	    GAPopulation* population;
 
 	public:
-	    GASolver(TSPProblem *problem, unsigned int pop_size,\
+	    GASolver(TSPProblem *problem, unsigned int pop_size_factor,\
 				unsigned int t_limit, unsigned int itr_limit, \
 				double mutation_pr);
 	    // ~GASolver(){ problem = NULL; delete population;}

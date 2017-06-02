@@ -40,28 +40,28 @@ void run_istances();
 }
 
 void single_test() {
-	unsigned int cplex_time_limit = 10;	// 5 minutes
+	unsigned int cplex_time_limit = 20;	// 5 minutes
 
 	int size = 20;
-	TSPProblem* problem = new TSPProblem("/media/psf/memoc-project/code/instances/bcl380_n20.tsp");
-	cout << "Problema: N = " <<size<<endl;
+	TSPProblem* problem = new TSPProblem("/media/psf/memoc-project/code/instances/bcl380_n40.tsp");
+	cout << "Problema: N = " <<problem->get_size()<<endl;
 	// problem->print_costs();
 
 	long long e_time, s_time;
 
-	s_time = current_time();
-	CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
-	TSPSolution* cplexSol = cplexSolver->solve();
-	e_time = current_time();
+	// s_time = current_time();
+	// CPLEXSolver* cplexSolver = new CPLEXSolver(problem, cplex_time_limit);
+	// TSPSolution* cplexSol = cplexSolver->solve();
+	// e_time = current_time();
+	//
+	// cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_solution_cost() <<endl;
+	// cplexSol->print_path();
+	// cout << "Tempo " << (e_time - s_time) << endl;
+	// cout << "--------------------------------------"<<endl;
 
-	cout << "Soluzione di CPLEX - Costo "<<cplexSol->get_solution_cost() <<endl;
-	cplexSol->print_path();
-	cout << "Tempo " << (e_time - s_time) << endl;
-	cout << "--------------------------------------"<<endl;
-
-	unsigned int ga_time_limit = 3;
+	unsigned int ga_time_limit = 10;
 	unsigned int ga_iteration_limit = 1000;
-	unsigned int ga_population_size_factor = 5;
+	unsigned int ga_population_size_factor = 3;
 	double ga_mutation_probability = 0.02;
 
 	cout << "Risolvo con GA" <<endl;
@@ -70,7 +70,7 @@ void single_test() {
 	// per debug prendiamone una piccola
 	s_time = current_time();
 	GASolver* gaSolver = new GASolver(problem,\
-						problem->get_size()*ga_population_size_factor,\
+						ga_population_size_factor,\
 						ga_time_limit,\
 						ga_iteration_limit,
 						ga_mutation_probability);
@@ -81,7 +81,8 @@ void single_test() {
 	gaSol->print_path();
 	cout << "Tempo " << (e_time - s_time) << endl;
 	cout << "--------------------------------------" <<endl;
-	cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexSol->get_solution_cost()))*100 <<"%"<<endl;
+	double cplexsol = 334.07;
+	cout << "Gap dall'ottimo: " << (1-(gaSol->get_fitness() / cplexsol))*100 <<"%"<<endl;
 }
 
 void run_istances() {

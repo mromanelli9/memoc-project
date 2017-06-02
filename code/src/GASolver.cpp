@@ -17,17 +17,18 @@
 #include "../include/GAPopulation.h"
 #include <iostream>
 #include <sys/time.h>
+#include <math.h>
 
 using namespace std;
 
 /**
 *	@brief	Default constructor
 */
-GASolver::GASolver(TSPProblem *problem, unsigned int pop_size, \
+GASolver::GASolver(TSPProblem *problem, unsigned int pop_size_factor, \
 		unsigned int t_limit, unsigned int itr_limit,
 		double mutation_pr) {
     this->problem = problem;
-    this->population_size = pop_size;
+    this->population_size = problem->get_size() * pop_size_factor;
     this->time_limit = (long long) t_limit * 1000;	// seconds to milliseconds
 	this->iterations_limit = itr_limit;
     this->mutation_probability = mutation_pr;
@@ -53,12 +54,18 @@ GAIndividual* GASolver::solve() {
 		<< "; Peggiore " << worst->get_fitness() \
 		<< ", Migliore: " << best->get_fitness() << endl;
 
+	// Counting how much consegutive iterations
+	// the population fitness fits to a value.
+	unsigned int fix_point = 0;
+	// If a fix point is reached for <fix_point_limit>
+	// consegutive iterations stop evolution
+	unsigned int fix_point_limit = pow(this->problem->get_size(), 1.3);
+
 	// Start main loop. Stop when time exceed
 	unsigned int i = 0;	// current itereation
 	long long t_start = current_timestamp();	// time in milliseconds
 
 	while  ((i < this->iterations_limit) && ((current_timestamp() - t_start) < this->time_limit)) {
-
 		// Phase 2: select the mating pool
 		vector< GAIndividual* > mating_pool;
 		mating_pool = population->create_mating_pool(20);
@@ -75,6 +82,17 @@ GAIndividual* GASolver::solve() {
 		best = population->get_best_individual();
 		worst = population->get_worst_individual();
 
+		// Check for fix point
+		if ( worst->get_fitness() == best->get_fitness() ) { fix_point++; }
+
+		// If population diverge, reset fix point counter
+		if (( fix_point > 0) && (worst->get_fitness() != best->get_fitness())) {
+			fix_point = 0;
+		}
+
+		// If fix point counter reaches a fixed value stop evolution
+		if ( fix_point > fix_point_limit) { break; }
+
 		// Some statistics:
 		if ( i % 500 == 0) {
 			cout << "Giro " << i<< "; Peggiore " << worst->get_fitness() \
@@ -83,7 +101,7 @@ GAIndividual* GASolver::solve() {
 
 		i++;
 	}
-
+	
 	best = population->get_best_individual();
 	worst = population->get_worst_individual();
 	cout << "Fine (it: " << i \
