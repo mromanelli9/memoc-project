@@ -1,0 +1,26 @@
+% !TEX encoding = UTF-8
+% !TEX program = pdflatex
+% !TEX root = relazione.tex
+% !TeX spellcheck = it_IT
+
+\section{Note sul codice}
+
+\subsection{Utilizzo}
+La cartella contenente il codice è strutturata in modo tenere separati i sorgenti, i binari, il codice generato,
+i file Header, scripts e altri file utili all'esecuzione.
+Per questo motivo il codice viene fornito con un \textsf{Makefile} che include al suo interno i comandi
+necessari alla compilazione e all'esecuzione dei test.
+Per un corretto utilizzo sono necessari alcuni passi da eseguirsi sul terminale di un computer con sistema
+operativo basato su Linux.
+%
+\paragraph{Inizio} Il codice viene fornito sottoforma di archivio, quindi per prima cosa è necessario estrarre
+i file contenuti all'interno:
+\label{code:make-passo-1}
+\begin{lstlisting}[language=bash]
+tar -zxvf codice.tar.gz
+\end{lstlisting}
+per poi spostarsi all'interno della cartella appena creata:
+\label{code:make-passo-2}
+\begin{lstlisting}[language=bash]
+cd codice/
+\end{lstlisting}
