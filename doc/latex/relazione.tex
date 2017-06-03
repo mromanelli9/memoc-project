@@ -1,0 +1,96 @@
+\documentclass[fleqn,a4paper,11pt]{article}
+\usepackage[italian]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[final]{graphicx}
+\usepackage[toc,page]{appendix}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{wasysym}
+\usepackage{stmaryrd}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{listings}
+\lstset{mathescape,columns=fullflexible,basicstyle=\fontfamily{lmvtt}\selectfont}
+\usepackage{caption} 
+\setlength\abovecaptionskip{.4em}
+\setlength\belowcaptionskip{.8em}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{tabularx}
+%\setlength{\extrarowheight}{5pt}
+\usepackage{array}
+\newcolumntype{?}{!{\vrule width 0.3mm}}
+\usepackage{rotating,booktabs}
+\def\MC#1{\multicolumn{1}{c}{#1}}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\newcommand\HRule{\rule{\textwidth}{1pt}}
+\newcommand\LRule{\rule{\textwidth}{.5pt}}
+\newcommand\DRule{\rule{\textwidth}{.4pt}\\[\dimexpr-\baselineskip+1mm+2pt] \rule{\textwidth}{2pt}}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter:}{.3em}{} 
+%\titlespacing*{<command>}{<left>}{<before-sep>}{<after-sep>}
+\titlespacing*{\chapter}
+{0pt}{5.5ex plus 1ex minus .2ex}{3.3ex plus .2ex}
+
+\graphicspath{{images/}}
+
+\begin{document}
+
+% begin intro
+\begin{titlepage}
+\begin{center}
+	\begin{minipage}{6in}
+  		\centering
+  		\raisebox{-0.5\height}{\includegraphics[height=80px]{pollo.png}}
+  		\hspace*{1.6in}
+  		\raisebox{-0.5\height}{\includegraphics[height=20px]{logoDM.png}}
+  		%\hspace*{.35in}
+	\end{minipage}\\[1cm]
+% Upper part of the page
+\textsc{\LARGE Universit\`a di Padova}\\[.2cm]
+\textsc{\large Laurea Magistrale in Informatica}\\[.3cm]
+\DRule \\[.5cm]
+% Title
+{\large Corso di Methods and Models for Combinatorial Optimization} \\[.4cm]
+{\huge \bfseries Relazione finale sugli esercizi di laboratorio} \\[.4cm]
+{\Large Marco Romanelli} \\[.2cm]
+{\footnotesize marco.romanelli.1@studenti.unipd.it} \\
+{\footnotesize matricola n. 1106706} \\[1cm]
+{\large \today}
+\HRule \\[3cm]
+\end{center}
+\end{titlepage}
+\newpage
+% end intro
+
+% begin document
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\tableofcontents
+%\newpage
+
+% INTRO
+%\input{capitolo1.tex} 
+
+% PANORAMICA
+
+%\clearpage
+%\appendix
+% TABELLE
+%\input{appendice1.tex}
+
+% BIBLIOGRAFIA
+%\clearpage % da cambiare se prima ci sono troppi spazi vuoti
+%\bibliography{biblio.bib}
+%\bibliographystyle{ieeetr}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+%
+% end document
+\end{document}
