@@ -1,3 +1,12 @@
+% !TEX encoding = UTF-8
+% !TEX program = pdflatex
+% !TEX root = relazione.tex
+% !TeX spellcheck = it_IT
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND MISC SETTINGS
+%----------------------------------------------------------------------------------------
+
 \documentclass[fleqn,a4paper,11pt]{article}
 \usepackage[italian]{babel}
 \usepackage[utf8x]{inputenc}
@@ -36,11 +45,15 @@
 %\titlespacing*{<command>}{<left>}{<before-sep>}{<after-sep>}
 \titlespacing*{\chapter}
 {0pt}{5.5ex plus 1ex minus .2ex}{3.3ex plus .2ex}
+\usepackage{pdfpages}
 
 \graphicspath{{images/}}
 
 \begin{document}
 
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
 % begin intro
 \begin{titlepage}
 \begin{center}
@@ -65,32 +78,34 @@
 \HRule \\[3cm]
 \end{center}
 \end{titlepage}
-\newpage
-% end intro
 
-% begin document
-%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------------------------------------------------------
 
-%\tableofcontents
-%\newpage
 
-% INTRO
-%\input{capitolo1.tex} 
+%----------------------------------------------------------------------------------------
+%	DOCUMENT HEADER
+%----------------------------------------------------------------------------------------
 
-% PANORAMICA
 
-%\clearpage
-%\appendix
-% TABELLE
-%\input{appendice1.tex}
+	%----------------------------------------------------------------------------------------
+	%	TOC
+	%----------------------------------------------------------------------------------------
+		
+	\clearpage
+	\tableofcontents
+	
+	%----------------------------------------------------------------------------------------
+	% ESSAY BODY
+	%----------------------------------------------------------------------------------------
+	\clearpage
+	\input{introduzione}	% Introduzione
+	\input{generazione-istanze}	% Generazione delle istanze 
+	
+	%\appendix
+	%----------------------------------------------------------------------------------------
+	%	END
+	%----------------------------------------------------------------------------------------
 
-% BIBLIOGRAFIA
-%\clearpage % da cambiare se prima ci sono troppi spazi vuoti
-%\bibliography{biblio.bib}
-%\bibliographystyle{ieeetr}
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-
-%
 % end document
 \end{document}
