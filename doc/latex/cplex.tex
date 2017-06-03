@@ -10,10 +10,13 @@ ed eventuali modifiche e/o accorgimenti all'implementazione standard.
 \subsection{Definizione delle variabili}
 Nel modello sono presenti due variabili le $x_{ij}$ e le $y_{ij}$.
 A titolo esemplificativo, prendiamo le prime:
+%
 \begin{gather*}
 x_{ij} = \text{ amount of the flow shipped from } i \text{ to } j, ∀ (i,j) \in A;
 \end{gather*}
+%
 L'implementazione corrispondente è:
+%
 \label{code:cplex-variabili}
 \begin{lstlisting}[language=C++, caption=Creazione delle variabili $x_{ij}$]
 for (unsigned int i = 0; i < N; ++i) {
@@ -32,21 +35,48 @@ for (unsigned int i = 0; i < N; ++i) {
 	}
 }
 \end{lstlisting}
-
-
+%
 Una volta create, le variabili sono memorizzate internamente al risolutore e l'unico modo per accedervi è tramite la sua posizione nell'array interno.
 Per semplificare questo processo, viene creata una matrice $NxN$ che associa il nome della variabile alla sua posizione interna del risolutore.
-Mentre viene tenuta traccia del numero di variabili create, l'indice della variabile corrente viene memorizzato nella mappa.
+Mentre viene tenuta traccia del numero di variabili create, l'indice della variabile corrente viene memorizzato nella mappa di supporto (\textsf{xMap}).
 
-Un'altra osservazione che si può fare sul codice è il fatto che vengono create le variabili $x_{ij}$ quando gli indici sono uguali;
+Un'altra osservazione che si può fare sul codice è il fatto che non vengono create le variabili $x_{ij}$ quando gli indici sono uguali;
 ovviamente non si avrebbe guadagno nel farlo, infatti se si pensa al problema reale, spostare la trivella lungo l'argo $(i, i)$ equivale a lasciarla ferma.
-
-
+%%%%
+%%%%
 \subsection{Definizione dei vincoli}
+Sebbene le API di CPLEX permettano la definizione di più vincoli in una sola chiamata, si è scelto di definire un vincolo per chiamata;
+in questo modo la definizione risulta più chiara e quindi più semplice da modificare in un futuro.
+Il costo computazione derivante da tale scelta è comunque limitato, in quanto la definizione del problema avviene solo in fase di inizializzazione
+e questa fase ha un costo molto inferiore rispetto alla fase di ottimizzazione.
+%
+\label{code:cplex-vincoli}
+\begin{lstlisting}[language=C++, caption=Creazione di un vincolo]
+std::vector<int> varIndex(N-1);
+std::vector<double> coef(N-1);
 
-\subsection{Implementazione}
+int idx = 0;
+for (unsigned int j = 0; j < N; ++j) {
+	if (j == STARTING_NODE) continue;
+	varIndex[idx] = xMap[STARTING_NODE][j];
+	coef[idx] = 1;
+	idx++;
+}
 
+char sense = 'E';
+double rhs = N;
+snprintf(name, NAME_SIZE, "flux");
+char* cname = (char*)(&name[0]);
 
-
-
+int matbeg = 0;
+CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, varIndex.size(), &rhs, &sense, &matbeg, &varIndex[0], &coef[0], NULL, &cname );
+}
+\end{lstlisting}
+%
+I parametri della chiamata CPLEX sono (alcuni): il numero di variabili e vincoli da creare, il numero di variabili nel vincolo dove il coefficiente è
+diverso da zero, la parte destra del vincolo e il verso (in questo caso definisce l'uguale ``$=$''), il vettore \textsf{rmatbeg} (posto a zero in quanto creo un solo vincolo
+\footnote{Non è necessario utilizzare il vettore per tenere traccia delle righe, perché definendo un solo vincolo si ha una sola riga che inizierà alla posizione 0.}),
+l'inizio dell'array con gli indici della variabili e poi quello con gli indici dei coefficienti e infine il nome del vincolo.
+%%%%
+%%%%
 \subsection{Risultati}
