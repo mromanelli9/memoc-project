@@ -10,7 +10,7 @@ BINDIR := bin
 TARGET := bin/main
 PYTARGET := scripts/gen_instances.py
 PYCC := python
-DATASET := vlsi-dataset/bcl380.tsp
+DATASET := vlsi-dataset/
 INSTANCESDIR := instances
 PYARGS := -f $(INSTANCESDIR)/bcl380.tsp -n 100
 OUTDIR := output
@@ -39,9 +39,7 @@ run: ${TARGET}
 
 gen-instances: ${PYTARGET} ${DATASET}
 	@mkdir -p $(INSTANCESDIR)
-	@cp ${DATASET} $(INSTANCESDIR)/bcl380.tsp
-	@echo "Generating instances.\n $(PYCC) ${PYTARGET} ${PYARGS}"; $(PYCC) ${PYTARGET} ${PYARGS}
-	@rm $(INSTANCESDIR)/bcl380.tsp
+	$(PYCC) ${PYTARGET} ${DATASET}
 
 clean:
 	@echo "Cleaning...";
