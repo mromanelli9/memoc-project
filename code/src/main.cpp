@@ -21,14 +21,16 @@
 #include <dirent.h>
 #include <algorithm>
 #include <sys/stat.h>
+#include <fstream>
+#include <vector>
 
 using namespace std;
 
 int getdir (string dir, vector<string> &files);
 bool is_file(const char* path);
 bool is_dir(const char* path);
-void single_test(string filename);
-void run_tests(vector<string> &files);
+int single_test(string filename);
+int run_tests(vector<string> &files);
 long long current_timestamp();
 
  /**
@@ -44,34 +46,150 @@ long long current_timestamp();
 	 if (is_dir(input.c_str())) {
 		 // Read instances filenames
 		 getdir(input, files);
-		 std::sort(files.begin(), files.end());
 
-		 // Remove . and ..
-		 files.erase(files.begin(), files.begin()+2);
+		 // Some cleaning: filter only .tsp files
+		 vector<std::string> instances;
+		 for (auto & el : files) {
+			 std::string ext;
+			 try {
+				 ext = el.substr( el.size()-4, el.size()-1);
+			 } catch(std::exception& e) { continue; }
+
+			 if (ext == ".tsp") {
+				 instances.push_back( input + "/" + el );
+			 }
+		 }
+
+		 files.clear();
+		 std::sort(instances.begin(), instances.end());
 
 		 // Go!
-		 run_tests(files);
+		 return run_tests(instances);
 	 } else if (is_file(input.c_str())) {
 		 // GO!
-		 single_test(input);
+		 return  single_test(input);
 	 } else {
 		 cout << "Error." << endl;
 		 return -2;
 	 }
 
-	 return 0;
+	 return -1;
 }
 
-void run_tests(vector<string> &files) {
-	for (unsigned int i = 0;i < files.size();i++) {
-		 cout << files[i] << endl;
+/**
+*	@brief	Run all the instance and solvs them
+*
+*	@return exit status (int)
+*/
+int run_tests(vector<string> &files) {
+	long long s_time, e_time, cplex_time, ga_time;
+	std::string separator = "\t";
+	std::string output_file = "results.txt";
+	ofstream myfile;
+
+	cout << "############   TSP SOLVER  ############"<< endl;
+
+	// Set all the parameters
+	unsigned int cplex_time_limit = 60 * 5;	// 5 minutes
+	unsigned int ga_time_limit = 60 * 5;	// 5 minutes
+	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
+	unsigned int ga_population_size_factor = 2;	// the population will have a number
+												// of individuals set to 5 * problem-size
+	double ga_mutation_probability = 0.05;	// probability of mutation
+	bool verbose = false;
+
+	try {
+		myfile.open(output_file, ios::out);
+		myfile << "\"Dimension\"" << separator;
+		myfile << "\"CPLEX Time\"" << separator;
+		myfile << "\"CPLEX Sol.\"" << separator;
+		myfile << "\"GA Sol.\"" << separator;
+		myfile << "\"GA Time\"" << separator;
+		myfile << "\r\n" << std::flush;
+	} catch(std::exception& e) {
+		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+		return EXIT_FAILURE;
 	}
+
+	// For each instance:
+	for (unsigned int i = 0; i < files.size(); i++) {
+		std::string instance = files[i];
+		cout << "Now running on: \'" << instance << "\'..." << endl;
+
+		// Create a new problem based on date provided in the file
+		TSPProblem* tspProblem = new TSPProblem(instance);
+
+		// Solving problem using CPLEX
+		cout << "  with CPLEX..."  << endl;
+		TSPSolution* cplexSol = NULL;
+		try {
+			s_time = current_timestamp();
+			CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, cplex_time_limit);
+			cplexSol = cplexSolver->solve();
+			e_time = current_timestamp();
+			cplex_time = e_time - s_time;
+		} catch(std::exception& e) {
+			cplexSol = NULL;
+			cplex_time = -1;
+		}
+
+		// Solving problem using GA
+		cout << "  with GA..."  << endl;
+		s_time = current_timestamp();
+		GASolver* gaSolver = new GASolver(tspProblem,\
+										ga_population_size_factor,\
+										ga_time_limit,\
+										ga_iteration_limit,\
+										ga_mutation_probability,
+										verbose);
+		GAIndividual* gaSol = gaSolver->solve();
+		e_time = current_timestamp();
+		ga_time = e_time - s_time;
+
+		try {
+			// Save cplex results
+			myfile << tspProblem->get_size() << separator;
+			myfile << cplex_time << separator;
+			myfile <<  ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << separator;
+
+			// Save ga results
+			myfile << ga_time << separator;
+			myfile << gaSol->get_fitness();
+			// ga will always find a solution, so we're not saving the success/failure flag
+
+			// End of the line
+			myfile << "\r\n" << std::flush;
+		} catch(std::exception& e) {
+			std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+			return EXIT_FAILURE;
+		}
+
+
+	}
+
+	try {
+		myfile.close();
+	} catch(std::exception& e) {
+		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	cout << endl << endl;
+
+	return 0;
 }
 
-void single_test(string filename) {
+/**
+*	@brief	Run a single instance provided in the file.
+*			To use for testing and examples.
+*
+*	@return exit status (int)
+
+*/
+int single_test(string filename) {
 	long long s_time, e_time, cplex_time, ga_time;
 
-	cout << "######################################"<< endl;
+	cout << "############   TSP SOLVER  ############"<< endl;
 
 	// Create a new problem based on date provided in the file
 	TSPProblem* tspProblem = new TSPProblem(filename);
@@ -82,7 +200,7 @@ void single_test(string filename) {
 	try {
 		// Initialize the solver
 		cout << "Solving with CPLEX..." <<endl;
-		unsigned int cplex_time_limit = 10;	// 5 minutes
+		unsigned int cplex_time_limit = 10;	// 10 seconds
 
 		s_time = current_timestamp();
 		CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, cplex_time_limit);
@@ -95,7 +213,7 @@ void single_test(string filename) {
 	} catch(std::exception& e) {
 		cplexSol = NULL;
 		cplex_time = -1;
-		std::cout << ">>>EXCEPTION: " << e.what() << std::endl;
+		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
 	}
 	cout << " Done." << endl;
 
@@ -158,6 +276,8 @@ void single_test(string filename) {
 			(1-(gaSol->get_fitness() / cplexSol->get_solution_cost())) * 100 << \
 			"%" << "." << endl;
 	}
+
+	return 0;
 }
 
 
