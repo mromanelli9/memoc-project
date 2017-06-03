@@ -28,7 +28,7 @@
 \lccode`~=0
 \usepackage{amssymb}
 %\lstset{tabsize=2,
-%		breaklines=true, 
+%		breaklines=true,
 %     	breakatwhitespace=true,
 %		xleftmargin=.25in,
 %		mathescape,
@@ -39,7 +39,7 @@
 %\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
 %\lstset{
 %backgroundcolor=\color{lbcolor},
-%    tabsize=4,    
+%    tabsize=4,
 %%   rulecolor=,
 %    language=[GNU]C++,
 %        basicstyle=\footnotesize,
@@ -80,7 +80,7 @@
 %  commentstyle=\color{darkgreen},
 %  stringstyle=\color{red}
 %}
-\usepackage{caption} 
+\usepackage{caption}
 \setlength\abovecaptionskip{.4em}
 \setlength\belowcaptionskip{.8em}
 \usepackage{hyperref}
@@ -98,7 +98,7 @@
 \newcommand\DRule{\rule{\textwidth}{.4pt}\\[\dimexpr-\baselineskip+1mm+2pt] \rule{\textwidth}{2pt}}
 \usepackage{titlesec}
 \titleformat{\chapter}[hang]
-{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter:}{.3em}{} 
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter:}{.3em}{}
 %\titlespacing*{<command>}{<left>}{<before-sep>}{<after-sep>}
 \titlespacing*{\chapter}
 {0pt}{5.5ex plus 1ex minus .2ex}{3.3ex plus .2ex}
@@ -147,19 +147,20 @@
 	%----------------------------------------------------------------------------------------
 	%	TOC
 	%----------------------------------------------------------------------------------------
-		
+
 	\clearpage
 	\tableofcontents
-	
+
 	%----------------------------------------------------------------------------------------
 	% ESSAY BODY
 	%----------------------------------------------------------------------------------------
 	\clearpage
 	\input{introduzione}	% Introduzione
-	\input{generazione-istanze}	% Generazione delle istanze 
+	\input{generazione-istanze}	% Generazione delle istanze
 	\input{cplex}	% Parte 1 (CPLEX)
-	
-	%\appendix
+
+	\appendix
+	\input{codice}	% Utilizzo del codice
 	%----------------------------------------------------------------------------------------
 	%	END
 	%----------------------------------------------------------------------------------------
