@@ -3,11 +3,9 @@
 #title           : gen_instances.py
 #description     : This script will create instances from a real TSP file probem
 #					provided in the VLSI data sets by Andre Rohe.
-#					The instances will have this format: bcl380_n[$i].tsp,
-#					with $i within the range 5-<limit>.
 #author          : Marco Romanelli
-#date            : 30/05/2017
-#version         : 1
+#date            : 03/05/2017
+#version         : 2
 #usage           : python gen_instances.py -f <instanceName> [-n <limit>]
 #python_version  : 2.7
 #==============================================================================
@@ -15,27 +13,18 @@
 
 import getopt, sys
 import numpy as np
-# import matplotlib.pyplot as plt	# enable this to show a PCB
 import math
 import os.path
 import random
+from os import walk
 
-
-def diplay_pcb(N, points):
-	""" Create a window and show graphically where
-	the points are placed.
-    """
-	x = [item[0] for item in points]
-	y = [item[1] for item in points]
-
-	plt.scatter(x, y)
-	plt.show()
 
 def distance(p1, p2):
 	""" Compute the distance between two point. """
 	x1, y1 = p1
 	x2, y2 = p2
 	return math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
+
 
 def readPoints(filename):
 	""" Read a file with path "filename" and return
@@ -56,6 +45,7 @@ def readPoints(filename):
 	del t_points
 
 	return points
+
 
 def heuristic(points, n):
 	""" This function takes a list of points
@@ -88,55 +78,37 @@ def heuristic(points, n):
 	points = p
 	return points
 
-def main(argv):
-	""" Main function. """
-
-	# Handle parameters
-	try:
-		(opts, args) = getopt.getopt(argv, "f:n:")
-	except getopt.GetoptError as err:
-		# print help information and exit:
-		print "parse_istance.py -f <instanceName> [-n <limit>]"
-		print str(err)  # will print something like "option -a not recognized"
-		sys.exit(2)
-
-	filename = None
-	N = None
-	step = 5
-
-	for o, a in opts:
-		if o == "-f":
-			filename = a
-		elif o == "-n":
-			N = int(a)
-		else:
-			assert False, "unhandled option"
+def generate_from_vlsi(filename, step=5, limit=100):
+	""" Generate a set of instances from one original vlsi file.
+		Instances will have the form:
+	 		<vlsi-filename>_n<N>.tsp
+		where N:
+			<step> <= N <= <limit>
+			with step of <step>
+	"""
 
 	# Parse a file
 	print "Parsing file '%s'..." % filename
 	points = readPoints(filename)
-	print "I got %d points." % len(points)
+	print " I got %d points." % len(points)
 
-	# Display the PCB
-	# diplay_pcb(N, points)
-
-	print "Starting instances generation (%d different instances with step %d)." % (N, step)
+	print " Starting instances generation..."
 
 	# Generate instances iteratively
 	i = 1
 	instances = []
 	p = None
-	for itr in xrange(step, N+step, step):
-		print "Generating instance #%d with %d points." % (i, itr)
+	for itr in range(step, limit + step, step):
+		print "  Generating instance #%d with %d points." % (i, itr)
 		p = heuristic(points, itr)
 		instances.append(p)
 		i += 1
 
 	# Compute distance for each pair of points
 	# in each instance
-	print "Computing distances..."
+	print " Computing distances..."
 	for i, current in enumerate(instances):
-		print "Working on instance #%d." % (i+1)
+		print "  Working on instance #%d." % (i+1)
 
 		n = len(current)
 		data = str(n) + '\n'
@@ -153,10 +125,29 @@ def main(argv):
 		outputFile = "instances/" + \
 					os.path.splitext(os.path.basename(filename))[0] + \
 					"_n" + str(n) + ".tsp"
-		print "\tSaving (%s)..." % (outputFile)
+		print "  Saving (%s)..." % (outputFile)
 		fp = open(outputFile, 'w')
 		fp.write(data)
 		fp.close()
+
+	print
+
+
+def main(argv):
+	if (len(sys.argv)) != 2:
+		print "[!] Missing parameters."
+		sys.exit(-1)
+
+	folder = str(sys.argv[1])
+
+	# Parameters
+	generation_step = 5
+	generation_limit = 100
+
+	# Run over all vlsi-dataset folder
+	for el in os.listdir(folder):
+		instance_file = folder + el
+		generate_from_vlsi( instance_file, generation_step, generation_limit)
 
 	# Exit
 	print "Done. Exit."
