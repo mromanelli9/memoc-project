@@ -4,3 +4,49 @@
 % !TeX spellcheck = it_IT
 
 \section{CPLEX}
+Il modello è già ampiamente descritto nella consegna, per cui verrà esposto la tecnica di implementazione delle variabili e dei vincoli utilizzando le API di CPLEX
+ed eventuali modifiche e/o accorgimenti all'implementazione standard.
+
+\subsection{Definizione delle variabili}
+Nel modello sono presenti due variabili le $x_{ij}$ e le $y_{ij}$.
+A titolo esemplificativo, prendiamo le prime:
+\begin{gather*}
+x_{ij} = \text{ amount of the flow shipped from } i \text{ to } j, ∀ (i,j) \in A;
+\end{gather*}
+L'implementazione corrispondente è:
+\label{code:cplex-variabili}
+\begin{lstlisting}[language=C++, caption=Creazione delle variabili $x_{ij}$]
+for (unsigned int i = 0; i < N; ++i) {
+	for (unsigned int j = 0; j < N; ++j) {
+		if (i == j) continue;
+		
+		char htype = 'I';
+		double obj = 0.0;
+		double lb = 0.0;
+		double ub = CPX_INFBOUND;
+		snprintf(name, NAME_SIZE, "x_%d,%d", nodes[i], nodes[j]);
+		char* xname = &name[0];
+		CHECKED_CPX_CALL( CPXnewcols, env, lp, 1, &obj, &lb, &ub, &htype, &xname );
+		xMap[i][j] = created_vars;
+		created_vars++;
+	}
+}
+\end{lstlisting}
+
+
+Una volta create, le variabili sono memorizzate internamente al risolutore e l'unico modo per accedervi è tramite la sua posizione nell'array interno.
+Per semplificare questo processo, viene creata una matrice $NxN$ che associa il nome della variabile alla sua posizione interna del risolutore.
+Mentre viene tenuta traccia del numero di variabili create, l'indice della variabile corrente viene memorizzato nella mappa.
+
+Un'altra osservazione che si può fare sul codice è il fatto che vengono create le variabili $x_{ij}$ quando gli indici sono uguali;
+ovviamente non si avrebbe guadagno nel farlo, infatti se si pensa al problema reale, spostare la trivella lungo l'argo $(i, i)$ equivale a lasciarla ferma.
+
+
+\subsection{Definizione dei vincoli}
+
+\subsection{Implementazione}
+
+
+
+
+\subsection{Risultati}
