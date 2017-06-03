@@ -128,7 +128,7 @@ using namespace std;
 		snprintf(name, NAME_SIZE, "flux");
 		char* cname = (char*)(&name[0]);
 
-		int matbeg = 0;
+		int matbeg = 0; // 'cause we have just one constraint
 		CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, varIndex.size(), &rhs, &sense, &matbeg, &varIndex[0], &coef[0], NULL, &cname );
 	}
 
