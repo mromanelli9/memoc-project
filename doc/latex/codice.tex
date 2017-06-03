@@ -13,14 +13,106 @@ necessari alla compilazione e all'esecuzione dei test.
 Per un corretto utilizzo sono necessari alcuni passi da eseguirsi sul terminale di un computer con sistema
 operativo basato su Linux.
 %
-\paragraph{Inizio} Il codice viene fornito sottoforma di archivio, quindi per prima cosa è necessario estrarre
+Il codice viene fornito sottoforma di archivio, quindi per prima cosa è necessario estrarre
 i file contenuti all'interno:
 \label{code:make-passo-1}
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[style=BashStyle]
 tar -zxvf codice.tar.gz
 \end{lstlisting}
 per poi spostarsi all'interno della cartella appena creata:
 \label{code:make-passo-2}
-\begin{lstlisting}[language=bash]
+\begin{lstlisting}[style=BashStyle]
 cd codice/
 \end{lstlisting}
+%
+Per compilare i sorgenti è sufficiente lanciare il comando \textsf{Make}:
+\label{code:make-passo-3}
+\begin{lstlisting}[style=BashStyle]
+make
+\end{lstlisting}
+%
+Se la compilazione termina con successo, all'interno della
+cartella \textsf{bin} (per ulteriori dettagli si rimanda all'apposita sotto-sezione) troveremo
+l'eseguibile principale.
+Tuttavia si rende necessario un passo intermedio: bisogna infatti generare le istanze su cui si andrà
+poi a eseguire il binario.
+Per far ciò è sufficiente digitare
+\label{code:make-passo-4}
+\begin{lstlisting}[style=BashStyle]
+make gen-instances
+\end{lstlisting}
+e, una volta completato il processo, avremmo l'insieme delle istanze, generate secondo il metodo
+descritto nella sezione~\ref{sec:generazione-istanze}.
+
+Infine, si può scegliere se eseguire gli algoritmi su tutto l'insieme di istanze:
+\label{code:make-passo-5}
+\begin{lstlisting}[style=BashStyle]
+make run
+\end{lstlisting}
+oppure se eseguire sono un test su una sola istanza a scelta:
+% TODO: AGGIORNARE IL CODICE!!!
+\label{code:make-passo-6}
+\begin{lstlisting}[style=BashStyle]
+make test
+\end{lstlisting}
+%%%%
+%%%%
+\subsection{Struttura della cartella}
+Come già accennato, la disposizione dei file all'interno della cartella è ben strutturata e definita,
+ma può risultare dispersiva a un estraneo.
+Per questo motivo, viene qui fatta una panoramica dalla disposizione delle cartelle e dei file al suo interno.
+Come si può vedere dalla figura~\ref{fig:struttura-codice}, all'interno della cartella pricipale troviamo:
+\begin{itemize}
+	\item \textsf{bin}: contiene il file binario generato dalla compilazione;
+	\item \textsf{include}: all'interno sono presenti tutti i file header;
+	\item \textsf{instances}: una volta generate, le istanze si troveranno qui dentro;
+	\item \textsf{scripts}: si trova lo script in python che si occupa della generazione
+	delle istanze;
+	\item \textsf{src}: i sorgenti per gli algoritmi risolutivi delle due parti;
+	\item \textsf{vlsi-dataset}: contiente i file delle istanze originali, da cui poi verranno generate tutte le altre.
+\end{itemize}
+%
+I sorgenti sono molteplici e la loro descrizione è presente all'interno nelle prime righe;
+Tuttavia, le parti fondamentali degli algoritmi richiesti sono contenute solamente in alcuni, che sono:
+\begin{itemize}
+	\item \textsf{CPLEXSover}: contiene la risoluzione del problema posto utilizzando le API di CPLEX (risoluzione parte 1);
+	\item \textsf{GASolver} e \textsf{GAPopulation}: qui si trova la risoluzione mediante l'agoritmo genetico (parte 2);
+	\item \textsf{Main}: principalmente si occupa di iterare gli algoritmi su tutte le istanze, ma tramite una sua lettura
+	(funzione \textsf{single\_test}) è possibile vedere come utilizzare appropriatamente le classi e i metodi per la
+	risoluzione di un problema.
+\end{itemize}
+%
+\label{fig:struttura-codice}
+\begin{forest}
+    for tree={font=\sffamily, grow'=0,
+    folder indent=.9em, folder icons,
+    edge=densely dotted}
+    [main folder
+      [include
+          [cpxmacro.h, is file]
+		  [CPLEXSolver.h, is file]
+		  [GAIndividual.h, is file]
+		  [GAPopulation.h, is file]
+		  [GASolver.h, is file]
+		  [TSPProblem.h, is file]
+		  [TSPSolution.h, is file]]
+      [scripts
+          [gen\_instances.py, is file]]
+	  [src
+           [CPLEXSolver.cpp, is file]
+ 		  [GAIndividual.cpp, is file]
+ 		  [GAPopulation.cpp, is file]
+ 		  [GASolver.cpp, is file]
+		  [main.cpp, is file]
+ 		  [TSPProblem.cpp, is file]
+ 		  [TSPSolution.cpp, is file]]
+	 [vlsi-dataset
+		 [bcl380.tsp, is file]
+		 [dcc1911.tsp, is file]
+		 [djb2036.tsp, is file]
+		 [pbd984.tsp, is file]
+		 [pds2566.tsp, is file]
+		 [xql662.tsp, is file]]
+      [Makefile, is file]
+    ]
+ \end{forest}
