@@ -3,5 +3,50 @@
 % !TEX root = relazione.tex
 % !TeX spellcheck = it_IT
 
-\section{Generazione istanze}\label{sec:generazione-istanze}
-TODO
+\section{Algoritmo Genetico}\label{sec:GA}
+Come da consegna, la seconda parte prevedeva l'implementazione di un algortimo ad-hoc, scegliendo fra le varie
+metaeuristica presenti nelle dispense del corso;
+fra queste, si è scelta la classe dei metodi basati su popolazione e, in particolare, gli Algoritmi Genetici,
+molto diffusi grazie alla loro adattabilità e semplicità implementativa.
+%%%%
+%%%%
+\subsection{Operatori genetici}\label{subsec:operatori-genetici}
+Trattandosi di una metaeuristica, lo schema principale è generale e lascia molto spazio di manovra.
+Si inzia con la \textit{codifica delle soluzioni}, per poi definire i diversi \textit{operatori genetici}:
+\begin{itemize}
+	\item la generazione di un insieme di soluzioni (popolazione iniziale);
+	\item funzione che valuta la fitness di una soluzione;
+	\item operatori di ricombinazione;
+	\item operatori di passaggio generazionale.
+\end{itemize}
+Per la descrizione della metaeuristica si rimanda alle dispsense, mentre qui si evenzieranno
+solo le scelte progettuali attuate.
+%%%%
+%%%
+\subsubsection{Codifica degli individui}\label{subsubsec:codifica-individui}
+Un individuo della popolazione è una seguenza di $N+1$ geni, dove $N$ è la dimensione del problema e
+dove ciascun gene in posizione $i$ indica un nodo (o foro per la trivella) da visitare in posizione $i$
+nel ciclo hamiltoniano (il percorso che dovrà fare la trivella).
+La sequenza ha dimensione maggiore di $1$ rispetto alla dimensione del problema per codificare direttamente
+il vincolo che la trivella ritorni al punto di partenza; l'ultimo gene, infatti, avrà sempre valore uguale
+al primo, cioè $0$.
+%%%
+\subsubsection{Popolazione iniziale}\label{subsubsec:popolazione-inziale}
+La popolazione iniziale viene creata generando delle soluzioni (individui) in modo pseudo-greedy, ovvero
+incrementalmente a partire dal nodo inziale, scegliendo il successivo casualmente fra quelli ancora da visitare,
+ma dando più probabilità a quelli con costo minore.
+Questo per permettere sia una diversificazione degli individui (parte probabilistica) mantentendo tuttavia
+una convergenza abbastanza veloce (scelte pesate).
+
+La dimensione è specificata tramite un parametro ed è direttamente proporzionale alla dimensione del problema;
+è ragionevole pensare, infatti, che istanze maggiori abbiano un spazio delle soluzioni maggiore.
+%%%%
+\subsubsection{Funzione di fitness}\label{subsubsec:funzione-fitness}
+La funzione di fitness serve a dare una misura quantitiva della bontà di un individuo e guida
+molti dei processi evolutivi dell'algoritmo.
+Per questo motivo, è stata scelta la funzione obbiettivo del modello, ovvero il costo del ciclo della soluzione.
+%%%%
+\subsubsection{Operatori di selezione}\label{subsubsec:operatori-selezione}
+
+
+%%%
