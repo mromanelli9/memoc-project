@@ -4,4 +4,43 @@
 % !TeX spellcheck = it_IT
 
 \section{Generazione istanze}\label{sec:generazione-istanze}
-TODO
+È ovvio come per prima cosa sia necessario creare delle istanze per il problema che sia andrà ad analizzare.
+Un'istanza di un problema di foratura (come descritto nella prima parte della consegna) può essere rappresentata
+da un grafo dove i nodi sono i fori e gli archi con relativo peso sono gli spostamenti e i costi che la trivella
+deve effettuare per muoversi.
+Rappresentando questo tramite una matrice dei costi, il problema ora è come generare tali nodi e distanze;
+i fori nei pannelli perforati, infatti, non sono distribuiti casualmente sullo spazio ma seguono delle
+logiche intrinseche del problema che si fa a risolvere.
+
+Per cercare, quindi, di riprodurre almeno in parte questa distribuzione si è utilizzato una collezione di istanze
+per TSP basate su un data-set di VLSI, fornite da Andre Roh dell'Istituto di Ricerca per la Matematica Discreta
+dell'Università di Bonn, consultabili gratuitamente sul sito web ufficiale
+\footnote{\url{http://www.math.uwaterloo.ca/tsp/vlsi/index.html}}.
+Un esempio di tale istanze si può vedere in figura~\ref{fig:istanza-tsp-XQF131}.
+%
+\begin{figure}[!h]
+\begin{center}
+	\includegraphics[scale=.3]{XQF131}
+{\scriptsize \caption{Esempio di problema TSP con 131 città.}
+\label{fig:istanza-tsp-XQF131}}
+\end{center}
+\end{figure}
+%
+\paragraph{Generazione istanze pseudo-casuali}
+Queste istanze hanno però un numero di nodi molto elevato rispetto alle necessità
+e alle risorse di questa analisi.
+Inoltre, data la natura probabilistica dell'algoritmo previsto per la soluzione della parte 2 della consegna,
+è necessario eseguire le soluzioni proposte su molte istanze diverse.
+
+Per questo motivo è stato implementato un generatore di istanze pseudo-casuali che, a partire dalle istanze TSP
+descritte in precedenza, generi delle sotto-istanze di dimensioni minori.
+Dati i punti dell'istanza originale, il generatore prima estrare casualmente un sotto-insieme di questi
+di dimensione variabile per poi calcolare le distanze (futuri costi) sui nuovi punti.
+
+Da una singola istanza originale ne vengono generate 20 nuove, partendo da una dimensione $n=5$ e iterativamente
+crandone una con $i*n$ nodi, fino ad arrivare a un problema con dimensione 100.
+Per creare poi diverse istanze con la stessa dimensione, il generatore viene eseguito su 6 istanze TSP originali,
+per avere alla fine del processo 120 nuove istanze pseudo-casuali.
+
+Per l'implementazione è stato creato appositamente uno script scritto nel linguaggio Python.
+%%%
