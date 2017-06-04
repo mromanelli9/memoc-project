@@ -55,7 +55,7 @@ vector< GAIndividual* > GAPopulation::create_mating_pool(unsigned int ratio) {
 	for (unsigned int i = 0; i < this->population_size; i++) {
 
 		// new_generation_ratio is fixed and set to 2
-		// so we create two parents
+		// so we'll create two parents
 		for (unsigned int j = 0; j < this->new_generation_ratio; j++) {
 			vector<GAIndividual*> candidates;	// individuals in this round
 			vector<GAIndividual*> no_good;	// avoid past individuals
