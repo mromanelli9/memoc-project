@@ -3,9 +3,8 @@
 % !TEX root = relazione.tex
 % !TeX spellcheck = it_IT
 
-\section{Note sul codice}
-
-\subsection{Utilizzo}
+\section{Note sul codice}\label{sec:codice}
+\subsection{Utilizzo}\label{subsec:utilizzo}
 La cartella contenente il codice è strutturata in modo tenere separati i sorgenti, i binari, il codice generato,
 i file Header, scripts e altri file utili all'esecuzione.
 Per questo motivo il codice viene fornito con un \textsf{Makefile} che include al suo interno i comandi
@@ -57,7 +56,7 @@ make test
 \end{lstlisting}
 %%%%
 %%%%
-\subsection{Struttura della cartella}
+\subsection{Struttura della cartella}\label{subsec:struttura}
 Come già accennato, la disposizione dei file all'interno della cartella è ben strutturata e definita,
 ma può risultare dispersiva a un estraneo.
 Per questo motivo, viene qui fatta una panoramica dalla disposizione delle cartelle e dei file al suo interno.
@@ -118,3 +117,21 @@ Tuttavia, le parti fondamentali degli algoritmi richiesti sono contenute solamen
 	  [results.txt, is file]
     ]
  \end{forest}
+ %%%%
+ %%%%
+ \subsection{Note}\label{subsec:note}
+Utilizzando il Makefile non è necessario conoscere i nomi dei file o i loro parametri ed è sufficiente
+utilizzare i comandi descritti in precedenza (sotto-capitolo~\ref{subsec:utilizzo}) per compilare
+ed eseguire il codice.
+Tuttavia potrebbe rendersi necessaria una modifica al Makefile nel caso in cui il percorso di installazione
+di CPLEX sia diverso
+\footnote{Il Makefile presente nel codice conseganto al docente è già stato adattato per funzionare nei computer
+del laboratorio. La modifica è necessaria nel caso si voglia compilare su una macchina diversa.}
+ da quello indicato.
+In questo caso è necessario aprire il file \textsf{Makefile} con un editor di testo (nano, emacs, gedit, sublime)
+e modificare il percorso a CPLEX, indicato nelle variabili \textsf{CPX\_INCDIR} e \textsf{CPX\_LIBDIR}.
+\label{code:modifica-makefile}
+\begin{lstlisting}[style=BashStyle]
+CPX_INCDIR := <PERCORSO_CPLEX>/include/
+CPX_LIBDIR := <PERCORSO_CPLEX>/lib/x86-64_linux/static_pic
+\end{lstlisting}
