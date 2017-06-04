@@ -47,6 +47,78 @@ molti dei processi evolutivi dell'algoritmo.
 Per questo motivo, è stata scelta la funzione obbiettivo del modello, ovvero il costo del ciclo della soluzione.
 %%%%
 \subsubsection{Operatori di selezione}\label{subsubsec:operatori-selezione}
+Gli operatori di selezione scelgono tra la popolazione corrente gli invidui che partecipano ai processi riproduttivi.
+La scelta dev'essere in parte pesata sugli invidui migliori, in modo da trasmettere le migliori caratteristiche
+alla progenie, ma anche una componente casuale che permetta di convergere più lentamente e introdurre caratteristiche
+diverse che potrebbero rivelarsi anch'esse migliori.
 
+Sono stati proposti diversi metodi per combinare questi due aspetti, ma la scelta è ricaduta sul metodo
+chiamato \textit{Torneo-n}.
+Vengono quindi prima scelti $n$ individui e poi fra questi estratto il miglior candidato; il processo viene ripetuto
+una seconda volta in modo da ottenere due genitori.
 
+Il valore degli $n$ individui è impostato sul $20\%$ della popolazione.
 %%%
+\subsubsection{Operatori di ricombinazione}\label{subsubsec:operatori-ricombinazione}
+Gli operatori di ricombinazione, chimati in inglese di \textit{crossover},generano uno o più figli a partire dai genitori.
+Come già detto, i genitori in questo caso sono due (come avviene nella maggioranza dei casi) e viene generato
+un solo individuo figlio utilizzando il metodo noto come \textit{cut-cut crossover}.
+Il metodo nasce dall'ipotesi che geni vicini fra loro controllino caratteristiche tra loro correlate e, quindi,
+affinché i figli preservino tali caratteristiche sia necessario trasmettere blocchi di geni contigui.
+In dettaglio, vengono definiti casualmente 2 punti di taglio (e quindi sarà un 2-cut crossover) e il figlio si ottiene
+copiano i blocchi dei genitori alternativamente.
+%%
+\begin{figure}[!h]
+\begin{center}
+	\includegraphics[scale=.6]{2-cut-point-crossover}
+{\scriptsize \caption{Esempio di 2-cut-point crossover con un figlio.}
+\label{fig:2-cut-point-crossover}}
+\end{center}
+\end{figure}
+%%
+Per preservare l'ammissibilità dei figli (e generare quindi soluzioni ammissibili) è stato implementata
+una variante del metodo appena descritto, ovvero l'\textit{order crossover}.
+In questa tecnica, il figlio riporta le parti esterne dal primo genitore mentre i restanti geni (blocco interno del figlio)
+si ottengono copiando i geni mancanti nell'ordine in cui appiaiono nel secondo genitore.
+Si noti che questo metodo preserva il vincolo che il primo e l'ultimo gene siano entrambi pari a 0.
+%%%
+\subsubsection{Mutazione}\label{subsubsec:mutazione}
+Per evitare il fenomeno chiamato assorbimento genetico (convergenza casuale di uno o più geni verso lo stesso valore),
+l'operatore di mutazinone modifica casualmente il valore di alcuni geni, scelti casualmente anch'essi.
+
+Anche in questo, caso è stato implementato un metodo che preserva l'ammissibilità, chiamato \textit{mutazione per inversione},
+dove sono generati casualmente due punti della sequenza e si inverte la sottosequenza tra questi.
+
+La probabilità di mutazione è modificabile tramite un apposito parametro ed è solitamente molto bassa.
+%%%
+\subsubsection{Sostituzione della popolazione}\label{subsubsec:sostituzione-popolazione}
+A questo punto si ha un nuovo insieme di individui che va sostituito alla generazione corrente.
+Diverse tecniche sono state proposte e si è scelto di implementare la politica chiamata \textit{selezione dei migliori}.
+Si mantengono nella popolazione corrente gli N individui migliori tra gli $N + R$ (con $N$ dimensione della popolazione corrente
+e $R$ i nuovi individui generati), effettuando la selezione utilizzando il metodo Montecarlo con probabilità
+proporzionale al valore di fitness.
+%%%
+\subsubsection{Criterio di arresto}\label{subsubsec:criterio-arresto}
+% TODO: se si cambia il codice aggiornare qua
+I possibili criteri per l'arresto sono diversi e sono possibili anche combinazioni fra questi.
+In questo caso si è scelto un metodo ibrido che prevede un numero massimo di iterazioni (evoluzioni
+della popolazione) e tempo massimo d'esecuzione, entrambi specificabili come parametri all'avvio dell'algoritmo.
+
+Il tempo limite permette un confronto più semplice con il metodo CPLEX (i tempi limite sono infatti uguali)
+ed evita che l'algoritmo richieda troppo tempo quando la dimensione del problema è molto grande;
+il numero massimo di iterazioni permette invece di limitare il tempo d'esecuzione
+quando le istanze hanno una bassa dimensione.
+%%%%
+%%%%
+\subsection{Valore dei parametri}\label{subsec:parametri}
+
+
+
+
+
+%%%%
+%%%%
+\subsection{Risultati}\label{subsec:risultati}
+
+
+%%%%
