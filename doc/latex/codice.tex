@@ -77,9 +77,10 @@ Tuttavia, le parti fondamentali degli algoritmi richiesti sono contenute solamen
 \begin{itemize}
 	\item \textsf{CPLEXSover}: contiene la risoluzione del problema posto utilizzando le API di CPLEX (risoluzione parte 1);
 	\item \textsf{GASolver} e \textsf{GAPopulation}: qui si trova la risoluzione mediante l'agoritmo genetico (parte 2);
-	\item \textsf{Main}: principalmente si occupa di iterare gli algoritmi su tutte le istanze, ma tramite una sua lettura
-	(funzione \textsf{single\_test}) è possibile vedere come utilizzare appropriatamente le classi e i metodi per la
-	risoluzione di un problema.
+	\item \textsf{Main}: principalmente si occupa di iterare gli algoritmi su tutte le istanze,
+	ma può essere visto come esempio su come tilizzare appropriatamente le classi e i metodi per la
+	risoluzione di un problema (ad esempio nella funzione \textsf{single\_test});
+	\item \textsf{results.txt}: contiene i risultati delle esecuzioni sulle istanze (presente solo dopo l'esecuzione).
 \end{itemize}
 %
 \label{fig:struttura-codice}
@@ -114,5 +115,6 @@ Tuttavia, le parti fondamentali degli algoritmi richiesti sono contenute solamen
 		 [pds2566.tsp, is file]
 		 [xql662.tsp, is file]]
       [Makefile, is file]
+	  [results.txt, is file]
     ]
  \end{forest}
