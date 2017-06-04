@@ -17,12 +17,12 @@ x_{ij} = \text{ amount of the flow shipped from } i \text{ to } j, ∀ (i,j) \in
 %
 L'implementazione corrispondente è:
 %
-\label{code:cplex-variabili}
+\label{lst:cplex-variabili}
 \begin{lstlisting}[language=C++, caption=Creazione delle variabili $x_{ij}$]
 for (unsigned int i = 0; i < N; ++i) {
 	for (unsigned int j = 0; j < N; ++j) {
 		if (i == j) continue;
-		
+
 		char htype = 'I';
 		double obj = 0.0;
 		double lb = 0.0;
@@ -50,7 +50,7 @@ in questo modo la definizione risulta più chiara e quindi più semplice da modi
 Il costo computazione derivante da tale scelta è comunque limitato, in quanto la definizione del problema avviene solo in fase di inizializzazione
 e questa fase ha un costo molto inferiore rispetto alla fase di ottimizzazione.
 %
-\label{code:cplex-vincoli}
+\label{lst:cplex-vincoli}
 \begin{lstlisting}[language=C++, caption=Creazione di un vincolo]
 std::vector<int> varIndex(N-1);
 std::vector<double> coef(N-1);

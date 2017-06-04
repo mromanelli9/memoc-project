@@ -14,18 +14,18 @@ operativo basato su Linux.
 %
 Il codice viene fornito sottoforma di archivio, quindi per prima cosa è necessario estrarre
 i file contenuti all'interno:
-\label{code:make-passo-1}
+\label{lst:make-passo-1}
 \begin{lstlisting}[style=BashStyle]
 tar -zxvf codice.tar.gz
 \end{lstlisting}
 per poi spostarsi all'interno della cartella appena creata:
-\label{code:make-passo-2}
+\label{lst:make-passo-2}
 \begin{lstlisting}[style=BashStyle]
 cd codice/
 \end{lstlisting}
 %
 Per compilare i sorgenti è sufficiente lanciare il comando \textsf{Make}:
-\label{code:make-passo-3}
+\label{lst:make-passo-3}
 \begin{lstlisting}[style=BashStyle]
 make
 \end{lstlisting}
@@ -36,7 +36,7 @@ l'eseguibile principale.
 Tuttavia si rende necessario un passo intermedio: bisogna infatti generare le istanze su cui si andrà
 poi a eseguire il binario.
 Per far ciò è sufficiente digitare
-\label{code:make-passo-4}
+\label{lst:make-passo-4}
 \begin{lstlisting}[style=BashStyle]
 make gen-instances
 \end{lstlisting}
@@ -44,13 +44,13 @@ e, una volta completato il processo, avremmo l'insieme delle istanze, generate s
 descritto nella sezione~\ref{sec:generazione-istanze}.
 
 Infine, si può scegliere se eseguire gli algoritmi su tutto l'insieme di istanze:
-\label{code:make-passo-5}
+\label{lst:make-passo-5}
 \begin{lstlisting}[style=BashStyle]
 make run
 \end{lstlisting}
 oppure se eseguire sono un test su una sola istanza a scelta:
 % TODO: AGGIORNARE IL CODICE!!!
-\label{code:make-passo-6}
+\label{lst:make-passo-6}
 \begin{lstlisting}[style=BashStyle]
 make test
 \end{lstlisting}
@@ -130,7 +130,7 @@ del laboratorio. La modifica è necessaria nel caso si voglia compilare su una m
  da quello indicato.
 In questo caso è necessario aprire il file \textsf{Makefile} con un editor di testo (nano, emacs, gedit, sublime)
 e modificare il percorso a CPLEX, indicato nelle variabili \textsf{CPX\_INCDIR} e \textsf{CPX\_LIBDIR}.
-\label{code:modifica-makefile}
+\label{lst:modifica-makefile}
 \begin{lstlisting}[style=BashStyle]
 CPX_INCDIR := <PERCORSO_CPLEX>/include/
 CPX_LIBDIR := <PERCORSO_CPLEX>/lib/x86-64_linux/static_pic
