@@ -1,6 +1,8 @@
-#
-# TODO: -
-#
+# ------------------------------------
+#	Filename: Makefile
+#	Author:	Marco Romanelli
+#	Date:	05/06/2017
+# ------------------------------------
 
 CC := g++ # This is the main compiler
 # CC := clang --analyze # and comment out the linker last line for sanity
@@ -13,7 +15,7 @@ PYCC := python
 DATASET := vlsi-dataset/
 INSTANCESDIR := instances
 PYARGS := -f $(INSTANCESDIR)/bcl380.tsp -n 100
-OUTDIR := output
+OUTPUTFILE := results.txt
 
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -33,9 +35,11 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	@echo "$(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
-run: ${TARGET}
-	@mkdir -p $(OUTPUTDIR)
-	@echo "Launching ${TARGET}"; ${TARGET} ${ARGS}
+run: ${TARGET} ${INSTANCESDIR}
+	@echo "Launching ${TARGET} ${INSTANCESDIR}"; ${TARGET} ${INSTANCESDIR}
+
+test: ${TARGET}
+	@echo "Launching ${TARGET} ${ARGS}"; ${TARGET} ${ARGS}
 
 gen-instances: ${PYTARGET} ${DATASET}
 	@mkdir -p $(INSTANCESDIR)
@@ -43,6 +47,6 @@ gen-instances: ${PYTARGET} ${DATASET}
 
 clean:
 	@echo "Cleaning...";
-	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR) $(OUTDIR)"; $(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR) $(OUTDIR)
+	@echo "$(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR) $(OUTPUTFILE)"; $(RM) -rf $(BUILDDIR) $(BINDIR) $(INSTANCESDIR) $(OUTPUTFILE)
 
 .PHONY: clean
