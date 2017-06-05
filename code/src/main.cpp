@@ -39,14 +39,15 @@ long long current_timestamp();
  *
  */
  int main(int argc, char* argv[]) {
-	 if (argc != 3) { return -1; }
+	 if (argc < 2) { return -1; }
 
 	 std::string input = argv[1];
-	 unsigned int type = atoi(argv[2]);
-
 	 vector<std::string> files = vector<std::string>();
 
 	 if (is_dir(input.c_str())) {
+		 if (argc != 3) { return -1; }
+		 unsigned int type = atoi(argv[2]);
+
 		 // Read instances filenames
 		 getdir(input, files);
 
