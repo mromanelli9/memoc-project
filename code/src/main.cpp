@@ -30,7 +30,8 @@ int getdir (string dir, vector<string> &files);
 bool is_file(const char* path);
 bool is_dir(const char* path);
 int single_test(string filename);
-int run_tests(vector<string> &files);
+int run_instances_with_cplex(vector<string> &files);
+int run_instances_with_ga(vector<string> &files);
 long long current_timestamp();
 
  /**
@@ -38,9 +39,11 @@ long long current_timestamp();
  *
  */
  int main(int argc, char* argv[]) {
-	 if (argc != 2) { return -1; }
+	 if (argc != 3) { return -1; }
 
 	 std::string input = argv[1];
+	 unsigned int type = atoi(argv[2]);
+
 	 vector<std::string> files = vector<std::string>();
 
 	 if (is_dir(input.c_str())) {
@@ -64,7 +67,10 @@ long long current_timestamp();
 		 std::sort(instances.begin(), instances.end());
 
 		 // Go!
-		 return run_tests(instances);
+		 if (type == 1)
+		 	return run_instances_with_cplex(instances);
+		else
+			return run_instances_with_ga(instances);
 	 } else if (is_file(input.c_str())) {
 		 // GO!
 		 return  single_test(input);
@@ -77,20 +83,99 @@ long long current_timestamp();
 }
 
 /**
-*	@brief	Run all the instance and solvs them
+*	@brief	Run all the instance and solvs them using CPLEX
 *
 *	@return exit status (int)
 */
-int run_tests(vector<string> &files) {
-	long long s_time, e_time, cplex_time, ga_time;
+int run_instances_with_cplex(vector<string> &files) {
+	long long s_time, e_time, cplex_time;
 	std::string separator = ",";
 	std::string output_file = "results.csv";
 	ofstream myfile;
 
 	cout << "############   TSP SOLVER  ############"<< endl;
+	cout << "Solving instances using CPLEX." << endl;
 
 	// Set up all the parameters
 	unsigned int time_limit = 60 * 5;	// 5 minutes
+
+	try {
+		myfile.open(output_file, ios::out);
+		myfile << "\"Instance\"" << separator;
+		myfile << "\"Dimension\"" << separator;
+		myfile << "\"CPLEX Time\"" << separator;
+		myfile << "\"CPLEX Sol.\"" << separator;
+		myfile << "\r\n" << std::flush;
+	} catch(std::exception& e) {
+		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	// For each instance:
+	for (unsigned int i = 0; i < files.size(); i++) {
+		std::string instance = files[i];
+		cout << "Now running on: \'" << instance << "\'..." << endl;
+
+		// Create a new problem based on date provided in the file
+		TSPProblem* tspProblem = new TSPProblem(instance);
+
+		// Solving problem using CPLEX
+		TSPSolution* cplexSol = NULL;
+		try {
+			s_time = current_timestamp();
+			CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
+			cplexSol = cplexSolver->solve();
+			e_time = current_timestamp();
+			cplex_time = e_time - s_time;
+		} catch(std::exception& e) {
+			cplexSol = NULL;
+			cplex_time = -1;
+		}
+
+
+		try {
+			// Save cplex results
+			myfile << "\"" << instance << "\"" << separator;
+			myfile << "\"" << tspProblem->get_size() << "\"" << separator;
+			myfile << "\"" << cplex_time << "\"" << separator;
+			myfile << "\"" << ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << "\"" << separator;
+
+			// End of the line
+			myfile << "\r\n" << std::flush;
+		} catch(std::exception& e) {
+			std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+			return EXIT_FAILURE;
+		}
+	}
+
+	try {
+		myfile.close();
+	} catch(std::exception& e) {
+		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	cout << endl << endl;
+
+	return 0;
+}
+
+/**
+*	@brief	Run all the instance and solvs them using GA
+*
+*	@return exit status (int)
+*/
+int run_instances_with_ga(vector<string> &files) {
+	long long s_time, e_time, ga_time;
+	std::string separator = ",";
+	std::string output_file = "results.csv";
+	ofstream myfile;
+
+	cout << "############   TSP SOLVER  ############"<< endl;
+	cout << "Solving instances using GA." << endl;
+
+	// Set up all the parameters
+	unsigned int ga_time_limit = 60 * 5;	// 5 minutes
 	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
 	unsigned int ga_population_size_factor = 3;	// the population will have a number
 												// of individuals set to this value times problem-size
@@ -101,8 +186,6 @@ int run_tests(vector<string> &files) {
 		myfile.open(output_file, ios::out);
 		myfile << "\"Instance\"" << separator;
 		myfile << "\"Dimension\"" << separator;
-		myfile << "\"CPLEX Time\"" << separator;
-		myfile << "\"CPLEX Sol.\"" << separator;
 		myfile << "\"GA Time.\"" << separator;
 		myfile << "\"GA Sol\"" << separator;
 		myfile << "\r\n" << std::flush;
@@ -119,26 +202,11 @@ int run_tests(vector<string> &files) {
 		// Create a new problem based on date provided in the file
 		TSPProblem* tspProblem = new TSPProblem(instance);
 
-		// Solving problem using CPLEX
-		cout << "  with CPLEX..."  << endl;
-		TSPSolution* cplexSol = NULL;
-		try {
-			s_time = current_timestamp();
-			CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
-			cplexSol = cplexSolver->solve();
-			e_time = current_timestamp();
-			cplex_time = e_time - s_time;
-		} catch(std::exception& e) {
-			cplexSol = NULL;
-			cplex_time = -1;
-		}
-
 		// Solving problem using GA
-		cout << "  with GA..."  << endl;
 		s_time = current_timestamp();
 		GASolver* gaSolver = new GASolver(tspProblem,\
 										ga_population_size_factor,\
-										time_limit,\
+										ga_time_limit,\
 										ga_iteration_limit,\
 										ga_mutation_probability,
 										verbose);
@@ -147,14 +215,9 @@ int run_tests(vector<string> &files) {
 		ga_time = e_time - s_time;
 
 		try {
-			// Save cplex results
 			myfile << "\"" << instance << "\"" << separator;
 			myfile << "\"" << tspProblem->get_size() << "\"" << separator;
-			myfile << "\"" << cplex_time << "\"" << separator;
-			myfile << "\"" << ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << "\"" << separator;
-
-			// Save ga results
-			myfile << "\"" << ga_time << "\"" separator;
+			myfile << "\"" << ga_time << "\"" << separator;
 			myfile << "\"" << gaSol->get_fitness() << "\"";
 			// ga will always find a solution, so we're not saving the success/failure flag
 
@@ -164,8 +227,6 @@ int run_tests(vector<string> &files) {
 			std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
 			return EXIT_FAILURE;
 		}
-
-
 	}
 
 	try {
@@ -179,6 +240,7 @@ int run_tests(vector<string> &files) {
 
 	return 0;
 }
+
 
 /**
 *	@brief	Run a single instance provided in the file.

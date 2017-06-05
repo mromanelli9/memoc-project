@@ -39,12 +39,14 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	@echo "$(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
-run: ${TARGET} ${INSTANCESDIR}
-	@echo "Launching ${TARGET} ${INSTANCESDIR}"; ${TARGET} ${INSTANCESDIR}
+run-cplex: ${TARGET} ${INSTANCESDIR}
+	@echo ""; ${TARGET} ${INSTANCESDIR} "1"
+
+run-ga: ${TARGET} ${INSTANCESDIR}
+	@echo ""; ${TARGET} ${INSTANCESDIR} "2"
 
 test: ${TARGET} ${INSTANCESDIR}
 	@echo "Launching ${TARGET} ${ARGS}"; ${TARGET} ${ARGS}
-
 
 gen-instances: ${PYTARGET} ${DATASET}
 	@mkdir -p $(INSTANCESDIR)
