@@ -149,13 +149,13 @@ int run_tests(vector<string> &files) {
 		try {
 			// Save cplex results
 			myfile << "\"" << instance << "\"" << separator;
-			myfile << tspProblem->get_size() << separator;
-			myfile << cplex_time << separator;
-			myfile <<  ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << separator;
+			myfile << "\"" << tspProblem->get_size() << "\"" << separator;
+			myfile << "\"" << cplex_time << "\"" << separator;
+			myfile << "\"" << ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << "\"" << separator;
 
 			// Save ga results
-			myfile << ga_time << separator;
-			myfile << gaSol->get_fitness();
+			myfile << "\"" << ga_time << "\"" separator;
+			myfile << "\"" << gaSol->get_fitness() << "\"";
 			// ga will always find a solution, so we're not saving the success/failure flag
 
 			// End of the line
