@@ -79,4 +79,31 @@ diverso da zero, la parte destra del vincolo e il verso (in questo caso definisc
 l'inizio dell'array con gli indici della variabili e poi quello con gli indici dei coefficienti e infine il nome del vincolo.
 %%%%
 %%%%
-\subsection{Risultati}
+\subsection{Verifica del modello}\label{subsec:verifica-modello-cplex}
+L'obbiettivo della prima parte della consegna consisteva nell'implementare il modello ed eseguirlo su delle istanze di prova
+e osservare fino a che dimensioni il problema può essere risolto entro un certo tempo.
+Le prove sono state effettuate nel laboratorio, su una macchina con sistema operativo Ubuntu 64-bit,
+con un Intel Core i5 a 3,30GHz e 4GB di memoria RAM.
+Le istanze sono state generate come descritto nella sezione precedente (sezione~\ref{sec:generazione-istanze})
+e sono stati definiti quattro intervalli di tempo: 0,1, 1 e 10 secondi, 1 minuto.
+
+Dai risultati si può osservare come:
+%TODO
+
+%
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{l|c}\hline
+	Tempo limite & Dimensione  \\ \hline
+	0,1 secondo & -  \\ \hline
+	1 secondo & -  \\ \hline
+	10 secondi & -  \\ \hline
+	1 minuto & -  \\ \hline
+	\end{tabular}
+	\caption{Dimensione massima risolvibile entro un certo tempo.}
+	\label{tab:dimensione-massima-tempi-cplex}
+\end{table}
+%
+
+
+%%%%
