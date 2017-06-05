@@ -110,10 +110,56 @@ il numero massimo di iterazioni permette invece di limitare il tempo d'esecuzion
 quando le istanze hanno una bassa dimensione.
 %%%%
 %%%%
-\subsection{Valore dei parametri}\label{subsec:parametri}
-% TODO -
+\subsection{Taratura dei parametri}\label{subsec:parametri}
+Come detto in precedenza, gli algoritmi genetici dipendono molto dalla loro configurazione, ossia
+dai valori che si sceglie di dare ai vari parametri.
+Nel caso in esame, quattro sono i parametri su cui si è andato ad agire:
+\begin{itemize}
+	\item \textsf{time\_limit}: tempo limite per l'evoluzione della popolazione;
+	\item \textsf{ga\_iteration\_limit}: numero massimo di iterazioni o, in altre parole, numero massimo di evoluzioni
+	della popolazione;
+	\item \textsf{ga\_population\_size\_factor}: la popolazione iniziale avrà dimensione pari a questo valore
+	moltiplicato per la dimensione del problema;
+	\item \textsf{ga\_mutation\_probability}: probabilità che un individuo subisca una mutazione.
+\end{itemize}
+%
+\paragraph{Limite di tempo}
+Dovendo iterare l'esecuzione dell'algoritmo su diverse istanze e dovendone confrontare i risultati
+con l'implementazione con CPLEX, è stato necessario introdurre un limite massimo all'esecuzione.
+Il valore è impostabile secondo le preferenze del momento e al problema che si sta considerando,
+a seconda del fatto che si voglia una soluzione migliore oppure maggior rapidità d'esecuzione.
+Per motivi logistici e di tempistiche, il valore scelto è pari a 5 minuti.
+%
+\paragraph{Numero massimo di iterazioni}
+Come per il limite di tempo, questo valore è stato deciso sulla base di diverse prove effettuate
+e cerca di bilanciare una buona evoluzione della popolazione inziale e ovvi costi computazionali.
+Il valore scelto di 1000 iterazioni sembra essere un buon compromesso.
+%
+\paragraph{Dimensione della popolazione iniziale}
+In questo caso non è possibile specificare direttamente la dimensione iniziale, bensì si imposta
+un fattore di moltiplicazione che verrà combinato con la dimensione del problema.
+Visto che, nelle istanze su cui si andrà poi a eseguire l'algoritmo, questo valore
+potrà assumere una gamma di valori abbastanza ampia (da 5 a 100), impostare un numero fisso
+per la dimensione iniziale sarebbe risultato troppo abbondante per le piccole istanze
+e troppo riduttivo per quelle grandi.
+
+Per determinare il valore del fattore di moltiplicazione si sono fatte diverse prove e si è visto
+che, naturalmente, all'aumentare di tale valore l'algoritmo terminava con una soluzione migliore
+(un numero maggiore di invidui implica una maggior probabilità che la soluzione ottima sia fra questi
+o che le `caratteristiche genetiche' di queste siano presenti) ma ovviamente aumentava di molto tempo d'esecuzione.
+Considerato che la fase di creazione della popolazione e successivamente la sua sostituzione sono le fasi
+computazionalmente più onerose, si è preferito tenere basso il fattore di moltiplicazione, preferendo
+un'esecuzione più snella a fronte di una soluzione leggermente meno ottimale.
+
+Il valore finale scelto è pari a 3, producendo quindi una popolazione iniziale di 3 volte superiore
+alla dimensione del problema.
+%
+\paragraph{Probabilità della mutazione}
+Una probabilità di mutazione alta aumenta le probabilità di esplorare più aree dello spazio di ricerca
+ma rallenta la convergenza all'ottimo globale; d'altre parte, un valore basso potrebbe portare a una prematura convergenza (ottimo locale).
+Seguendo anche le indicazione fornite sulle dispense, il valore finale scelto è $0,05$.
 %%%%
 %%%%
 \subsection{Risultati}\label{subsec:risultati}
-% TODO - 
+% TODO -
 %%%%
