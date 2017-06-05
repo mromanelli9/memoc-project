@@ -17,6 +17,10 @@ INSTANCESDIR := instances
 PYARGS := -f $(INSTANCESDIR)/bcl380.tsp -n 100
 OUTPUTFILE := results.txt
 
+ifndef ARGS
+ARGS=${INSTANCESDIR}/dcc1911_n30.tsp
+endif
+
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
@@ -38,8 +42,9 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 run: ${TARGET} ${INSTANCESDIR}
 	@echo "Launching ${TARGET} ${INSTANCESDIR}"; ${TARGET} ${INSTANCESDIR}
 
-test: ${TARGET}
+test: ${TARGET} ${INSTANCESDIR}
 	@echo "Launching ${TARGET} ${ARGS}"; ${TARGET} ${ARGS}
+
 
 gen-instances: ${PYTARGET} ${DATASET}
 	@mkdir -p $(INSTANCESDIR)
