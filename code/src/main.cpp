@@ -98,7 +98,7 @@ int run_instances_with_cplex(vector<string> &files) {
 	cout << "Solving instances using CPLEX." << endl;
 
 	// Set up all the parameters
-	unsigned int time_limit = 60 * 2;	// 2 minutes
+	unsigned int time_limit = 60 * 3;	// time in minutes
 
 	try {
 		myfile.open(output_file, ios::out);
@@ -176,7 +176,7 @@ int run_instances_with_ga(vector<string> &files) {
 	cout << "Solving instances using GA." << endl;
 
 	// Set up all the parameters
-	unsigned int ga_time_limit = 60 * 2;	// 2 minutes
+	unsigned int ga_time_limit = 60 * 3;	// time in minutes
 	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
 	unsigned int ga_population_size_factor = 3;	// the population will have a number
 												// of individuals set to this value times problem-size
@@ -255,7 +255,7 @@ int single_test(string filename) {
 
 	cout << "############   TSP SOLVER  ############"<< endl;
 
-	unsigned int time_limit = 60 * 1;	// 1 minute
+	unsigned int time_limit = 60 * 3;	// time in minute
 
 	// Create a new problem based on date provided in the file
 	TSPProblem* tspProblem = new TSPProblem(filename);
