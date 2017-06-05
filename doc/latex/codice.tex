@@ -43,15 +43,22 @@ make gen-instances
 e, una volta completato il processo, avremmo l'insieme delle istanze, generate secondo il metodo
 descritto nella sezione~\ref{sec:generazione-istanze}.
 
-Infine, si può scegliere se eseguire gli algoritmi su tutto l'insieme di istanze:
+A questo punto è possibile eseguire gli algoritmi sull'insieme di istanze; per farlo
+utilizzando il risolutore CPLEX:
 \label{lst:make-passo-5}
 \begin{lstlisting}[style=BashStyle]
-make run
+make run-cplex
 \end{lstlisting}
-oppure se eseguire un test su una sola istanza a scelta:
+mentre per utilizzare l'Algoritmo Genetico:
+\label{lst:make-passo-5b}
+\begin{lstlisting}[style=BashStyle]
+make run-ga
+\end{lstlisting}
+È possibile risolvere anche una singola istanza; in questo caso verrà utilizzato prima il risolutore
+CPLEX e poi quello GA (se non viene passata nessuna istanza, verrà presa una d'esempio).
 \label{lst:make-passo-6}
 \begin{lstlisting}[style=BashStyle]
-make test
+make test ARGS=<percorso-istanza>
 \end{lstlisting}
 %%%%
 %%%%
