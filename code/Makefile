@@ -15,7 +15,7 @@ PYCC := python
 DATASET := vlsi-dataset/
 INSTANCESDIR := instances
 PYARGS := -f $(INSTANCESDIR)/bcl380.tsp -n 100
-OUTPUTFILE := results.txt
+OUTPUTFILE := results.csv
 
 ifndef ARGS
 ARGS=${INSTANCESDIR}/dcc1911_n30.tsp

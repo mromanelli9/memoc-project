@@ -83,8 +83,8 @@ long long current_timestamp();
 */
 int run_tests(vector<string> &files) {
 	long long s_time, e_time, cplex_time, ga_time;
-	std::string separator = "\t";
-	std::string output_file = "results.txt";
+	std::string separator = ",";
+	std::string output_file = "results.csv";
 	ofstream myfile;
 
 	cout << "############   TSP SOLVER  ############"<< endl;
@@ -99,6 +99,7 @@ int run_tests(vector<string> &files) {
 
 	try {
 		myfile.open(output_file, ios::out);
+		myfile << "\"Instance\"" << separator;
 		myfile << "\"Dimension\"" << separator;
 		myfile << "\"CPLEX Time\"" << separator;
 		myfile << "\"CPLEX Sol.\"" << separator;
@@ -147,6 +148,7 @@ int run_tests(vector<string> &files) {
 
 		try {
 			// Save cplex results
+			myfile << "\"" << instance << "\"" << separator;
 			myfile << tspProblem->get_size() << separator;
 			myfile << cplex_time << separator;
 			myfile <<  ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << separator;
