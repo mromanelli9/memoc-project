@@ -90,8 +90,7 @@ int run_tests(vector<string> &files) {
 	cout << "############   TSP SOLVER  ############"<< endl;
 
 	// Set all the parameters
-	unsigned int cplex_time_limit = 60 * 5;	// 5 minutes
-	unsigned int ga_time_limit = 60 * 5;	// 5 minutes
+	unsigned int time_limit = 60 * 5;	// 5 minutes
 	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
 	unsigned int ga_population_size_factor = 2;	// the population will have a number
 												// of individuals set to 5 * problem-size
@@ -124,7 +123,7 @@ int run_tests(vector<string> &files) {
 		TSPSolution* cplexSol = NULL;
 		try {
 			s_time = current_timestamp();
-			CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, cplex_time_limit);
+			CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
 			cplexSol = cplexSolver->solve();
 			e_time = current_timestamp();
 			cplex_time = e_time - s_time;
@@ -138,7 +137,7 @@ int run_tests(vector<string> &files) {
 		s_time = current_timestamp();
 		GASolver* gaSolver = new GASolver(tspProblem,\
 										ga_population_size_factor,\
-										ga_time_limit,\
+										time_limit,\
 										ga_iteration_limit,\
 										ga_mutation_probability,
 										verbose);
