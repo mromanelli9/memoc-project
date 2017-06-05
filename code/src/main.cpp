@@ -89,13 +89,13 @@ int run_tests(vector<string> &files) {
 
 	cout << "############   TSP SOLVER  ############"<< endl;
 
-	// Set all the parameters
+	// Set up all the parameters
 	unsigned int time_limit = 60 * 5;	// 5 minutes
 	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
-	unsigned int ga_population_size_factor = 2;	// the population will have a number
-												// of individuals set to 5 * problem-size
+	unsigned int ga_population_size_factor = 3;	// the population will have a number
+												// of individuals set to this value times problem-size
 	double ga_mutation_probability = 0.05;	// probability of mutation
-	bool verbose = false;
+	bool verbose = false;	// To speed up the computation, do not show any messages
 
 	try {
 		myfile.open(output_file, ios::out);
@@ -198,31 +198,31 @@ int single_test(string filename) {
 
 	// Solving problem using CPLEX
 	TSPSolution* cplexSol;
-	try {
-		// Initialize the solver
-		cout << "Solving with CPLEX..." <<endl;
-
-		s_time = current_timestamp();
-		CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
-
-		// Solve the problem with CPLEX
-		cplexSol = cplexSolver->solve();
-		e_time = current_timestamp();
-
-		cplex_time = e_time - s_time;
-	} catch(std::exception& e) {
-		cplexSol = NULL;
-		cplex_time = -1;
-		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
-	}
-	cout << " Done." << endl;
+	// try {
+	// 	// Initialize the solver
+	// 	cout << "Solving with CPLEX..." <<endl;
+	//
+	// 	s_time = current_timestamp();
+	// 	CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
+	//
+	// 	// Solve the problem with CPLEX
+	// 	cplexSol = cplexSolver->solve();
+	// 	e_time = current_timestamp();
+	//
+	// 	cplex_time = e_time - s_time;
+	// } catch(std::exception& e) {
+	// 	cplexSol = NULL;
+	// 	cplex_time = -1;
+	// 	std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+	// }
+	// cout << " Done." << endl;
 
 	// Solving problem using the heuristic (GA)
 
 	// Parameters
 	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
-	unsigned int ga_population_size_factor = 2;	// the population will have a number
-												// of individuals set to 5 * problem-size
+	unsigned int ga_population_size_factor = 3;	// the population will have a number
+												// of individuals set to this value times problem-size
 	double ga_mutation_probability = 0.05;	// probability of mutation
 	bool verbose = true;
 
