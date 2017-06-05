@@ -101,7 +101,7 @@ GAIndividual* GASolver::solve() {
 		best = population->get_best_individual();
 		worst = population->get_worst_individual();
 
-		if (this->verbose && (i % 500) == 0 ) {
+		if (this->verbose && (i > 0) && (i % 500) == 0 ) {
 			best = population->get_best_individual();
 			worst = population->get_worst_individual();
 
