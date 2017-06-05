@@ -191,6 +191,8 @@ int single_test(string filename) {
 
 	cout << "############   TSP SOLVER  ############"<< endl;
 
+	unsigned int time_limit = 60 * 1;	// 1 minute
+
 	// Create a new problem based on date provided in the file
 	TSPProblem* tspProblem = new TSPProblem(filename);
 	cout << "Problem dimension: " << tspProblem->get_size() << "." << endl;
@@ -200,10 +202,9 @@ int single_test(string filename) {
 	try {
 		// Initialize the solver
 		cout << "Solving with CPLEX..." <<endl;
-		unsigned int cplex_time_limit = 10;	// 10 seconds
 
 		s_time = current_timestamp();
-		CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, cplex_time_limit);
+		CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
 
 		// Solve the problem with CPLEX
 		cplexSol = cplexSolver->solve();
@@ -220,7 +221,6 @@ int single_test(string filename) {
 	// Solving problem using the heuristic (GA)
 
 	// Parameters
-	unsigned int ga_time_limit = 5;	// 10 seconds
 	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
 	unsigned int ga_population_size_factor = 2;	// the population will have a number
 												// of individuals set to 5 * problem-size
@@ -231,7 +231,7 @@ int single_test(string filename) {
 	s_time = current_timestamp();
 	GASolver* gaSolver = new GASolver(tspProblem,\
 									ga_population_size_factor,\
-									ga_time_limit,\
+									time_limit,\
 									ga_iteration_limit,\
 									ga_mutation_probability,
 									verbose);
