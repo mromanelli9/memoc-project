@@ -102,8 +102,8 @@ int run_tests(vector<string> &files) {
 		myfile << "\"Dimension\"" << separator;
 		myfile << "\"CPLEX Time\"" << separator;
 		myfile << "\"CPLEX Sol.\"" << separator;
-		myfile << "\"GA Sol.\"" << separator;
-		myfile << "\"GA Time\"" << separator;
+		myfile << "\"GA Time.\"" << separator;
+		myfile << "\"GA Sol\"" << separator;
 		myfile << "\r\n" << std::flush;
 	} catch(std::exception& e) {
 		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
