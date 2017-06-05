@@ -200,24 +200,24 @@ int single_test(string filename) {
 
 	// Solving problem using CPLEX
 	TSPSolution* cplexSol;
-	// try {
-	// 	// Initialize the solver
-	// 	cout << "Solving with CPLEX..." <<endl;
-	//
-	// 	s_time = current_timestamp();
-	// 	CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
-	//
-	// 	// Solve the problem with CPLEX
-	// 	cplexSol = cplexSolver->solve();
-	// 	e_time = current_timestamp();
-	//
-	// 	cplex_time = e_time - s_time;
-	// } catch(std::exception& e) {
-	// 	cplexSol = NULL;
-	// 	cplex_time = -1;
-	// 	std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
-	// }
-	// cout << " Done." << endl;
+	try {
+		// Initialize the solver
+		cout << "Solving with CPLEX..." <<endl;
+
+		s_time = current_timestamp();
+		CPLEXSolver* cplexSolver = new CPLEXSolver(tspProblem, time_limit);
+
+		// Solve the problem with CPLEX
+		cplexSol = cplexSolver->solve();
+		e_time = current_timestamp();
+
+		cplex_time = e_time - s_time;
+	} catch(std::exception& e) {
+		cplexSol = NULL;
+		cplex_time = -1;
+		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
+	}
+	cout << " Done." << endl;
 
 	// Solving problem using the heuristic (GA)
 
