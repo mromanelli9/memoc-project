@@ -124,7 +124,7 @@ def generate_from_vlsi(filename, step=5, limit=100):
 
 		outputFile = "instances/" + \
 					os.path.splitext(os.path.basename(filename))[0] + \
-					"_n" + str(n) + ".tsp"
+					"_n" + str(n).zfill(3) + ".tsp"
 		print "  Saving (%s)..." % (outputFile)
 		fp = open(outputFile, 'w')
 		fp.write(data)
@@ -141,13 +141,14 @@ def main(argv):
 	folder = str(sys.argv[1])
 
 	# Parameters
-	generation_step = 5
-	generation_limit = 100
+	generation_step = 10
+	generation_limit = 150
 
 	# Run over all vlsi-dataset folder
 	for el in os.listdir(folder):
-		instance_file = folder + el
-		generate_from_vlsi( instance_file, generation_step, generation_limit)
+		ext = os.path.splitext(el)[-1].lower()
+		if (ext == ".tsp" and (not el.startswith('.'))):
+			generate_from_vlsi( folder + el, generation_step, generation_limit)
 
 	# Exit
 	print "Done. Exit."
