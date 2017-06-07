@@ -102,7 +102,7 @@ Dai risultati si può osservare come:
 \begin{table}[!h]
 \centering
 \begin{tabular}{|
->{\columncolor[HTML]{EFEFEF}}c |c|c|c|c|}
+>{\columncolor[HTML]{EFEFEF}}c|c|c|c|c|}
 \hline
 \textbf{Dimensione} & \cellcolor[HTML]{EFEFEF}\textbf{Tempo minimo {[}s{]}} & \cellcolor[HTML]{EFEFEF}\textbf{Tempo medio {[}s{]}} & \cellcolor[HTML]{EFEFEF}\textbf{Tempo massimo {[}s{]}} & \cellcolor[HTML]{EFEFEF}\textbf{Fallimenti} \\ \hline
 5                   & 0,02                                                  & 0,03                                                 & 0,04                                                   & 0\%                                         \\ \hline
@@ -132,10 +132,10 @@ Dai risultati si può osservare come:
 \end{center}
 \end{figure}
 %
-Infine, come richiesto nella consegna, sono stati definiti quattro intervalli di tempo: 0,1, 1 e 10 secondi, 1 minuto.
-Per il limite di 5 minuti sono stati inseriti in tabella due valori.
-Il primo problema per cui CPLEX supera i 5 minuti è quello con dimensione $N=70$, quindi di conseguenza
-riesce a risolvere i problemi con $N=60$ al di sotto di questo limite.
+Infine, come richiesto nella consegna, sono stati definiti quattro intervalli di tempo: 0,1, 1 e 10 secondi, 1 e 5 minuti.
+Per il limite di 5 minuti sono stati inseriti in tabella due valori;
+il primo problema, infatti, per cui CPLEX supera i 5 minuti è quello con dimensione $N=70$, quindi di conseguenza
+riesce a risolvere i problemi con $N=60$ al di sotto del limite dei 5 minuti.
 Tuttavia, anche le istanze con $N=80$ sono state tutte risolte entro il limite; per questo motivo anche questo
 valore è stato inserito in tabella.
 %
