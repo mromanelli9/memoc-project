@@ -84,16 +84,21 @@ L'obbiettivo della prima parte della consegna consisteva nell'implementare il mo
 e osservare fino a che dimensioni il problema può essere risolto entro un certo tempo.
 Le prove sono state effettuate nel laboratorio, su una macchina con sistema operativo Ubuntu 64-bit,
 con un Intel Core i5 a 3,30GHz e 4GB di memoria RAM.
-Le istanze sono state generate come descritto nella sezione precedente (sezione~\ref{sec:generazione-istanze})
-e sono stati definiti quattro intervalli di tempo: 0,1, 1 e 10 secondi, 1 minuto.
+Le istanze sono state generate come descritto nella sezione precedente (sezione~\ref{sec:generazione-istanze}).
+In tabella~\ref{tab:risultati-cplex} si possono trovare i risultati delle esecuzioni, ordinati per dimensione
+del problema crescente, fra cui si trovano i tempi medi e la percentuale di fallimenti (rispetto alle istanze della stessa dimensione).
 
 Dai risultati si può osservare come:
-%TODO
-
-
-% Please add the following required packages to your document preamble:
-% \usepackage[table,xcdraw]{xcolor}
-% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{itemize}
+	\item il tempo d'esecuzione aumenta in maniera esponenziale, in particolare a partire dalle istanze con $N=20$.
+	\item Il tempo massimo d'esecuzione, pari a 5 minuti (300 s), viene raggiunto per la prima volta
+	nei problemi con $N=70$\footnote{Il tempo è leggermente superiore ai 300 secondi in quanto il conteggio viene fatto
+	quando il risolutore ritorna il risultato. Il valore in eccesso è il tempo che impiega la macchina
+	da quando il risolutore si ferma a quando viene preso il conteggio del tempo.}.
+	\item il primo fallimento avviene con l'istanza di dimensione $N=80$, mentre con istanze con $N=20$ CPLEX
+	non riesce a trovare una soluzione in nessuna delle istanze (100\% di fallimenti).
+\end{itemize}
+%
 \begin{table}[!h]
 \centering
 \caption{Risultati dell'esecuzione con risolutore CPLEX}
@@ -118,29 +123,34 @@ Dai risultati si può osservare come:
 120                 & -                                                     & -                                                    & -                                                      & 100\%                                       \\ \hline
 \end{tabular}
 \end{table}
-
-% \begin{figure}[!h]
-% \begin{center}
-% 	\includegraphics[scale=.8]{tempi-cplex}
-% {\scriptsize \caption{Esempio di 2-cut-point crossover con un figlio.}
-% \label{fig:diff-tempi}}
-% \end{center}
-% \end{figure}
-
+%
+\begin{figure}[!h]
+\begin{center}
+	\includegraphics[scale=.5]{tempi-cplex}
+{\scriptsize \caption{Tempo medio impiegato dal risolutore CPLEX, in secondi.}
+\label{fig:diff-tempi}}
+\end{center}
+\end{figure}
+%
+Infine, come richiesto nella consegna, sono stati definiti quattro intervalli di tempo: 0,1, 1 e 10 secondi, 1 minuto.
+Per il limite di 5 minuti sono stati inseriti in tabella due valori.
+Il primo problema per cui CPLEX supera i 5 minuti è quello con dimensione $N=70$, quindi di conseguenza
+riesce a risolvere i problemi con $N=60$ al di sotto di questo limite.
+Tuttavia, anche le istanze con $N=80$ sono state tutte risolte entro il limite; per questo motivo anche questo
+valore è stato inserito in tabella.
 %
 \begin{table}[!h]
 	\centering
 	\begin{tabular}{l|c}\hline
 	Tempo limite & Dimensione  \\ \hline
-	0,1 secondo & -  \\ \hline
-	1 secondo & -  \\ \hline
-	10 secondi & -  \\ \hline
-	1 minuto & -  \\ \hline
+	0,1 secondo & 5 \\ \hline
+	1 secondo & 10  \\ \hline
+	10 secondi & 20  \\ \hline
+	1 minuto & 25  \\ \hline
+	5 minuti & 60 (80)  \\ \hline
 	\end{tabular}
 	\caption{Dimensione massima risolvibile entro un certo tempo.}
-	\label{tab:dimensione-massima-tempi-cplex}
+	\label{tab:intervalli-tempo-cplex}
 \end{table}
 %
-
-
 %%%%
