@@ -160,6 +160,76 @@ ma rallenta la convergenza all'ottimo globale; d'altre parte, un valore basso po
 Seguendo anche le indicazione fornite sulle dispense, il valore finale scelto è $0,05$.
 %%%%
 %%%%
-\subsection{Risultati}\label{subsec:risultati}
-% TODO -
+\subsection{Verifica del modello}\label{subsec:risultati-ga}
+La seconda parte della consegna prevedeva di eseguire il risolutore proposto,
+analizzarne le prestazioni e compararle con quelle del risolutore CPLEX.
+Anche in questo caso le prove sono state eseguite nel labotorio e utilizzando le istanze generate
+allo stesso modo (si veda il capitolo~\ref{subsec:verifica-modello-cplex}).
+
+I parametri sono stati impostati come descritto precedentemente; si riportano qui i valori per una più facile lettura:
+\begin{itemize}
+	\item \textsf{time\_limit}: 5 minuti (come con il risolutore CPLEX);
+	\item \textsf{iteration\_limit}: 500,
+	\item \textsf{population\_size\_factor}: N * 3 (con N dimensione del problema),
+	\item \textsf{mutation\_probability}: $0,05$.
+\end{itemize}
+In tabella~\ref{tab:risultati-ga} si possono trovare i tempi d'esecuzione dell'algoritmo, espressi in secondi;
+i tempi medi sono anche rappresentati in figura\ref{fig:tempi-ga}.
+La figura~\ref{fig:diff-tempi} mostra, invece, la differenza fra il tempo d'esecuzione (medio) fra il risolutore
+CPELX e GA.
+%
+\begin{table}[!h]
+\centering
+\begin{tabular}{|
+>{\columncolor[HTML]{EFEFEF}}c |c|c|c|}
+\hline
+\textbf{Dimensione} & \cellcolor[HTML]{EFEFEF}\textbf{Tempo minimo {[}s{]}} & \cellcolor[HTML]{EFEFEF}\textbf{Tempo medio {[}s{]}} & \cellcolor[HTML]{EFEFEF}\textbf{Tempo massimo {[}s{]}} \\ \hline
+\textbf{5}          & 0,002                                                 & 0,004                                                & 0,008                                                  \\ \hline
+\textbf{10}         & 0,18                                                  & 0,24                                                 & 0,26                                                   \\ \hline
+\textbf{15}         & 0,60                                                  & 0,60                                                 & 0,60                                                   \\ \hline
+\textbf{20}         & 1,12                                                  & 1,12                                                 & 1,13                                                   \\ \hline
+\textbf{25}         & 1,73                                                  & 1,73                                                 & 1,74                                                   \\ \hline
+\textbf{30}         & 2,54                                                  & 2,54                                                 & 2,55                                                   \\ \hline
+\textbf{35}         & 3,51                                                  & 3,52                                                 & 3,53                                                   \\ \hline
+\textbf{40}         & 4,76                                                  & 4,79                                                 & 4,82                                                   \\ \hline
+\textbf{50}         & 9,25                                                  & 9,31                                                 & 9,36                                                   \\ \hline
+\textbf{60}         & 14,20                                                 & 14,22                                                & 14,26                                                  \\ \hline
+\textbf{70}         & 19,84                                                 & 19,88                                                & 19,91                                                  \\ \hline
+\textbf{80}         & 27,00                                                 & 27,11                                                & 27,24                                                  \\ \hline
+\textbf{100}        & 46,92                                                 & 47,39                                                & 47,96                                                  \\ \hline
+\textbf{120}        & 75,00                                                 & 75,06                                                & 75,11                                                  \\ \hline
+\end{tabular}
+\caption{Risultati dell'esecuzione con risolutore GA}
+\label{tab:risultati-ga}
+\end{table}
+%
+Dai risultati si può osservare che:
+\begin{itemize}
+	\item i tempi sono di molto infereriori rispetto al risolutore CPELX.
+	\item Anche in questo caso si ha un andamento esponenziale al crescere di $N$.
+\end{itemize}
+%
+\begin{figure}[!h]
+\begin{center}
+	\includegraphics[scale=.5]{tempi-ga}
+{\scriptsize \caption{Tempo medio impiegato dal risolutore GA, in secondi.}
+\label{fig:tempi-ga}}
+\end{center}
+\end{figure}
+%
+%
+\begin{figure}[!h]
+\begin{center}
+	\includegraphics[scale=.5]{diff-tempi}
+{\scriptsize \caption{Tempo medio impiegato dai risolutori GA e CPLEX, in secondi.}
+\label{fig:diff-tempi}}
+\end{center}
+\end{figure}
+%
+\subsection{Analisi della convergenza e delle prestazioni}\label{subsec:analisi-finale-gaf}
+
+%
+\subsection{Possibilo-miglioramenti}\label{subsec:miglioramenti-ga}
+
+
 %%%%
