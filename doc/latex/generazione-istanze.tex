@@ -37,10 +37,14 @@ descritte in precedenza, generi delle sotto-istanze di dimensioni minori.
 Dati i punti dell'istanza originale, il generatore prima estrare casualmente un sotto-insieme di questi
 di dimensione variabile per poi calcolare le distanze (futuri costi) sui nuovi punti.
 
-Da una singola istanza originale ne vengono generate 20 nuove, partendo da una dimensione $n=5$ e iterativamente
-crandone una con $i*n$ nodi, fino ad arrivare a un problema con dimensione 100.
-Per creare poi diverse istanze con la stessa dimensione, il generatore viene eseguito su 6 istanze TSP originali,
-per avere alla fine del processo 120 nuove istanze pseudo-casuali.
+Partendo da un'istanza originale, il generatore crea delle nuove istanze con dimensione a partire da 5 fino ad arrivare
+a 40 con un passo di 5.
+Successivamente ne vengono create altre a partire da 50 con un passo di 10 fino a 80.
+Infine le ultime due vengono generate con dimensione 100 e 120 (da 100 a 120 con passo 20).
+Il processo viene ripetuto per quattro istanze originali, generando quindi 57 nuove istanze pseudo-casuali.
+Il numero del passo va via via aumentando per permettere di eseguire i test in tempi più ragionevoli
+(basti pensare che per ogni istanza pseudo-casuale l'algoritmo CPLEX  ha tempo limite pari a 5 minuti,
+arrivando quindi a, potenzialmente, quasi 5 ore d'esecuzione per la prima consegna).
 
 Per l'implementazione è stato creato appositamente uno script scritto nel linguaggio Python.
 %%%
