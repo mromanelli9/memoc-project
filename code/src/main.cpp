@@ -98,15 +98,14 @@ int run_instances_with_cplex(vector<string> &files) {
 	cout << "Solving instances using CPLEX." << endl;
 
 	// Set up all the parameters
-	unsigned int time_limit = 60 * 3;	// time in minutes
+	unsigned int time_limit = 60 * 5;	// time in minutes
 
 	try {
 		myfile.open(output_file, ios::out);
 		myfile << "\"Instance\"" << separator;
 		myfile << "\"Dimension\"" << separator;
 		myfile << "\"CPLEX Time\"" << separator;
-		myfile << "\"CPLEX Sol.\"" << separator;
-		myfile << "\r\n" << std::flush;
+		myfile << "\"CPLEX Sol.\"" << "\r\n" << std::flush;
 	} catch(std::exception& e) {
 		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
 		return EXIT_FAILURE;
@@ -139,10 +138,7 @@ int run_instances_with_cplex(vector<string> &files) {
 			myfile << "\"" << instance << "\"" << separator;
 			myfile << "\"" << tspProblem->get_size() << "\"" << separator;
 			myfile << "\"" << cplex_time << "\"" << separator;
-			myfile << "\"" << ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << "\"" << separator;
-
-			// End of the line
-			myfile << "\r\n" << std::flush;
+			myfile << "\"" << ((cplexSol != NULL) ? cplexSol->get_solution_cost() : -1) << "\"" << "\r\n" << std::flush;
 		} catch(std::exception& e) {
 			std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
 			return EXIT_FAILURE;
@@ -176,8 +172,8 @@ int run_instances_with_ga(vector<string> &files) {
 	cout << "Solving instances using GA." << endl;
 
 	// Set up all the parameters
-	unsigned int ga_time_limit = 60 * 3;	// time in minutes
-	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
+	unsigned int ga_time_limit = 60 * 5;	// time in minutes
+	unsigned int ga_iteration_limit = 500;	// maximum number of iterations
 	unsigned int ga_population_size_factor = 3;	// the population will have a number
 												// of individuals set to this value times problem-size
 	double ga_mutation_probability = 0.05;	// probability of mutation
@@ -187,9 +183,8 @@ int run_instances_with_ga(vector<string> &files) {
 		myfile.open(output_file, ios::out);
 		myfile << "\"Instance\"" << separator;
 		myfile << "\"Dimension\"" << separator;
-		myfile << "\"GA Time.\"" << separator;
-		myfile << "\"GA Sol\"" << separator;
-		myfile << "\r\n" << std::flush;
+		myfile << "\"GA Time\"" << separator;
+		myfile << "\"GA Sol.\"" << "\r\n" << std::flush;;
 	} catch(std::exception& e) {
 		std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
 		return EXIT_FAILURE;
@@ -219,11 +214,7 @@ int run_instances_with_ga(vector<string> &files) {
 			myfile << "\"" << instance << "\"" << separator;
 			myfile << "\"" << tspProblem->get_size() << "\"" << separator;
 			myfile << "\"" << ga_time << "\"" << separator;
-			myfile << "\"" << gaSol->get_fitness() << "\"";
-			// ga will always find a solution, so we're not saving the success/failure flag
-
-			// End of the line
-			myfile << "\r\n" << std::flush;
+			myfile << "\"" << gaSol->get_fitness() << "\"" << "\r\n" << std::flush;
 		} catch(std::exception& e) {
 			std::cout << "[!] EXCEPTION: " << e.what() << std::endl;
 			return EXIT_FAILURE;
@@ -255,7 +246,7 @@ int single_test(string filename) {
 
 	cout << "############   TSP SOLVER  ############"<< endl;
 
-	unsigned int time_limit = 60 * 3;	// time in minute
+	unsigned int time_limit = 60 * 5;	// time in minute
 
 	// Create a new problem based on date provided in the file
 	TSPProblem* tspProblem = new TSPProblem(filename);
@@ -285,7 +276,7 @@ int single_test(string filename) {
 	// Solving problem using the heuristic (GA)
 
 	// Parameters
-	unsigned int ga_iteration_limit = 1000;	// maximum number of iterations
+	unsigned int ga_iteration_limit = 500;	// maximum number of iterations
 	unsigned int ga_population_size_factor = 3;	// the population will have a number
 												// of individuals set to this value times problem-size
 	double ga_mutation_probability = 0.05;	// probability of mutation
