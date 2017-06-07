@@ -4,9 +4,9 @@
 #description     : This script will create instances from a real TSP file probem
 #					provided in the VLSI data sets by Andre Rohe.
 #author          : Marco Romanelli
-#date            : 03/05/2017
-#version         : 2
-#usage           : python gen_instances.py -f <instanceName> [-n <limit>]
+#date            : 07/05/2017
+#version         : 3
+#usage           : python gen_instances.py <instanceName> [<initN> <step> <limit>]
 #python_version  : 2.7
 #==============================================================================
 
@@ -78,12 +78,12 @@ def heuristic(points, n):
 	points = p
 	return points
 
-def generate_from_vlsi(filename, step=5, limit=100):
+def generate_from_vlsi(filename, init=5, step=5, limit=50):
 	""" Generate a set of instances from one original vlsi file.
 		Instances will have the form:
 	 		<vlsi-filename>_n<N>.tsp
 		where N:
-			<step> <= N <= <limit>
+			<init> <= N <= <limit>
 			with step of <step>
 	"""
 
@@ -98,7 +98,7 @@ def generate_from_vlsi(filename, step=5, limit=100):
 	i = 1
 	instances = []
 	p = None
-	for itr in range(step, limit + step, step):
+	for itr in range(init, limit + step, step):
 		print "  Generating instance #%d with %d points." % (i, itr)
 		p = heuristic(points, itr)
 		instances.append(p)
@@ -134,21 +134,30 @@ def generate_from_vlsi(filename, step=5, limit=100):
 
 
 def main(argv):
-	if (len(sys.argv)) != 2:
+	# Default values
+	generation_init = 5
+	generation_step = 5
+	generation_limit = 40
+
+	if (len(argv)) < 1:
 		print "[!] Missing parameters."
 		sys.exit(-1)
 
-	folder = str(sys.argv[1])
+	folder = str(argv[0])
 
-	# Parameters
-	generation_step = 10
-	generation_limit = 150
+	if len(argv) == 4:
+		# Override default values
+		generation_init, generation_step, generation_limit = [int(el) for el in argv[1:4]]
+
+	if generation_init < 5 or generation_step < 5:
+		print "[!] Error."
+		sys.exit(-1)
 
 	# Run over all vlsi-dataset folder
 	for el in os.listdir(folder):
 		ext = os.path.splitext(el)[-1].lower()
 		if (ext == ".tsp" and (not el.startswith('.'))):
-			generate_from_vlsi( folder + el, generation_step, generation_limit)
+			generate_from_vlsi( folder + el, generation_init, generation_step, generation_limit)
 
 	# Exit
 	print "Done. Exit."

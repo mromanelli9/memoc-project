@@ -50,7 +50,9 @@ test: ${TARGET} ${INSTANCESDIR}
 
 gen-instances: ${PYTARGET} ${DATASET}
 	@mkdir -p $(INSTANCESDIR)
-	$(PYCC) ${PYTARGET} ${DATASET}
+	$(PYCC) ${PYTARGET} ${DATASET} 5 5 40
+	$(PYCC) ${PYTARGET} ${DATASET} 40 10 80
+	$(PYCC) ${PYTARGET} ${DATASET} 80 20 120
 
 clean:
 	@echo "Cleaning...";
