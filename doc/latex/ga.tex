@@ -182,32 +182,6 @@ CPELX e del risolutore GA.
 Infine, la figura~\label{fig:gap-sol} mostra l'andamento della differenza fra le soluzioni trovate
 dal risolutore GA e quelle del risolutore CPLEX, in media, espressa in percentuale, sempre rispetto
 al crescere della dimensione del problema.
-
-Dai risultati si può osservare come:
-\begin{itemize}
-	\item i tempi sono di molto infereriori rispetto al risolutore CPELX;
-	basti osservare come per istanze con $N=25$ il risolutore CPLEX impieghi un tempo medio di quasi 51 secondi,
-	mentre ne bastano meno di 2 per quello GA.
-	\item Anche in questo caso si ha un andamento esponenziale al crescere di $N$;
-	mentre nel caso precedente si era visto come la curva esponenziale iniziava a ``impennarsi'' a partire dai
-	problemi con $N$ pari a 20, con l'algoritmo GA questo succede da $N=80$.
-	\item Dalla figura~\label{fig:gap-sol} si può notare come la differenza fra le soluzioni trovate dai due
-	risolutori si mantenga pari a 0 fino a $N=40$. Questo vuol dire che l'algoritmo GA riesce, fino a questo punto,
-	a trovare la soluzione ottima al problema.
-	Per dimensioni fino a $N=40$, l'algoritmo non riesce a trovare la soluzine ottima, ma riesce tuttavia
-	ad avvicinarsi con uno scarto del $1,32\%$.
-	Successivamente nota invece un comportamento strano:
-	mentre nelle istanze con $N=60$ lo scarto è del $6,84\%$, in linea con i valori precendenti,
-	sulle istanze con dimensione pari a 50 lo scarto è oltre il $13\%$.
-	Su questo tipo di istanze sono state fatte diverse prove e tutte riportavano (a parte piccoli discostamenti)
-	lo stesso valore. Probabilmente con queste istanze l'algoritmo generava una popolazione iniziale
-	nettamente peggiore rispetto alle precedenti, oppure non riusciva a migliorla di molto durante l'evoluzione.
-
-	Infine, si nota come con istanze di dimensione maggiore a 70 lo scarto è positivo, ossia il risolutore
-	GA trovava una soluzione migliore rispetto a quella trovata da CPLEX.
-	Questo perché con queste dimensioni il risolutore CPLEX eccedeva il limite di tempo imposto e non riusciva,
-	di conseguenza, a trovare la soluzione ottima al problema.
-\end{itemize}
 %
 \begin{table}[!h]
 \centering
@@ -242,6 +216,32 @@ Dai risultati si può osservare come:
 \end{center}
 \end{figure}
 %
+Dai risultati si può osservare come:
+\begin{itemize}
+	\item i tempi sono di molto infereriori rispetto al risolutore CPELX;
+	basti osservare come per istanze con $N=25$ il risolutore CPLEX impieghi un tempo medio di quasi 51 secondi,
+	mentre ne bastano meno di 2 per quello GA.
+	\item Anche in questo caso si ha un andamento esponenziale al crescere di $N$;
+	mentre nel caso precedente si era visto come la curva esponenziale iniziava a ``impennarsi'' a partire dai
+	problemi con $N$ pari a 20, con l'algoritmo GA questo succede da $N=80$.
+	\item Dalla figura~\label{fig:gap-sol} si può notare come la differenza fra le soluzioni trovate dai due
+	risolutori si mantenga pari a 0 fino a $N=40$. Questo vuol dire che l'algoritmo GA riesce, fino a questo punto,
+	a trovare la soluzione ottima al problema.
+	Per dimensioni fino a $N=40$, l'algoritmo non riesce a trovare la soluzine ottima, ma riesce tuttavia
+	ad avvicinarsi con uno scarto del $1,32\%$.
+	Successivamente nota invece un comportamento strano:
+	mentre nelle istanze con $N=60$ lo scarto è del $6,84\%$, in linea con i valori precendenti,
+	sulle istanze con dimensione pari a 50 lo scarto è oltre il $13\%$.
+	Su questo tipo di istanze sono state fatte diverse prove e tutte riportavano (a parte piccoli discostamenti)
+	lo stesso valore. Probabilmente con queste istanze l'algoritmo generava una popolazione iniziale
+	nettamente peggiore rispetto alle precedenti, oppure non riusciva a migliorla di molto durante l'evoluzione.
+
+	Infine, si nota come con istanze di dimensione maggiore a 70 lo scarto è positivo, ossia il risolutore
+	GA trovava una soluzione migliore rispetto a quella trovata da CPLEX.
+	Questo perché con queste dimensioni il risolutore CPLEX eccedeva il limite di tempo imposto e non riusciva,
+	di conseguenza, a trovare la soluzione ottima al problema.
+\end{itemize}
+%
 \begin{figure}[!h]
 \begin{center}
 	\includegraphics[scale=.5]{diff-tempi.png}
@@ -258,10 +258,28 @@ Dai risultati si può osservare come:
 \end{center}
 \end{figure}
 %
-\subsection{Analisi della convergenza e delle prestazioni}\label{subsec:analisi-finale-gaf}
-
-%
+% \subsection{Analisi delle prestazioni}\label{subsec:analisi-finale-gaf}
 \subsection{Possibili miglioramenti}\label{subsec:miglioramenti-ga}
-
-
+Come si può notare dai risultati esposti in precedenza, sull'insieme di istanze proposto l'algoritmo GA
+non ha mai raggiunto il tempo limite imposto di 5 minuti (tempo massimo d'esecuzione: circa 75 secondi)
+e quindi l'arresto è da attribuirsi esclusivamente al limite sul numero di iterazioni, pari a 500.
+Tuttavia questo valore è stato deciso dopo prove sperimentali su tutto l'inisieme di istanze.
+Probabilmente il numero di iterazioni necessarie all'algoritmo per convergere con un problema di $N=5$ non
+è lo stesso di uno con $N=100$.
+Inoltre, a parte il criterio d'arresto, l'algoritmo non ha alcun controllo sulla convergenza
+e sulle caratteristiche della popolazione.
+Diversi miglioramenti sono quindi possibili:
+\begin{itemize}
+	\item fasi di intensificazione e diversificazione: l'alternanza di queste fasi durante l'evoluzione
+	potrebbe portare a una convergenza più veloce (per esempip con problemi semplici), ma anche
+	meno ``specializzata'', con una popolazione che evolve con caratteristiche diverse (meno overfitting).
+	\item Variare la probabilità di mutazione: anche in un contesto come quello descritto sopra.
+	\item misure di convergenza: come, per esempio, la distanza di Hamming; sia come forma di misura
+	di fitness, come criterio d'arresto o per alternare diverse fasi nell'evoluzione.
+	\item criterio d'arresto: oltre a quello appena descritto (distanza di Hamming) e visto in questo
+	caso si aveva a disposizione la soluzione fornita da CPLEX, sarebbe possibile impostare uno scarto accettabile
+	e far terminare l'algoritmo quando si raggiunge questo livello.
+	\item ottimizzazioni del codice: è possibile eseguire fasi dell'algoritmo in maniera parallela; questo
+	aumenterebbe la complessiva implementativa ma se ne guadagnerebbe in tempo d'esecuzione.
+\end{itemize}
 %%%%
