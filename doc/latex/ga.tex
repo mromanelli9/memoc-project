@@ -161,9 +161,9 @@ Seguendo anche le indicazione fornite sulle dispense, il valore finale scelto è
 %%%%
 %%%%
 \subsection{Verifica del modello}\label{subsec:risultati-ga}
-La seconda parte della consegna prevedeva di eseguire il risolutore proposto,
-analizzarne le prestazioni e compararle con quelle del risolutore CPLEX.
-Anche in questo caso le prove sono state eseguite nel labotorio e utilizzando le istanze generate
+La seconda parte della consegna prevedeva di eseguire il risolutore proposto, analizzarne le prestazioni
+e compararle con quelle del risolutore CPLEX.
+Anche in questo caso le prove sono state eseguite nel labotorio, utilizzando le istanze generate
 allo stesso modo (si veda il capitolo~\ref{subsec:verifica-modello-cplex}).
 
 I parametri sono stati impostati come descritto precedentemente; si riportano qui i valori per una più facile lettura:
@@ -173,10 +173,41 @@ I parametri sono stati impostati come descritto precedentemente; si riportano qu
 	\item \textsf{population\_size\_factor}: N * 3 (con N dimensione del problema),
 	\item \textsf{mutation\_probability}: $0,05$.
 \end{itemize}
-In tabella~\ref{tab:risultati-ga} si possono trovare i tempi d'esecuzione dell'algoritmo, espressi in secondi;
-i tempi medi sono anche rappresentati in figura\ref{fig:tempi-ga}.
-La figura~\ref{fig:diff-tempi} mostra, invece, la differenza fra il tempo d'esecuzione (medio) fra il risolutore
-CPELX e GA.
+In tabella~\ref{tab:risultati-ga} si possono trovare i tempi d'esecuzione dell'algoritmo, espressi in secondi, per
+problemi di dimensione da $N=5$ a $N=120$, mostrati in ordine crescente.
+Per osservare meglio l'andamento del tempo d'esecuzione al variare di $N$, in figura\ref{fig:tempi-ga}
+si può trovare raffigurato il tempo medio.
+La figura~\ref{fig:diff-tempi} mostra, invece, la differenza fra i tempi d'esecuzione medi del risolutore
+CPELX e del risolutore GA.
+Infine, la figura~\label{fig:gap-sol} mostra l'andamento della differenza fra le soluzioni trovate
+dal risolutore GA e quelle del risolutore CPLEX, in media, espressa in percentuale, sempre rispetto
+al crescere della dimensione del problema.
+
+Dai risultati si può osservare come:
+\begin{itemize}
+	\item i tempi sono di molto infereriori rispetto al risolutore CPELX;
+	basti osservare come per istanze con $N=25$ il risolutore CPLEX impieghi un tempo medio di quasi 51 secondi,
+	mentre ne bastano meno di 2 per quello GA.
+	\item Anche in questo caso si ha un andamento esponenziale al crescere di $N$;
+	mentre nel caso precedente si era visto come la curva esponenziale iniziava a ``impennarsi'' a partire dai
+	problemi con $N$ pari a 20, con l'algoritmo GA questo succede da $N=80$.
+	\item Dalla figura~\label{fig:gap-sol} si può notare come la differenza fra le soluzioni trovate dai due
+	risolutori si mantenga pari a 0 fino a $N=40$. Questo vuol dire che l'algoritmo GA riesce, fino a questo punto,
+	a trovare la soluzione ottima al problema.
+	Per dimensioni fino a $N=40$, l'algoritmo non riesce a trovare la soluzine ottima, ma riesce tuttavia
+	ad avvicinarsi con uno scarto del $1,32\%$.
+	Successivamente nota invece un comportamento strano:
+	mentre nelle istanze con $N=60$ lo scarto è del $6,84\%$, in linea con i valori precendenti,
+	sulle istanze con dimensione pari a 50 lo scarto è oltre il $13\%$.
+	Su questo tipo di istanze sono state fatte diverse prove e tutte riportavano (a parte piccoli discostamenti)
+	lo stesso valore. Probabilmente con queste istanze l'algoritmo generava una popolazione iniziale
+	nettamente peggiore rispetto alle precedenti, oppure non riusciva a migliorla di molto durante l'evoluzione.
+
+	Infine, si nota come con istanze di dimensione maggiore a 70 lo scarto è positivo, ossia il risolutore
+	GA trovava una soluzione migliore rispetto a quella trovata da CPLEX.
+	Questo perché con queste dimensioni il risolutore CPLEX eccedeva il limite di tempo imposto e non riusciva,
+	di conseguenza, a trovare la soluzione ottima al problema.
+\end{itemize}
 %
 \begin{table}[!h]
 \centering
@@ -203,12 +234,6 @@ CPELX e GA.
 \label{tab:risultati-ga}
 \end{table}
 %
-Dai risultati si può osservare che:
-\begin{itemize}
-	\item i tempi sono di molto infereriori rispetto al risolutore CPELX.
-	\item Anche in questo caso si ha un andamento esponenziale al crescere di $N$.
-\end{itemize}
-%
 \begin{figure}[!h]
 \begin{center}
 	\includegraphics[scale=.5]{tempi-ga.png}
@@ -216,7 +241,6 @@ Dai risultati si può osservare che:
 \label{fig:tempi-ga}}
 \end{center}
 \end{figure}
-%
 %
 \begin{figure}[!h]
 \begin{center}
@@ -226,10 +250,18 @@ Dai risultati si può osservare che:
 \end{center}
 \end{figure}
 %
+\begin{figure}[!h]
+\begin{center}
+	\includegraphics[scale=.5]{gap-sol.png}
+{\scriptsize \caption{Differenza, in percentuale, fra le soluzioni trovate dai due risolutori.}
+\label{fig:gap-sol}}
+\end{center}
+\end{figure}
+%
 \subsection{Analisi della convergenza e delle prestazioni}\label{subsec:analisi-finale-gaf}
 
 %
-\subsection{Possibilo-miglioramenti}\label{subsec:miglioramenti-ga}
+\subsection{Possibili miglioramenti}\label{subsec:miglioramenti-ga}
 
 
 %%%%
