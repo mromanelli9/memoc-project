@@ -5,7 +5,7 @@ Lab exercises for the MeMOC course (Methods and Models for Combinatorial Optimiz
 ### Prerequisites
 LaTeX, Python, g++, CPLEX
 
-### Compiling
+### Compile
 First run a terminal and move into the folder that contains the code:
 ```
 cd code/
