@@ -54,9 +54,9 @@ GAIndividual* GASolver::solve() {
 	worst = population->get_worst_individual();
 
 	if (this->verbose) {
-		cout << " Inizio" \
-			<< ": Peggiore " << worst->get_fitness() \
-			<< ", Migliore: " << best->get_fitness() << endl;
+		cout << " Start" \
+			<< ": Worst " << worst->get_fitness() \
+			<< ", Best: " << best->get_fitness() << endl;
 	}
 
 	// Counting how much consegutive iterations
@@ -101,13 +101,13 @@ GAIndividual* GASolver::solve() {
 		best = population->get_best_individual();
 		worst = population->get_worst_individual();
 
-		if (this->verbose && (i > 0) && (i % 500) == 0 ) {
+		if (this->verbose && (i > 0) && (i % 100) == 0 ) {
 			best = population->get_best_individual();
 			worst = population->get_worst_individual();
 
-			cout << " Iterazione " << i \
-				<< ": Peggiore " << worst->get_fitness() \
-				<< ", Migliore: " << best->get_fitness() << endl;
+			cout << " Iteration " << i \
+				<< ": Worst " << worst->get_fitness() \
+				<< ", Best: " << best->get_fitness() << endl;
 		}
 
 		i++;
