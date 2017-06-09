@@ -1,8 +1,8 @@
 /**
  *  @file    main.cpp
  *  @author  Marco Romanelli
- *  @date    29/05/2017
- *  @version 1.0
+ *  @date    09/05/2017
+ *  @version 3.0
  *
  *  @brief  Main file
  *
@@ -84,7 +84,7 @@ long long current_timestamp();
 }
 
 /**
-*	@brief	Run all the instance and solvs them using CPLEX
+*	@brief	Runs all the instance and solvs them using CPLEX
 *
 *	@return exit status (int)
 */
@@ -98,7 +98,7 @@ int run_instances_with_cplex(vector<string> &files) {
 	cout << "Solving instances using CPLEX." << endl;
 
 	// Set up all the parameters
-	unsigned int time_limit = 60 * 5;	// time in minutes
+	unsigned int time_limit = 60 * 5;	// time in seconds
 
 	try {
 		myfile.open(output_file, ios::out);
@@ -132,7 +132,6 @@ int run_instances_with_cplex(vector<string> &files) {
 			cplex_time = -1;
 		}
 
-
 		try {
 			// Save cplex results
 			myfile << "\"" << instance << "\"" << separator;
@@ -158,7 +157,7 @@ int run_instances_with_cplex(vector<string> &files) {
 }
 
 /**
-*	@brief	Run all the instance and solvs them using GA
+*	@brief	Runs all the instance and solvs them using GA
 *
 *	@return exit status (int)
 */
@@ -172,7 +171,7 @@ int run_instances_with_ga(vector<string> &files) {
 	cout << "Solving instances using GA." << endl;
 
 	// Set up all the parameters
-	unsigned int ga_time_limit = 60 * 5;	// time in minutes
+	unsigned int ga_time_limit = 60 * 5;	// time in seconds
 	unsigned int ga_iteration_limit = 500;	// maximum number of iterations
 	unsigned int ga_population_size_factor = 3;	// the population will have a number
 												// of individuals set to this value times problem-size
@@ -235,18 +234,17 @@ int run_instances_with_ga(vector<string> &files) {
 
 
 /**
-*	@brief	Run a single instance provided in the file.
+*	@brief	Runs a single instance provided in the file.
 *			To use for testing and examples.
 *
 *	@return exit status (int)
-
 */
 int single_test(string filename) {
 	long long s_time, e_time, cplex_time, ga_time;
 
 	cout << "############   TSP SOLVER  ############"<< endl;
 
-	unsigned int time_limit = 60 * 5;	// time in minute
+	unsigned int time_limit = 60 * 5;	// time in seconds
 
 	// Create a new problem based on date provided in the file
 	TSPProblem* tspProblem = new TSPProblem(filename);

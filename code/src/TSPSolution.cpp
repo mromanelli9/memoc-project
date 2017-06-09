@@ -24,12 +24,11 @@ using namespace std;
 *	@brief	Constructor: create a solution for the model.
 *			Method: pseudo-greey
 */
-// TODO: rivedere questa parte
 TSPSolution::TSPSolution(TSPProblem *problem) {
 	this->problem = problem;
 
-	// Costruisco la soluzione in modo pseudo-casuale: come successore scelgo a caso tra quelli possibili, tenendo conto di quanto migliorano
-	// choose the next successor randomly among the possibilies
+	// Solutions are build with a pseudo-greedy approach:
+	// choose randomly a successor among those avaiable, considering how much they improve "fitness"
 	vector< vector<double> > C = problem->get_costs();
 	unsigned int N = problem->get_size();
 	solution_cost = 0;
@@ -81,7 +80,7 @@ TSPSolution::TSPSolution(TSPProblem *problem, vector<Node> p) {
 		this->solution_cost += C[path[i]][path[i+1]];
 	}
 
-	// assert(debug_sum == debug_sum_2);	// note: told to do so but not sure why
+	assert(debug_sum == debug_sum_2);	// note: told to do so but not sure why
 }
 
 /**
@@ -142,7 +141,6 @@ bool TSPSolution::equals(TSPSolution &sol) {
 *
 *   @return return a node
 */
-// TODO: rivedere questa parte
 Node TSPSolution::choose_node(Node from, vector<Node> nodes, vector< vector<double> >& C){
 	if (nodes.size() == 1){
 		return nodes[0];
@@ -158,7 +156,7 @@ Node TSPSolution::choose_node(Node from, vector<Node> nodes, vector< vector<doub
 	for (unsigned int i = 0; i < nodes.size(); ++i) {
 		double adjusted_cost = tot - C[from][nodes[i]];
 		adjusted_costs.push_back(adjusted_cost);
-		adjusted_tot += adjusted_cost; // Aggiungo l'ultimo elemento al totale
+		adjusted_tot += adjusted_cost;
 	}
 
 	double val = (rand() / (double) RAND_MAX) * adjusted_tot;	// random number in [0, tot]
@@ -171,7 +169,7 @@ Node TSPSolution::choose_node(Node from, vector<Node> nodes, vector< vector<doub
 	double sum = 0;
 	while (val > sum){
 		sum += adjusted_costs[i];
-		if (val > sum) {i++;} // evito di incrementare all'ultima iterazione
+		if (val > sum) {i++;} // skip the last one
 	}
 	assert(i < nodes.size());
 	return nodes[i];

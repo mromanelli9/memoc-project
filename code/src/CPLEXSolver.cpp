@@ -254,7 +254,6 @@ using namespace std;
 	 CHECKED_CPX_CALL( CPXgetobjval, env, lp, &obj_val );
 	 // std::cout << "Optimum (min): " << obj_val << std::endl;
 
-
 	 int num_vars = CPXgetnumcols(env, lp);
 	 std::vector<double> var_vals;
 

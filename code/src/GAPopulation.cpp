@@ -324,8 +324,6 @@ GAIndividual* GAPopulation::montecarlo_selection(vector< GAIndividual* > pool) {
 }
 
 
-
-
 /**
 *	@brief	Return the best individual from the given set of individuals
 *
