@@ -25,7 +25,7 @@ bin/main "samples/dcc1911_n025.tsp"
 - None
 
 ## Licenses
-Code: [License: MIT] (https://gitlab.com/mromanelli/memoc-project/LICENSE)
+Code: [License: MIT] (https://gitlab.com/mromanelli/memoc-project/blob/f4a7322d8310f8f1f8306b63bba6b770697f0fc6/LICENSE)
 
 Report:
 [![License: CC BY 4.0](https://licensebuttons.net/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)  
