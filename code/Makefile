@@ -45,9 +45,6 @@ run-cplex: ${TARGET} ${INSTANCESDIR}
 run-ga: ${TARGET} ${INSTANCESDIR}
 	@echo ""; ${TARGET} ${INSTANCESDIR} "2"
 
-test: ${TARGET} ${INSTANCESDIR}
-	@echo "Launching ${TARGET} ${ARGS}"; ${TARGET} ${ARGS}
-
 gen-instances: ${PYTARGET} ${DATASET}
 	@mkdir -p $(INSTANCESDIR)
 	$(PYCC) ${PYTARGET} ${DATASET} 5 5 40
