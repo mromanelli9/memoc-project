@@ -117,9 +117,9 @@ GAIndividual* GASolver::solve() {
 	worst = population->get_worst_individual();
 
 	if (this->verbose) {
-		cout << " Fine (iterazione: " << i \
-			<< "): Peggiore " << worst->get_fitness() \
-			<< ", Migliore: " << best->get_fitness() << endl;
+		cout << " End (itertion: " << i \
+			<< "): Worst " << worst->get_fitness() \
+			<< ", Best: " << best->get_fitness() << endl;
 	}
 
 	return best;
