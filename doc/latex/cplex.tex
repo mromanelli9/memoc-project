@@ -4,11 +4,12 @@
 % !TeX spellcheck = it_IT
 
 \section{CPLEX}\label{sec:cplex}
-Il modello è già ampiamente descritto nella consegna, per cui verrà esposto la tecnica di implementazione delle variabili e dei vincoli utilizzando le API di CPLEX
-ed eventuali modifiche e/o accorgimenti all'implementazione standard.
+Il modello è già ampiamente descritto nella consegna, per cui verrà presentanta solamente una panoramica
+sull'implementazione delle variabili e dei vincoli utilizzando le API di CPLEX
+ed eventuali modifiche e/o accorgimenti adottati.
 
 \subsection{Definizione delle variabili}
-Nel modello sono presenti due variabili le $x_{ij}$ e le $y_{ij}$.
+Nel modello sono presenti due variabili: le $x_{ij}$ e le $y_{ij}$.
 A titolo esemplificativo, prendiamo le prime:
 %
 \begin{gather*}
@@ -37,18 +38,17 @@ for (unsigned int i = 0; i < N; ++i) {
 \end{lstlisting}
 %
 Una volta create, le variabili sono memorizzate internamente al risolutore e l'unico modo per accedervi è tramite la sua posizione nell'array interno.
-Per semplificare questo processo, viene creata una matrice $NxN$ che associa il nome della variabile alla sua posizione interna del risolutore.
+Per semplificare questo processo, viene creata una matrice $N\times N$ che associa il nome della variabile alla sua posizione interna del risolutore.
 Mentre viene tenuta traccia del numero di variabili create, l'indice della variabile corrente viene memorizzato nella mappa di supporto (\textsf{xMap}).
 
 Un'altra osservazione che si può fare sul codice è il fatto che non vengono create le variabili $x_{ij}$ quando gli indici sono uguali;
-ovviamente non si avrebbe guadagno nel farlo, infatti se si pensa al problema reale, spostare la trivella lungo l'argo $(i, i)$ equivale a lasciarla ferma.
-%%%%
+infatti, se si pensa al problema reale, non si avrebbe guadagno nel farlo: spostare la trivella lungo l'argo $(i, i)$ equivale a lasciarla ferma.
 %%%%
 \subsection{Definizione dei vincoli}
 Sebbene le API di CPLEX permettano la definizione di più vincoli in una sola chiamata, si è scelto di definire un vincolo per chiamata;
-in questo modo la definizione risulta più chiara e quindi più semplice da modificare in un futuro.
+in questo modo la definizione risulta più chiara e quindi più semplice da modificare in futuro.
 Il costo computazione derivante da tale scelta è comunque limitato, in quanto la definizione del problema avviene solo in fase di inizializzazione
-e questa fase ha un costo molto inferiore rispetto alla fase di ottimizzazione.
+e questa ha un costo molto inferiore rispetto alla fase di ottimizzazione.
 %
 \label{lst:cplex-vincoli}
 \begin{lstlisting}[language=C++, caption=Creazione di un vincolo]
@@ -75,14 +75,14 @@ CHECKED_CPX_CALL( CPXaddrows, env, lp, 0, 1, varIndex.size(), &rhs, &sense, &mat
 %
 I parametri della chiamata CPLEX sono (alcuni): il numero di variabili e vincoli da creare, il numero di variabili nel vincolo dove il coefficiente è
 diverso da zero, la parte destra del vincolo e il verso (in questo caso definisce l'uguale ``$=$''), il vettore \textsf{rmatbeg} (posto a zero in quanto creo un solo vincolo
-\footnote{Non è necessario utilizzare il vettore per tenere traccia delle righe, perché definendo un solo vincolo si ha una sola riga che inizierà alla posizione 0.}),
+\footnote{Non è necessario utilizzare il vettore per tenere traccia delle righe perché definendo un solo vincolo si ha una sola riga che inizierà alla posizione 0.}),
 l'inizio dell'array con gli indici della variabili e poi quello con gli indici dei coefficienti e infine il nome del vincolo.
 %%%%
 %%%%
 \subsection{Verifica del modello}\label{subsec:verifica-modello-cplex}
-L'obbiettivo della prima parte della consegna consisteva nell'implementare il modello ed eseguirlo su delle istanze di prova
+L'obbiettivo della prima parte della consegna consisteva nell'implementare il modello, eseguirlo su delle istanze di prova
 e osservare fino a che dimensioni il problema può essere risolto entro un certo tempo.
-Le prove sono state effettuate nel laboratorio, su una macchina con sistema operativo Ubuntu 64-bit,
+Le prove sono state effettuate nel laboratorio LabTA, su una macchina con sistema operativo Ubuntu 64-bit,
 con un Intel Core i5 a 3,30GHz e 4GB di memoria RAM.
 Le istanze sono state generate come descritto nella sezione precedente (sezione~\ref{sec:generazione-istanze}).
 In tabella~\ref{tab:risultati-cplex} si possono trovare i risultati delle esecuzioni, ordinati per dimensione
@@ -92,10 +92,10 @@ Dai risultati si può osservare come:
 \begin{itemize}
 	\item il tempo d'esecuzione aumenta in maniera esponenziale, in particolare a partire dalle istanze con $N=20$.
 	\item Il tempo massimo d'esecuzione, pari a 5 minuti (300 s), viene raggiunto per la prima volta
-	nei problemi con $N=70$\footnote{Il tempo è leggermente superiore ai 300 secondi in quanto il conteggio viene fatto
+	nei problemi con $N=70$.\footnote{Il tempo è leggermente superiore ai 300 secondi in quanto il conteggio viene fatto
 	quando il risolutore ritorna il risultato. Il valore in eccesso è il tempo che impiega la macchina
-	da quando il risolutore si ferma a quando viene preso il conteggio del tempo.}.
-	\item il primo fallimento avviene con l'istanza di dimensione $N=80$, mentre con istanze con $N=20$ CPLEX
+	da quando il risolutore si ferma a quando viene preso il conteggio del tempo.}
+	\item Il primo fallimento avviene con l'istanza di dimensione $N=80$, mentre con istanze con $N=120$ CPLEX
 	non riesce a trovare una soluzione in nessuna delle istanze (100\% di fallimenti).
 \end{itemize}
 %
@@ -134,10 +134,10 @@ Dai risultati si può osservare come:
 %
 Infine, come richiesto nella consegna, sono stati definiti quattro intervalli di tempo: 0,1, 1 e 10 secondi, 1 e 5 minuti.
 Per il limite di 5 minuti sono stati inseriti in tabella due valori;
-il primo problema, infatti, per cui CPLEX supera i 5 minuti è quello con dimensione $N=70$, quindi di conseguenza
+il primo problema per cui CPLEX supera i 5 minuti è quello con dimensione $N=70$, quindi di conseguenza
 riesce a risolvere i problemi con $N=60$ al di sotto del limite dei 5 minuti.
-Tuttavia, anche le istanze con $N=80$ sono state tutte risolte entro il limite; per questo motivo anche questo
-valore è stato inserito in tabella.
+Tuttavia, anche le istanze con $N=80$ sono state tutte risolte entro il limite e per questo motivo anche questo
+è stato indicato anche questo valore.
 %
 \begin{table}[!h]
 	\centering
