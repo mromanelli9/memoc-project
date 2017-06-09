@@ -6,7 +6,7 @@
 #author          : Marco Romanelli
 #date            : 07/05/2017
 #version         : 3
-#usage           : python gen_instances.py <instanceName> [<initN> <step> <limit>]
+#usage           : python gen_instances.py <instanceFolderPath> [<initN> <step> <limit>]
 #python_version  : 2.7
 #==============================================================================
 
