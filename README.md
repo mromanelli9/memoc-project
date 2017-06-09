@@ -3,7 +3,7 @@ Lab exercises for the MeMOC course (Methods and Models for Combinatorial Optimiz
 
 ## Getting Started
 ### Prerequisites
-LaTeX, python, g++
+LaTeX, Python, g++, CPLEX
 
 ### Compiling
 First run a terminal and move into the folder that contains the code:
@@ -25,5 +25,12 @@ bin/main "samples/dcc1911_n025.tsp"
 - None
 
 ## License
-Code [MIT] (https://gitlab.com/mromanelli/memoc-project/LICENSE)
-Report [CC-License] (http://creativecommons.org/licenses/by/4.0)
+
+Code:
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
+`[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`
+
+Report:
+**[Choose on CreativeCommons.org](https://creativecommons.org/choose/)**  
+[![License: CC BY 4.0](https://licensebuttons.net/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)  
+`[![License: CC BY 4.0](https://licensebuttons.net/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)`
