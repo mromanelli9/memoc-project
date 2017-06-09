@@ -3,25 +3,24 @@
 % !TEX root = relazione.tex
 % !TeX spellcheck = it_IT
 
-\section{Note sul codice}\label{sec:codice}
-\subsection{Utilizzo}\label{subsec:utilizzo}
-La cartella contenente il codice è strutturata in modo tenere separati i sorgenti, i binari, il codice generato,
-i file Header, scripts e altri file utili all'esecuzione.
+\section{Note per l'utilizzo del codice}\label{sec:codice}
+\subsection{Compilazione ed esecuzione}\label{subsec:utilizzo}
+La cartella contenente il codice è strutturata in modo tenere separati le varie tipologie di file utili all'esecuzione.
 Per questo motivo il codice viene fornito con un \textsf{Makefile} che include al suo interno i comandi
 necessari alla compilazione e all'esecuzione dei test.
 Per un corretto utilizzo sono necessari alcuni passi da eseguirsi sul terminale di un computer con sistema
-operativo basato su Linux.
-%
-Il codice viene fornito sottoforma di archivio, quindi per prima cosa è necessario estrarre
-i file contenuti all'interno:
+operativo basato su Linux\footnote{I comandi descritti, così come i processi di compilazione ed esecuzione,
+sono stati provati e verificati sui computer del laboratorio LabTA.}.
+
+Il progetto viene fornito sottoforma di archivio, quindi per prima cosa è necessario estrarre i file contenuti all'interno:
 \label{lst:make-passo-1}
 \begin{lstlisting}[style=BashStyle]
-tar -zxvf codice.tar.gz
+tar -zxvf progetto-memoc-romanelli.tar.gz
 \end{lstlisting}
-per poi spostarsi all'interno della cartella appena creata:
+per poi spostarsi all'interno della cartella contenente il codice:
 \label{lst:make-passo-2}
 \begin{lstlisting}[style=BashStyle]
-cd codice/
+cd progetto-memoc-romanelli/codice/
 \end{lstlisting}
 %
 Per compilare i sorgenti è sufficiente lanciare il comando \textsf{Make}:
@@ -30,109 +29,67 @@ Per compilare i sorgenti è sufficiente lanciare il comando \textsf{Make}:
 make
 \end{lstlisting}
 %
-Se la compilazione termina con successo, all'interno della
-cartella \textsf{bin} (per ulteriori dettagli si rimanda all'apposita sotto-sezione) troveremo
-l'eseguibile principale.
-Tuttavia si rende necessario un passo intermedio: bisogna infatti generare le istanze su cui si andrà
-poi a eseguire il binario.
-Per far ciò è sufficiente digitare
+Se la compilazione termina con successo, all'interno della cartella \textsf{bin}
+(per ulteriori dettagli si rimanda alla sezione~\ref{subsec:struttura}) si troverà l'eseguibile principale \textsf{main}.
+
+Per eseguire il programma principale bisogna passare come parametro
+il percorso dell'istanza di prova desiderata, che si trova nella cartella \textsf{samples};
+ad esempio, se si vuole utilizzare l'istanza \textsf{dcc1911\_n025.tsp} il comando da utilizzare è:
 \label{lst:make-passo-4}
+\begin{lstlisting}[style=BashStyle]
+bin/main "samples/dcc1911_n025.tsp"
+\end{lstlisting}
+%
+\subsubsection{Creazione delle istanze}\label{subsubsec:creazione-istanze-note}
+Se invece si volesse eseguire il programma su tutto l'insieme di istanze, generate
+come scritto in sezione~\ref{sec:generazione-istanze}, per riproporre le prove fatte, è necessario utilizzare altri comandi.
+Per prima cosa vanno generate le istanze:
+\label{lst:make-passo-5}
 \begin{lstlisting}[style=BashStyle]
 make gen-instances
 \end{lstlisting}
-e, una volta completato il processo, avremmo l'insieme delle istanze, generate secondo il metodo
-descritto nella sezione~\ref{sec:generazione-istanze}.
-
-A questo punto è possibile eseguire gli algoritmi sull'insieme di istanze; per farlo
-utilizzando il risolutore CPLEX:
-\label{lst:make-passo-5}
+A questo punto è possibile eseguire gli algoritmi sull'insieme di istanze utilizzando il risolutore CPLEX:
+\label{lst:make-passo-6}
 \begin{lstlisting}[style=BashStyle]
 make run-cplex
 \end{lstlisting}
-mentre per utilizzare l'Algoritmo Genetico:
-\label{lst:make-passo-5b}
+oppure il risolutore che utilizza l'Algoritmo Genetico:
+\label{lst:make-passo-7}
 \begin{lstlisting}[style=BashStyle]
 make run-ga
 \end{lstlisting}
-È possibile risolvere anche una singola istanza; in questo caso verrà utilizzato prima il risolutore
-CPLEX e poi quello GA (se non viene passata nessuna istanza, verrà presa una d'esempio).
-\label{lst:make-passo-6}
-\begin{lstlisting}[style=BashStyle]
-make test ARGS=<percorso-istanza>
-\end{lstlisting}
-%%%%
 %%%%
 \subsection{Struttura della cartella}\label{subsec:struttura}
-Come già accennato, la disposizione dei file all'interno della cartella è ben strutturata e definita,
-ma può risultare dispersiva a un estraneo.
-Per questo motivo, viene qui fatta una panoramica dalla disposizione delle cartelle e dei file al suo interno.
-Come si può vedere dalla figura~\ref{fig:struttura-codice}, all'interno della cartella pricipale troviamo:
+Come già accennato, la disposizione dei file all'interno della cartella è ben strutturata e definita.
+Per questo motivo, viene proposta una veloce panoramica dalla disposizione delle cartelle e dei file al suo interno:
 \begin{itemize}
 	\item \textsf{bin}: contiene il file binario generato dalla compilazione;
 	\item \textsf{include}: all'interno sono presenti tutti i file header;
 	\item \textsf{instances}: una volta generate, le istanze si troveranno qui dentro;
+	\item \textsf{samples}: contiene alcune istanze di prova;
 	\item \textsf{scripts}: si trova lo script in python che si occupa della generazione
-	delle istanze;
+	delle istanze (per i test completi);
 	\item \textsf{src}: i sorgenti per gli algoritmi risolutivi delle due parti;
 	\item \textsf{vlsi-dataset}: contiente i file delle istanze originali, da cui poi verranno generate tutte le altre.
 \end{itemize}
 %
-I sorgenti sono molteplici e la loro descrizione è presente all'interno nelle prime righe;
+I sorgenti sono molteplici e una breve descrizione è presente all'interno del file nelle prime righe;
 Tuttavia, le parti fondamentali degli algoritmi richiesti sono contenute solamente in alcuni, che sono:
 \begin{itemize}
 	\item \textsf{CPLEXSover}: contiene la risoluzione del problema posto utilizzando le API di CPLEX (risoluzione parte 1);
 	\item \textsf{GASolver} e \textsf{GAPopulation}: qui si trova la risoluzione mediante l'agoritmo genetico (parte 2);
 	\item \textsf{Main}: principalmente si occupa di iterare gli algoritmi su tutte le istanze,
-	ma può essere visto come esempio su come tilizzare appropriatamente le classi e i metodi per la
+	ma può essere visto come esempio su come utilizzare propriatamente le classi e i metodi per la
 	risoluzione di un problema (ad esempio nella funzione \textsf{single\_test});
-	\item \textsf{results.csv}: contiene i risultati delle esecuzioni sulle istanze (presente solo dopo l'esecuzione).
 \end{itemize}
 %
-\label{fig:struttura-codice}
-\begin{forest}
-    for tree={font=\sffamily, grow'=0,
-    folder indent=.9em, folder icons,
-    edge=densely dotted}
-    [main folder
-      [include
-          [cpxmacro.h, is file]
-		  [CPLEXSolver.h, is file]
-		  [GAIndividual.h, is file]
-		  [GAPopulation.h, is file]
-		  [GASolver.h, is file]
-		  [TSPProblem.h, is file]
-		  [TSPSolution.h, is file]]
-      [scripts
-          [gen\_instances.py, is file]]
-	  [src
-           [CPLEXSolver.cpp, is file]
- 		  [GAIndividual.cpp, is file]
- 		  [GAPopulation.cpp, is file]
- 		  [GASolver.cpp, is file]
-		  [main.cpp, is file]
- 		  [TSPProblem.cpp, is file]
- 		  [TSPSolution.cpp, is file]]
-	 [vlsi-dataset
-		 [bcl380.tsp, is file]
-		 [dcc1911.tsp, is file]
-		 [djb2036.tsp, is file]
-		 [pbd984.tsp, is file]
-		 [pds2566.tsp, is file]
-		 [xql662.tsp, is file]]
-      [Makefile, is file]
-	  [results.csv, is file]
-    ]
- \end{forest}
- %%%%
- %%%%
- \subsection{CPLEX}\label{subsec:cplex}
+\subsection{CPLEX}\label{subsec:cplex}
 Utilizzando il Makefile non è necessario conoscere i nomi dei file o i loro parametri ed è sufficiente
 utilizzare i comandi descritti in precedenza (sotto-capitolo~\ref{subsec:utilizzo}) per compilare
 ed eseguire il codice.
 Tuttavia potrebbe rendersi necessaria una modifica al Makefile nel caso in cui il percorso di installazione
-di CPLEX sia diverso da quello indicato.
-\footnote{Il Makefile presente nel codice conseganto al docente è già stato adattato per funzionare nei computer
-del laboratorio. La modifica è necessaria nel caso si voglia compilare su una macchina diversa.}
+di CPLEX sia diverso da quello indicato\footnote{Il Makefile presente nel codice conseganto al docente è già stato adattato per funzionare nei computer
+del laboratorio. La modifica è necessaria nel caso si voglia compilare su una macchina diversa.}.
 In questo caso è necessario aprire il file \textsf{Makefile} con un editor di testo (nano, emacs, gedit, sublime)
 e modificare il percorso a CPLEX, indicato nelle voci \textsf{CPX\_INCDIR} e \textsf{CPX\_LIBDIR}.
 \label{lst:modifica-makefile}
