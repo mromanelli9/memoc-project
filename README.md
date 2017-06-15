@@ -34,7 +34,8 @@ make run-ga
 - None
 
 ## Licenses
-Code: [License: MIT] (https://gitlab.com/mromanelli/memoc-project/blob/f4a7322d8310f8f1f8306b63bba6b770697f0fc6/LICENSE)
+Code:
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)] (LICENSE)
 
 Report:
-[![License: CC BY 4.0](https://licensebuttons.net/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)  
+[![License: CC BY 4.0](https://licensebuttons.net/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/) 
