@@ -14,11 +14,20 @@ Then compile:
 ```
 make
 ```
+Generate the instances:
+```
+make gen-instances
+```
 
 ### Run
 Run main program on a sample instance by typing:
 ```
 bin/main "samples/dcc1911_n025.tsp"
+```
+If you want to run over all instances:
+```
+make run-cplex
+make run-ga
 ```
 
 ## Contributors
